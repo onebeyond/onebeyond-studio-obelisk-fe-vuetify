@@ -1,7 +1,7 @@
 <template>
     <v-app id="app">
         <v-app-bar color="primary" class="white--text" dark app>
-            <img src="/assets/images/one-beyond-logo.svg" id="headerLogo" />
+            <img src="/assets/images/one-beyond-logo.svg" id="headerLogo" alt="Company logo" />
             <div id="topNav">
                 <router-link to="/">Home</router-link>
                 <router-link to="/users">Users</router-link>
@@ -12,7 +12,10 @@
                 <v-menu offset-y transition="slide-y-transition">
                     <template v-slot:activator="{ on, attrs }">
                         <span color="primary" dark v-bind="attrs" v-on="on">
-                            <user-avatar :fullName="userName" :initials="userInitials"></user-avatar>
+                            <UserAvatar
+                                :fullName="store.userContext.userName"
+                                :initials="store.userContext.initials"
+                            ></UserAvatar>
                         </span>
                     </template>
                     <v-list dense>
@@ -20,7 +23,7 @@
                             <v-list-item-icon>
                                 <v-icon>mdi-account-outline</v-icon>
                             </v-list-item-icon>
-                            <strong>{{ userName }}</strong>
+                            <strong>{{ store.userContext.userName }}</strong>
                         </v-list-item>
                         <hr />
                         <v-list-item>
@@ -126,38 +129,22 @@
     </v-app>
 </template>
 
-<script lang="ts">
-    import { Component, Mixins, Vue } from "vue-property-decorator";
-    import AuthApiClient from "@js/api/auth/authApiClient";
+<script setup lang="ts">
+    import { inject } from "vue";
     import UserAvatar from "@components/util/userAvatar.vue";
-    import UserContextMixin from "@js/mixins/userContextMixin";
+    import AuthApiClient from "@js/api/auth/authApiClient";
+    import { useUserContextStore } from "@js/stores/appStore";
 
-    @Component({
-        name: "App",
-        components: {
-            "user-avatar": UserAvatar
-        }
-    })
-    export default class App extends Mixins(UserContextMixin) {
-        public drawer: boolean = false;
-        public group1: any = null;
-        public group2: any = null;
+    let drawer: boolean = false;
+    let group1: any = null;
 
-        public installationPrompt: any | null = null;
+    const $buildNumber = inject("$buildNumber");
+    const $buildDate = inject("$buildDate");
+    const store = useUserContextStore();
+    const authApiClient: AuthApiClient = new AuthApiClient();
 
-        authApiClient!: AuthApiClient = new AuthApiClient();
-
-        constructor() {
-            super();
-        }
-
-        public async created(): Promise<void> {}
-
-        public mounted(): void {}
-
-        public async performLogout(): Promise<void> {
-            await this.authApiClient.signOut();
-            window.location.href = `${(window as any).location.origin}/auth/`;
-        }
+    async function performLogout(): Promise<void> {
+        await authApiClient.signOut();
+        window.location.href = `${(window as any).location.origin}/auth/`;
     }
 </script>
