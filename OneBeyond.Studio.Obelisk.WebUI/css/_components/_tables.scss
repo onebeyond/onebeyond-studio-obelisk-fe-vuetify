@@ -1,0 +1,39 @@
+@import "_variables.scss";
+
+.v-data-table {
+    .v-data-table__wrapper {
+        table {
+            thead {
+                tr {
+                    th {
+                        font-size: $textSmall;
+                        background: $body-bg;
+                    }
+                }
+            }
+
+            tbody {
+                tr {
+                    td {
+                        font-size: $textSmall;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.table-search {
+    max-width: 400px;
+    margin: -5px 0px 1rem;
+
+    .v-text-field {
+        padding-top: 0;
+        margin-top: 0;
+
+        input,
+        .v-label {
+            padding-left: 5px;
+        }
+    }
+}

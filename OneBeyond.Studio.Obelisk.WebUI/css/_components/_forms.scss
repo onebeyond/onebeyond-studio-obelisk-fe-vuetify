@@ -1,0 +1,11 @@
+@import "_variables.scss";
+
+.v-input {
+    input {
+        font-size: $textSmall;
+    }
+}
+
+.v-label {
+    font-size: $textSmall;
+}

@@ -1,0 +1,27 @@
+@import "_variables.scss";
+
+.v-btn {
+    &:not(.v-btn--round).v-size--small {
+        height: 28px;
+        padding: 0 12px;
+    }
+
+    &.v-btn:not(.v-btn--round).v-size--default {
+        height: 32px;
+        padding: 0 12px;
+    }
+
+    &.v-size--small {
+        font-size: $textTiny;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    &.primary,
+    &.primary a {
+        color: #fff !important;
+        text-decoration: none;
+    }
+}

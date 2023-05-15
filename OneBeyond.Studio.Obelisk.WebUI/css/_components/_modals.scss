@@ -1,0 +1,43 @@
+@import "_variables.scss";
+
+.v-dialog {
+    h1 {
+        font-size: $titleNormal;
+        text-align: center;
+        margin-bottom: 0.8rem;
+    }
+
+    p {
+        font-size: $textSmall;
+    }
+
+    .v-sheet.v-card:not(.v-sheet--outlined) {
+        box-shadow: none;
+        border-radius: 0;
+
+        .container {
+            padding: 24px;
+        }
+    }
+
+    .v-card > .v-card__title {
+        background-color: $themeColour;
+        color: white;
+        font-size: $textLarge;
+        padding: 12px 24px;
+    }
+
+    .v-card__actions {
+        background-color: white;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        padding: 19px 0 0;
+        border-top: 1px solid $greyLight;
+
+        & > .v-btn.v-btn {
+            padding: 0 12px;
+            margin: 5px !important;
+        }
+    }
+}
