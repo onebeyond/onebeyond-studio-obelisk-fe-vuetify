@@ -1,12 +1,9 @@
-const Vue = require("vue");
-import Router from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
-Vue.use(Router);
-
-const indexRouter = new Router({
-    mode: "history",
+const indexRouter = createRouter({
+    history: createWebHistory(),
     routes: [
-        // //-- Home Page -------------------------------------------------
+        //-- Home Page --------------------------------------------------------
         {
             path: "/",
             name: "Home",
@@ -18,7 +15,7 @@ const indexRouter = new Router({
         },
         //-- 404 Error page ---------------------------------------------------
         {
-            path: "*",
+            path: "/:catchAll(.*)",
             name: "PageNotFound",
             component: () => import("@components/pagenotfound/pagenotfound.vue"),
             meta: { title: "Page not found" }
@@ -28,10 +25,9 @@ const indexRouter = new Router({
 });
 
 const applicationName = document.getElementsByTagName("title")[0].innerHTML;
-
 indexRouter.beforeEach((to, _from, next) => {
     document.title = to.meta.title + " - " + applicationName;
-    document.body.className = `page-${to.name}`;
+    document.body.className = `page-${to.name?.toString()}`;
     window.scrollTo(0, 0);
 
     next();

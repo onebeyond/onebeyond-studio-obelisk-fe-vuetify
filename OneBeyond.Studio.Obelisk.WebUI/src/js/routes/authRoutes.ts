@@ -1,11 +1,7 @@
-const Vue = require("vue");
-import Router from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
-Vue.use(Router);
-
-const authRouter = new Router({
-    mode: "history",
-    base: "auth",
+const authRouter = createRouter({
+    history: createWebHistory("auth"),
     routes: [
         //-- Sign in Page -------------------------------------------------
         {
@@ -58,7 +54,7 @@ const authRouter = new Router({
         },
         //-- 404 Error page ---------------------------------------------------
         {
-            path: "*",
+            path: "/:catchAll(.*)",
             name: "PageNotFound",
             component: () => import("@components/pagenotfound/pagenotfound.vue"),
             meta: { title: "Page not found" }
@@ -68,10 +64,9 @@ const authRouter = new Router({
 });
 
 const applicationName = document.getElementsByTagName("title")[0].innerHTML;
-
 authRouter.beforeEach((to, _from, next) => {
     document.title = to.meta.title + " - " + applicationName;
-    document.body.className = `page-${to.name}`;
+    document.body.className = `page-${to.name?.toString()}`;
     window.scrollTo(0, 0);
 
     next();

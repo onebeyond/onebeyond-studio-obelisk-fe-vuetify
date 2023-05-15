@@ -15,4 +15,9 @@ export default class UserApiClient extends EntityApiClient<User, string> {
     public async unlock(userId: string): Promise<void> {
         await this.put(`${userId}/Unlock`);
     }
+
+    public async search(query: string): Promise<any> {
+        const response = await this.get(`?search=${query}`);
+        return await response.json();
+    }
 }

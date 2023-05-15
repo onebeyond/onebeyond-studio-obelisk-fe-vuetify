@@ -1,6 +1,6 @@
 export default {
     en: {
-        title: "Generate TFA recovery codes",
+        title: "Generate two-factor authentication (TFA) recovery codes",
         recoveryCodesInfo: "Put these codes in a safe place.",
         reminder: "If you lose your device and don't have the recovery codes you will lose access to your account.",
         generateInfo:

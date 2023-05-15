@@ -6,17 +6,17 @@ export default abstract class Configuration {
     private static readonly _publicConfigurationFolder = "configuration";
     private static _appSettings: Readonly<AppSettings> | null = null;
 
-    public static load(environment: string, onSettingsLoaded: Function | null = null): Promise<any> {
+    public static async load(environment: string, onSettingsLoaded: Function | null = null): Promise<any> {
+        // eslint-disable-line @typescript-eslint/ban-types
         this._appSettings = new AppSettings();
 
         const envSettingsFile = `settings.${(environment || "dev").toLowerCase()}.json`;
-        return this.readFromFile(this._defaultSettingsFile).then((_) => {
-            this.readFromFile(envSettingsFile).then((_) => {
-                if (onSettingsLoaded) {
-                    onSettingsLoaded.call(this);
-                }
-            });
-        });
+
+        await this.readFromFile(this._defaultSettingsFile);
+        await this.readFromFile(envSettingsFile);
+        if (onSettingsLoaded) {
+            onSettingsLoaded.call(this);
+        }
     }
 
     public static get appSettings(): Readonly<AppSettings> {

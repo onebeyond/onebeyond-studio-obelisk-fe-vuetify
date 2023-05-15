@@ -10,9 +10,9 @@ module.exports = (env, options) => {
 
     const webpackConfig = {
         entry: {
-            indexApp: "./src/js/indexApp.ts",
-            adminApp: "./src/js/adminApp.ts",
-            authApp: "./src/js/authApp.ts",
+            indexApp: "./src/indexApp.ts",
+            adminApp: "./src/adminApp.ts",
+            authApp: "./src/authApp.ts",
             mainCss: "./css/site.scss"
         },
 
@@ -22,7 +22,7 @@ module.exports = (env, options) => {
             filename: isDevelopment ? "[name].bundle.js" : "[name].[contenthash].bundle.js",
             clean: true,
             devtoolModuleFilenameTemplate: (info) => {
-                var $filename = "sources://" + info.resourcePath;
+                let $filename = "sources://" + info.resourcePath;
                 if (info.resourcePath.match(/\.vue$/) && !info.query.match(/type=script/)) {
                     $filename = "webpack-generated:///" + info.resourcePath + "?" + info.hash;
                 }
@@ -30,8 +30,6 @@ module.exports = (env, options) => {
             },
             devtoolFallbackModuleFilenameTemplate: "webpack:///[resource-path]?[hash]"
         },
-
-        target: ["web", "es5"],
 
         plugins: [
             new CopyPlugin({
@@ -62,8 +60,7 @@ module.exports = (env, options) => {
             new webpack.ProvidePlugin({
                 process: "process/browser",
                 Popper: ["popper.js", "default"],
-                vueRouter: "vue-router",
-                vuex: "vuex"
+                vueRouter: "vue-router"
             }),
             new MiniCssExtractPlugin({
                 filename: isDevelopment ? "[name].bundle.css" : "[name].[contenthash].bundle.css",
@@ -100,11 +97,10 @@ module.exports = (env, options) => {
 
         resolve: {
             alias: {
-                vue: "vue/dist/vue.js",
+                vue$: "vue/dist/vue.esm-bundler.js",
                 "@assets": path.resolve(__dirname, "assets/"),
                 "@js": path.resolve(__dirname, "src/js/"),
                 "@components": path.resolve(__dirname, "src/components/"),
-                "@views": path.resolve(__dirname, "src/views/"),
                 "@styles": path.resolve(__dirname, "css/")
             },
             extensions: [".ts", ".tsx", ".js", ".jsx", ".vue", ".json"],
@@ -118,14 +114,13 @@ module.exports = (env, options) => {
                 //vue
                 {
                     test: /\.vue$/,
-                    loader: "vue-loader"
+                    use: "vue-loader"
                 },
 
                 // ts
                 {
                     test: /\.tsx?$/,
                     use: [
-                        "thread-loader",
                         "babel-loader",
                         {
                             loader: "ts-loader",
@@ -149,7 +144,7 @@ module.exports = (env, options) => {
                         // Don't transpile node_modules
                         return /node_modules/.test(file);
                     },
-                    use: ["thread-loader", "babel-loader"]
+                    use: ["babel-loader"]
                 },
 
                 //css
@@ -207,6 +202,10 @@ module.exports = (env, options) => {
             },
 
             open: ["/"]
+        },
+
+        experiments: {
+            topLevelAwait: true
         }
     };
 

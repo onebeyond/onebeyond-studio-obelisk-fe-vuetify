@@ -21,11 +21,6 @@ module.exports = (env, options) => {
         optimization: {
             minimize: true,
             minimizer: [new TerserPlugin({ parallel: true })]
-        },
-        resolve: {
-            alias: {
-                vue: "vue/dist/vue.min.js"
-            }
         }
     });
 };

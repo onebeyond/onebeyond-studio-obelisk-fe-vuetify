@@ -1,4 +1,4 @@
-import { SignInStatus } from "@js/dataModels/auth/signInStatus";
+import type { SignInStatus } from "@js/dataModels/auth/signInStatus";
 
 export class SignInWithRecoveryCodeResult {
     loginId: string | undefined;

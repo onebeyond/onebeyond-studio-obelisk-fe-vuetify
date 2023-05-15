@@ -1,4 +1,4 @@
-import InterceptorResponse from "@js/api/interceptors/interceptorResponse";
+import type InterceptorResponse from "@js/api/interceptors/interceptorResponse";
 
 export default interface IRequestInterceptor {
     /**

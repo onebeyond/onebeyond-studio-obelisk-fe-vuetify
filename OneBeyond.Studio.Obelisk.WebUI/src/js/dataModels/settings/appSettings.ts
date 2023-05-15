@@ -4,6 +4,7 @@
  * Please keep it in sync with JSON files
  */
 export default class AppSettings {
-    apiUrl: string = "";
-    sessionTimeoutInMinutes: number = 60;
+    apiUrl = "";
+    allowApiUrlOverrideFromDevTools = false;
+    sessionTimeoutInMinutes = 60;
 }

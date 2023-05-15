@@ -41,7 +41,7 @@ export default {
         },
         imageAltText: {
             entityImage: "Entity image",
-            logoImage: "Obelisk  Template Homepage"
+            logoImage: "Obelisk Template Homepage"
         },
         layout: {
             bannerTitle: "Obelisk Template",
@@ -64,7 +64,9 @@ export default {
             navigation: "Navigation"
         },
         message: {
-            addEditEntityTitle: "Add/Edit",
+            addEntityTitle: "Add",
+            editEntityTitle: "Edit",
+            deleteEntityTitle: "Delete",
             search: "Search",
             currentFolder: "Current folder:",
             yes: "Yes",
@@ -81,6 +83,9 @@ export default {
         },
         placeholder: {
             multiSelectSearch: "Type to search",
+            multiSelectSearchSelect: "Press enter to select",
+            multiSelectSearchSelected: "Selected",
+            multiSelectSearchDeselect: "Press enter to remove",
             select: "- Select -",
             multiSelectSearchAddYourOwn: "Type to search or add your own",
             search: "Search...",
