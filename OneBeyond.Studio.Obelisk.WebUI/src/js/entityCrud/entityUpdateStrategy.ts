@@ -1,97 +1,214 @@
-import EntityCrudMixin from "@js/entityCrud/entityCrudMixin";
-
-import { Entity } from "@js/dataModels/entity";
+import type { Entity, EntityBuilder } from "@js/dataModels/entity";
 import { EntityGrid, EntityGridAction } from "@js/grids/entityGrid";
+import type EntityApiClient from "@js/api/entityApiClient";
+import { useRouter } from "vue-router";
+import type { Ref } from "vue";
+
+export type ConstructorParams<TEntity extends Entity<T>, T> = {
+    entity: any;
+    onEntityLoaded: () => void;
+    provideEntityBuilder: EntityBuilder<TEntity, T>;
+    showEntity: Ref<boolean>;
+    entityApiClient: any;
+    onError: (any) => void;
+    onEntityUpdated: () => void;
+    isEditingEntityInline: Ref<boolean>;
+    isMobile: () => boolean;
+};
 
 //This is the base class for entity create/update behaviour. You can create your own versions of create/update behaviour deriving from it.
-export abstract class EntityUpdateStrategy<TEntity extends Entity<T>, T, TGrid extends EntityGrid> {
-    public abstract doAdd(caller: EntityCrudMixin<TEntity, T, TGrid>): void; //Reaction to user clicked on Add entity button
-    public abstract doEdit(caller: EntityCrudMixin<TEntity, T, TGrid>, entityId: T): Promise<void>; //Reaction to user clicked on Edit entity button
-    public abstract doViewDetails(caller: EntityCrudMixin<TEntity, T, TGrid>, entityId: T): void; //Reaction to user clicked on View entity details button
-    public abstract doEntitySaved(caller: EntityCrudMixin<TEntity, T, TGrid>): void; //Reaction on entity saved
-    public abstract doReturn(caller: EntityCrudMixin<TEntity, T, TGrid>); //Reaction on "Back"button
+export abstract class EntityUpdateStrategy<TEntity extends Entity<T>, T> {
+    entity: Ref<TEntity>;
+    onEntityLoaded: () => void;
+    provideEntityBuilder: EntityBuilder<TEntity, T>;
+    showEntity: Ref<boolean>;
+    entityApiClient: EntityApiClient<TEntity, T>;
+    onError: (any) => void;
+    onEntityUpdated: () => void;
+    isEditingEntityInline: Ref<boolean>;
+    isMobile: () => boolean;
+
+    $router = useRouter();
+
+    constructor(params: ConstructorParams<TEntity, T>) {
+        this.entity = params.entity;
+        this.onEntityLoaded = params.onEntityLoaded;
+        this.provideEntityBuilder = params.provideEntityBuilder;
+        this.showEntity = params.showEntity;
+        this.entityApiClient = params.entityApiClient;
+        this.onError = params.onError;
+        this.onEntityUpdated = params.onEntityUpdated;
+        this.isEditingEntityInline = params.isEditingEntityInline;
+        this.isMobile = params.isMobile;
+    }
+
+    public abstract doAdd(): void; //Reaction to user clicked on Add entity button
+    public abstract doEdit(entityId: T): Promise<void>; //Reaction to user clicked on Edit entity button
+    public abstract doViewDetails(entityId: T): void; //Reaction to user clicked on View entity details button
+    public abstract doEntitySaved(): void; //Reaction on entity saved
+    public abstract doReturn(); //Reaction on "Back"button
 }
 
-//Add/Update entity in a modal
-export class EntityUpdateUsingModal<
+export abstract class EntityUpdateStrategyWithGrid<
     TEntity extends Entity<T>,
     T,
     TGrid extends EntityGrid
-> extends EntityUpdateStrategy<TEntity, T, TGrid> {
-    public doAdd(caller: EntityCrudMixin<TEntity, T, TGrid>): void {
-        caller.entityGrid.rememberCurrentPageBeforeGridAction(EntityGridAction.EntityAdd);
-        caller.entity = new (caller.provideEntityBuilder())();
-        caller.onEntityLoaded();
-        caller.showEntity = true;
+> extends EntityUpdateStrategy<TEntity, T> {
+    entityGrid: TGrid;
 
-        caller.$nextTick(() => {
-            caller.$validator.reset();
-        });
+    constructor(params: ConstructorParams<TEntity, T>, entityGrid: TGrid) {
+        super(params);
+        this.entityGrid = entityGrid;
+    }
+}
+
+export class EntityUpdateUsingModal<TEntity extends Entity<T>, T> extends EntityUpdateStrategy<TEntity, T> {
+    public doAdd(): void {
+        this.entity.value = new this.provideEntityBuilder();
+        this.onEntityLoaded();
+        this.showEntity.value = true;
     }
 
-    public async doEdit(caller: EntityCrudMixin<TEntity, T, TGrid>, entityId: any): Promise<void> {
-        caller.entityGrid.rememberCurrentPageBeforeGridAction(EntityGridAction.EntityEdit);
-
+    public async doEdit(entityId: any): Promise<void> {
         try {
-            caller.entity = await caller.entityApiClient.getEntity(entityId);
-            caller.onEntityLoaded();
-            caller.showEntity = true;
+            this.entity.value = await this.entityApiClient.getEntity(entityId);
+            this.onEntityLoaded();
+            this.showEntity.value = true;
         } catch (e) {
-            caller.onError(e);
+            this.onError(e);
         }
     }
 
-    public doViewDetails(caller: EntityCrudMixin<TEntity, T, TGrid>, entityId: any): void {
+    public doViewDetails(entityId: any): void {
+        // eslint-disable-line @typescript-eslint/no-unused-vars
         //Do nothing? Or the reaction should be the same as doEdit?
     }
 
-    public doEntitySaved(caller: EntityCrudMixin<TEntity, T, TGrid>): void {
-        caller.onEntityUpdated();
+    public doEntitySaved(): void {
+        this.onEntityUpdated();
     }
 
-    public doReturn(caller: EntityCrudMixin<TEntity, T, TGrid>) {
+    public doReturn() {
+        // eslint-disable-line @typescript-eslint/no-unused-vars
         //Do nothing? Or should we close the add/edit modal window here?
     }
 }
 
-//Add/Update entity on a separate page
-export class EntityUpdateUsingSeparatePage<
+//Add/Update entity in a modal
+export class EntityUpdateUsingModalAndGrid<
     TEntity extends Entity<T>,
     T,
     TGrid extends EntityGrid
-> extends EntityUpdateStrategy<TEntity, T, TGrid> {
-    public readonly addView: string;
-    public readonly editView: string;
-    public readonly detailsView: string;
-    public readonly listView: string;
+> extends EntityUpdateUsingModal<TEntity, T> {
+    entityGrid: TGrid;
 
-    constructor(addView: string, editView: string, detailsView: string, listView: string) {
-        super();
-
-        this.addView = addView;
-        this.editView = editView;
-        this.detailsView = detailsView;
-        this.listView = listView;
+    constructor(params: ConstructorParams<TEntity, T>, entityGrid: TGrid) {
+        super(params);
+        this.entityGrid = entityGrid;
     }
 
-    public doAdd(caller: EntityCrudMixin<TEntity, T, TGrid>): void {
-        caller.$router.push({ name: this.addView, params: { id: caller.provideEntityBuilder().idDefault() as any } });
+    public doAdd(): void {
+        super.doAdd();
+        this.entityGrid.rememberCurrentPageBeforeGridAction(EntityGridAction.EntityAdd);
     }
 
-    public async doEdit(caller: EntityCrudMixin<TEntity, T, TGrid>, entityId: any): Promise<void> {
-        caller.$router.push({ name: this.editView, params: { id: entityId } });
+    public async doEdit(entityId: any): Promise<void> {
+        await super.doEdit(entityId);
+        this.entityGrid.rememberCurrentPageBeforeGridAction(EntityGridAction.EntityEdit);
+    }
+}
+
+// Can mix and match modal behaviour with separate page behaviour
+export class EntityUpdateUsingSeparatePage<TEntity extends Entity<T>, T> extends EntityUpdateUsingModal<TEntity, T> {
+    public readonly listView?: string;
+    public readonly addView?: string;
+    public readonly editView?: string;
+    public readonly detailsView?: string;
+
+    constructor(
+        superParams: ConstructorParams<TEntity, T>,
+        paths?: {
+            listView?: string;
+            addView?: string;
+            editView?: string;
+            detailsView?: string;
+        }
+    ) {
+        super(superParams);
+
+        this.listView = paths?.listView;
+        this.addView = paths?.addView;
+        this.editView = paths?.editView;
+        this.detailsView = paths?.detailsView;
     }
 
-    public doViewDetails(caller: EntityCrudMixin<TEntity, T, TGrid>, entityId: any): void {
-        caller.$router.push({ name: this.detailsView, params: { id: entityId } });
+    public doAdd(): void {
+        if (this.addView) {
+            this.$router.push({
+                name: this.addView,
+                params: { id: this.provideEntityBuilder.idDefault() as any }
+            });
+        } else {
+            super.doAdd();
+        }
     }
 
-    public doEntitySaved(caller: EntityCrudMixin<TEntity, T, TGrid>): void {
-        this.doReturn(caller);
+    public async doEdit(entityId: any): Promise<void> {
+        if (this.editView) {
+            this.$router.push({ name: this.editView, params: { id: entityId } });
+        } else {
+            super.doEdit(entityId);
+        }
     }
 
-    public doReturn(caller: EntityCrudMixin<TEntity, T, TGrid>) {
-        caller.$router.push({ name: this.listView });
+    public doViewDetails(entityId: any): void {
+        if (this.detailsView) {
+            this.$router.push({ name: this.detailsView, params: { id: entityId } });
+        } else {
+            super.doViewDetails(entityId);
+        }
+    }
+
+    public doEntitySaved(): void {
+        this.doReturn();
+    }
+
+    public doReturn() {
+        if (this.listView) {
+            this.$router.push({ name: this.listView });
+        }
+    }
+}
+
+export class EntityUpdateUsingSeparatePageAndGrid<
+    TEntity extends Entity<T>,
+    T,
+    TGrid extends EntityGrid
+> extends EntityUpdateUsingSeparatePage<TEntity, T> {
+    entityGrid: TGrid;
+
+    constructor(
+        params: ConstructorParams<TEntity, T>,
+        entityGrid: TGrid,
+        paths?: {
+            listView?: string;
+            addView?: string;
+            editView?: string;
+            detailsView?: string;
+        }
+    ) {
+        super(params, paths);
+        this.entityGrid = entityGrid;
+    }
+
+    public doAdd(): void {
+        super.doAdd();
+        this.entityGrid.rememberCurrentPageBeforeGridAction(EntityGridAction.EntityAdd);
+    }
+
+    public async doEdit(entityId: any): Promise<void> {
+        await super.doEdit(entityId);
+        this.entityGrid.rememberCurrentPageBeforeGridAction(EntityGridAction.EntityEdit);
     }
 }
 
@@ -100,14 +217,14 @@ export class EntityUpdateUsingInlineGrid<
     TEntity extends Entity<T>,
     T,
     TGrid extends EntityGrid
-> extends EntityUpdateUsingModal<TEntity, T, TGrid> {
-    public doAdd(caller: EntityCrudMixin<TEntity, T, TGrid>): void {
-        super.doAdd(caller);
-        caller.isEditingEntityInline = !caller.isMobile();
+> extends EntityUpdateUsingModalAndGrid<TEntity, T, TGrid> {
+    public doAdd(): void {
+        super.doAdd();
+        this.isEditingEntityInline.value = !this.isMobile();
     }
 
-    public async doEdit(caller: EntityCrudMixin<TEntity, T, TGrid>, entityId: any): Promise<void> {
-        super.doEdit(caller, entityId);
-        caller.isEditingEntityInline = !caller.isMobile();
+    public async doEdit(entityId: any): Promise<void> {
+        await super.doEdit(entityId);
+        this.isEditingEntityInline.value = !this.isMobile();
     }
 }

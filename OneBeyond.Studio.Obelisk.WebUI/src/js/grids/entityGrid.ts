@@ -1,10 +1,9 @@
 export abstract class EntityGrid {
     constructor() {}
-    abstract initDataAdaptor(apiUrl: string, errorCallback: Function): void;
-    abstract rememberCurrentPageBeforeGridAction(action: any): void;
-    abstract restoreCurrentPage(): Promise<void>;
-    abstract setInstance(gridRef: any): void;
-    abstract refresh(): Promise<void>;
+
+    abstract rememberCurrentPageBeforeGridAction(action: any);
+    abstract restoreCurrentPage();
+    abstract setInstance(gridRef: any);
 }
 
 export enum EntityGridAction {
