@@ -103,7 +103,7 @@ module.exports = (env, options) => {
                 "@components": path.resolve(__dirname, "src/components/"),
                 "@styles": path.resolve(__dirname, "css/")
             },
-            extensions: [".ts", ".tsx", ".js", ".jsx", ".vue", ".json"],
+            extensions: [".ts", ".tsx", ".js", ".jsx", ".vue", ".json", ".mjs"],
             fallback: {
                 path: require.resolve("path-browserify")
             }
