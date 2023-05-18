@@ -6,6 +6,6 @@
     "bracketSpacing": true,
     "jsxBracketSameLine": true,
     "vueIndentScriptAndStyle": true,
-    "trailingComma": "none",
+    "trailingComma": "all",
     "endOfLine": "auto"
 }
