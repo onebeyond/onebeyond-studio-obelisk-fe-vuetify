@@ -11,7 +11,7 @@
                     <a class="card-block stretched-link text-decoration-none" :href="adminUrl">
                         <h1 class="card-body text-center">
                             <v-icon color="primary" large>mdi-account-cog</v-icon>
-                            {{ $t("admin") }}
+                            {{ t("admin") }}
                         </h1>
                     </a>
                 </v-card>
@@ -62,24 +62,17 @@
     </div>
 </template>
 
-<script lang="ts">
-    import { Vue, Component } from "vue-property-decorator";
-    import dictionary from "@js/localizations/resources/components/home";
+<script setup lang="ts">
     import LocalSessionStorage from "@js/stores/localSessionStorage";
+    import { type ComputedRef, computed } from "vue";
+    import dictionary from "@js/localizations/resources/components/home";
+    import { useI18n } from "vue-i18n";
 
-    @Component({
-        name: "Home",
-        i18n: {
-            messages: dictionary
-        }
-    })
-    export default class Home extends Vue {
-        constructor() {
-            super();
-        }
+    const { t } = useI18n({
+        messages: dictionary
+    });
 
-        get adminUrl(): string {
-            return LocalSessionStorage.isUserAuthenticated() ? "/admin/" : "/auth/";
-        }
-    }
+    const adminUrl: ComputedRef<string> = computed(() =>
+        LocalSessionStorage.isUserAuthenticated() ? "/admin/" : "/auth/"
+    );
 </script>
