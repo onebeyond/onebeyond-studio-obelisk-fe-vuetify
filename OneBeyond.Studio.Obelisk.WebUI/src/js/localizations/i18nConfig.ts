@@ -1,4 +1,3 @@
-import "@js/localizations/thirdParty/veeValidate";
 import LocalAppStorage from "../stores/localAppStorage";
 
 const i18nConfig = {
