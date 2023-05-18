@@ -19,17 +19,3 @@
         </v-row>
     </div>
 </template>
-
-<script lang="ts">
-    import { Component, Mixins } from "vue-property-decorator";
-    import UserContextMixin from "@js/mixins/userContextMixin";
-
-    @Component({
-        name: "Dashboard"
-    })
-    export default class Dashboard extends Mixins(UserContextMixin) {
-        constructor() {
-            super();
-        }
-    }
-</script>
