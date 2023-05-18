@@ -2,7 +2,7 @@
     <div>
         <v-dialog v-model="dialog" persistent max-width="360px">
             <v-card>
-                <v-form ref="form" @submit.prevent="signIn">
+                <v-form ref="formRef" v-model="formValid" @submit.prevent="signIn">
                     <v-container>
                         <v-row>
                             <v-col cols="12">
@@ -10,14 +10,15 @@
                                     src="/assets/images/one-beyond-logo-black.svg"
                                     height="60"
                                     class="mx-auto d-block logo"
+                                    alt="company logo"
                                 />
-                                <h1 class="text-center mt-2 mb-4">{{ $t("title") }}</h1>
+                                <h1 class="text-center mt-2 mb-4">{{ t("title") }}</h1>
 
                                 <div>
-                                    <label>{{ $t("field.username") }}</label>
+                                    <label>{{ t("field.username") }}</label>
                                     <v-text-field
-                                        dense
-                                        outlined
+                                        density="compact"
+                                        variant="outlined"
                                         v-model="username"
                                         :rules="[rules.username]"
                                         data-cy="inputUserName"
@@ -25,10 +26,10 @@
                                 </div>
 
                                 <div>
-                                    <label for="password">{{ $t("field.password") }}</label>
+                                    <label for="password">{{ t("field.password") }}</label>
                                     <v-text-field
-                                        dense
-                                        outlined
+                                        density="compact"
+                                        variant="outlined"
                                         type="password"
                                         v-model="password"
                                         :rules="[rules.password]"
@@ -47,7 +48,7 @@
                                             v-model="rememberMe"
                                         />
                                         <label class="custom-control-label" for="rememberMe">{{
-                                            $t("field.rememberMe")
+                                            t("field.rememberMe")
                                         }}</label>
                                     </div>
                                 </div>
@@ -58,11 +59,11 @@
                                         type="submit"
                                         :disabled="signingIn"
                                         data-cy="submitBtn"
-                                        >{{ $t("button.signIn") }}</v-btn
+                                        >{{ t("button.signIn") }}</v-btn
                                     >
                                 </div>
                                 <p class="v-card__actions border-0">
-                                    <router-link to="forgotPassword">{{ $t("button.forgottenPassword") }}</router-link>
+                                    <router-link to="forgotPassword">{{ t("button.forgottenPassword") }}</router-link>
                                 </p>
 
                                 <div v-if="errorMsg">
@@ -79,77 +80,68 @@
     </div>
 </template>
 
-<script lang="ts">
-    import { Component, Vue } from "vue-property-decorator";
-    import dictionary from "@js/localizations/resources/components/signIn";
+<script setup lang="ts">
     import { SignInStatus } from "@js/dataModels/auth/signInStatus";
-    import { SignInResult } from "@js/dataModels/auth/signInResult";
+    import type { SignInResult } from "@js/dataModels/auth/signInResult";
     import AuthApiClient from "@js/api/auth/authApiClient";
     import { SignInRequest } from "@js/dataModels/auth/signInRequest";
     import LocalSessionStorage from "@js/stores/localSessionStorage";
+    import signInDictionary from "@js/localizations/resources/components/signIn";
+    import { useI18n } from "vue-i18n";
+    import { ref } from "vue";
+    import { useRouter } from "vue-router";
 
-    @Component({
-        name: "SignIn",
-        i18n: {
-            messages: dictionary
+    const router = useRouter();
+
+    const { t } = useI18n({
+        messages: signInDictionary,
+    });
+
+    const dialog = true;
+    let signingIn = false;
+    let username = ref("");
+    let password = ref("");
+    let rememberMe = false;
+    let errorMsg = ref("");
+    const authApiClient = new AuthApiClient();
+    let formValid = false;
+    const formRef = ref(null);
+
+    const rules = {
+        username: (value) => !!value || t("message.userNameRequired"),
+        password: (value) => !!value || t("message.passwordRequired"),
+    };
+
+    async function signIn(): Promise<void> {
+        if (!formValid) {
+            return;
         }
-    })
-    export default class SignIn extends Vue {
-        public signingIn: boolean = false;
-        public dialog: boolean = true;
-        username: string = "";
-        password: string = "";
-        public rememberMe: boolean = false;
-        public errorMsg: string = "";
 
-        private authApiClient: AuthApiClient;
+        signingIn = true;
+        errorMsg.value = "";
+        const defaultError: string = "An error occured while trying to log you in.";
 
-        rules: object = {
-            username: (value) => !!value || this.$t("message.userNameRequired"),
-            password: (value) => !!value || this.$t("message.passwordRequired")
-        };
+        const userCredentials = new SignInRequest(username.value, password.value, rememberMe);
 
-        constructor() {
-            super();
-            this.authApiClient = new AuthApiClient();
-        }
+        try {
+            const data: SignInResult = await authApiClient.basicSignIn(userCredentials);
 
-        showDialog(): void {
-            this.dialog = true;
-        }
-
-        async signIn(): Promise<void> {
-            if !(this.$refs.form.validate()) {
-                return;
+            if (data.status === SignInStatus.Success) {
+                LocalSessionStorage.setUserAuthenticated(true);
+                window.location.href = `${(window as any).location.origin}/admin/`;
+            } else if (data.status === SignInStatus.RequiresVerification) {
+                router.push({
+                    name: "loginWithTfa",
+                    query: { rememberMe: rememberMe.toString() },
+                });
+            } else {
+                errorMsg.value = defaultError;
             }
-
-            this.signingIn = true;
-
-            this.errorMsg = "";
-            const defaultError: string = "An error occured while trying to log you in.";
-
-            const userCredentials = new SignInRequest(this.username, this.password, this.rememberMe);
-
-            try {
-                const data: SignInResult = await this.authApiClient.basicSignIn(userCredentials);
-
-                if (data.status === SignInStatus.Success) {
-                    LocalSessionStorage.setUserAuthenticated(true);
-                    window.location.href = `${(window as any).location.origin}/admin/`;
-                } else if (data.status === SignInStatus.RequiresVerification) {
-                    this.$router.push(
-                        {
-                            name: "loginWithTfa",
-                            query: { rememberMe: this.rememberMe }
-                        });
-                } else {
-                    this.errorMsg = defaultError;
-                }
-            } catch {
-                this.errorMsg = defaultError;
-            } finally {
-                this.signingIn = false;
-            }
+        } catch {
+            console.log("** ERROR **");
+            errorMsg.value = defaultError;
+        } finally {
+            signingIn = false;
         }
     }
 </script>
