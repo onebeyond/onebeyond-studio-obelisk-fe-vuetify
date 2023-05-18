@@ -1,6 +1,6 @@
 import ObeliskResourceApiClient from "@js/api/obeliskResourceApiClient";
 import EnableAuthenticatorSettings from "@js/dataModels/tfa/enableAuthenticatorSettings";
-import EnableTfaRequest from "@js/dataModels/tfa/enableTfaRequest";
+import type EnableTfaRequest from "@js/dataModels/tfa/enableTfaRequest";
 import LoginTfaSettings from "@js/dataModels/tfa/loginTfaSettings";
 import { plainToInstance } from "class-transformer";
 

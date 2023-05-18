@@ -1,12 +1,12 @@
-import IRequestInterceptor from "@js/api/interceptors/request/iRequestInterceptor";
-import IResponseInterceptor from "@js/api/interceptors/response/iResponseInterceptor";
+import type IRequestInterceptor from "@js/api/interceptors/request/iRequestInterceptor";
+import type IResponseInterceptor from "@js/api/interceptors/response/iResponseInterceptor";
 
 /**
  *  WebAPI client based on FetchApi:
  *  https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
  */
 export default abstract class WebApiClient {
-    public static WebApiRoot: string = "";
+    public static WebApiRoot = "";
 
     public readonly apiBaseUrl: string;
 
@@ -18,19 +18,19 @@ export default abstract class WebApiClient {
     }
 
     protected async post(endpoint?: string, body?: any): Promise<Response> {
-        return this.fetch(endpoint, WebApiClient.buildRequest("POST", !!body ? JSON.stringify(body) : null));
+        return this.fetch(endpoint, WebApiClient.buildRequest("POST", body ? JSON.stringify(body) : null));
     }
 
     protected async put(endpoint?: string, body?: any): Promise<Response> {
-        return this.fetch(endpoint, WebApiClient.buildRequest("PUT", !!body ? JSON.stringify(body) : null));
+        return this.fetch(endpoint, WebApiClient.buildRequest("PUT", body ? JSON.stringify(body) : null));
     }
 
     protected async get(endpoint?: string, body?: any): Promise<Response> {
-        return this.fetch(endpoint, WebApiClient.buildRequest("GET", !!body ? JSON.stringify(body) : null));
+        return this.fetch(endpoint, WebApiClient.buildRequest("GET", body ? JSON.stringify(body) : null));
     }
 
     protected async delete(endpoint?: string, body?: any): Promise<Response> {
-        return this.fetch(endpoint, WebApiClient.buildRequest("DELETE", !!body ? JSON.stringify(body) : null));
+        return this.fetch(endpoint, WebApiClient.buildRequest("DELETE", body ? JSON.stringify(body) : null));
     }
 
     protected async fetch(endpoint?: string, request?: RequestInit, overriddenBaseUrl?: string): Promise<Response> {
@@ -65,7 +65,7 @@ export default abstract class WebApiClient {
         method: string,
         body?: any | null,
         headers?: any | null,
-        contentTypeOverride?: string
+        contentTypeOverride?: string,
     ): RequestInit {
         let contentType: string | null = "application/json;charset=utf-8";
         if (contentTypeOverride) {
@@ -77,25 +77,25 @@ export default abstract class WebApiClient {
         const defaultHeaders = {
             Accept: "application/json, text/plain, */*",
             "Content-Type": contentType,
-            "X-Requested-With": "XMLHttpRequest" // force server to return a 401 in case of authorization errors
+            "X-Requested-With": "XMLHttpRequest", // force server to return a 401 in case of authorization errors
         };
 
         return {
             body: body,
             method: method,
             credentials: "include", // change this to "omit" if you do not exchange cookies with the server
-            headers: headers ?? defaultHeaders
+            headers: headers ?? defaultHeaders,
         };
     }
 
     private async callRequestInterceptors(url: string, request?: RequestInit): Promise<boolean> {
-        let suppressResponseError: boolean = false;
-        for (let interceptor of this.requestInterceptors) {
-            if (!!interceptor) {
+        let suppressResponseError = false;
+        for (const interceptor of this.requestInterceptors) {
+            if (interceptor) {
                 const result = await interceptor.run(url, request);
                 suppressResponseError ||= result.suppressResponseError;
                 if (!result.canContinue) {
-                    if (!!result.errorMessage) {
+                    if (result.errorMessage) {
                         throw new WebApiError(result.errorMessage, 0, request);
                     }
 
@@ -108,14 +108,13 @@ export default abstract class WebApiClient {
     }
 
     private async callResponseInterceptors(response: Response, request: () => Promise<Response>): Promise<boolean> {
-        let suppressResponseError: boolean = false;
-        for (let interceptor of this.responseInterceptors) {
-            if (!!interceptor) {
+        let suppressResponseError = false;
+        for (const interceptor of this.responseInterceptors) {
+            if (interceptor) {
                 const result = await interceptor.run(response, request);
-
                 suppressResponseError ||= result.suppressResponseError;
                 if (!result.canContinue) {
-                    if (!!result.errorMessage) {
+                    if (result.errorMessage) {
                         throw new WebApiError(result.errorMessage, 0);
                     }
 
