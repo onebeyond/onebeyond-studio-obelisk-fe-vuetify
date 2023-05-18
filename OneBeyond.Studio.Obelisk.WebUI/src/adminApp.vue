@@ -1,7 +1,7 @@
 <template>
     <v-app id="app">
         <v-app-bar color="primary" class="white--text" dark app>
-            <img src="/assets/images/one-beyond-logo.svg" id="headerLogo" alt="Company logo" />
+            <img src="/assets/images/one-beyond-logo-black.svg" id="headerLogo" alt="Company logo" />
             <div id="topNav">
                 <router-link to="/">Home</router-link>
                 <router-link to="/users">Users</router-link>
@@ -10,8 +10,8 @@
             <v-app-bar-nav-icon class="white--text" right @click="drawer = true"></v-app-bar-nav-icon>
             <div id="userActions">
                 <v-menu offset-y transition="slide-y-transition">
-                    <template v-slot:activator="{ on, attrs }">
-                        <span color="primary" dark v-bind="attrs" v-on="on">
+                    <template v-slot:activator="{ props }">
+                        <span color="primary" dark v-bind="props">
                             <UserAvatar
                                 :fullName="store.userContext.userName"
                                 :initials="store.userContext.initials"
@@ -20,29 +20,21 @@
                     </template>
                     <v-list dense>
                         <v-list-item>
-                            <v-list-item-icon>
-                                <v-icon>mdi-account-outline</v-icon>
-                            </v-list-item-icon>
+                            <v-icon>mdi-account-outline</v-icon>
                             <strong>{{ store.userContext.userName }}</strong>
                         </v-list-item>
                         <hr />
                         <v-list-item>
-                            <v-list-item-icon>
-                                <v-icon>mdi-form-textbox-password</v-icon>
-                            </v-list-item-icon>
+                            <v-icon>mdi-form-textbox-password</v-icon>
                             <router-link to="/changePassword">{{ $t("layout.changePassword") }}</router-link>
                         </v-list-item>
                         <v-list-item>
-                            <v-list-item-icon>
-                                <v-icon>mdi-two-factor-authentication</v-icon>
-                            </v-list-item-icon>
+                            <v-icon>mdi-two-factor-authentication</v-icon>
                             <router-link to="/twoFactorAuthentication">Authenticator Settings</router-link>
                         </v-list-item>
                         <hr />
                         <v-list-item>
-                            <v-list-item-icon>
-                                <v-icon>mdi-logout</v-icon>
-                            </v-list-item-icon>
+                            <v-icon>mdi-logout</v-icon>
                             <a @click="performLogout">Logout</a>
                         </v-list-item>
                     </v-list>
@@ -52,50 +44,39 @@
 
         <v-navigation-drawer v-model="drawer" app temporary>
             <v-list nav>
-                <v-list-item-group v-model="group1" active-class="deep-purple--text text--accent-4">
-                    <v-list-item>
-                        <v-list-item-icon>
-                            <v-icon>mdi-home</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>
-                            <router-link to="/">Home</router-link>
-                        </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                        <v-list-item-icon>
-                            <v-icon>mdi-account-multiple</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>
-                            <router-link to="/users">Users</router-link>
-                        </v-list-item-title>
-                    </v-list-item>
+                <!-- <v-list-group v-model="group1" active-class="deep-purple--text text--accent-4"> -->
+                <v-list-item>
+                    <v-icon>mdi-home</v-icon>
+                    <v-list-item-title>
+                        <router-link to="/">Home</router-link>
+                    </v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                    <v-icon>mdi-account-multiple</v-icon>
+                    <v-list-item-title>
+                        <router-link to="/users">Users</router-link>
+                    </v-list-item-title>
+                </v-list-item>
 
-                    <v-list-item>
-                        <v-list-item-icon>
-                            <v-icon>mdi-form-textbox-password</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>
-                            <router-link to="/changePassword">{{ $t("layout.changePassword") }}</router-link>
-                        </v-list-item-title>
-                    </v-list-item>
+                <v-list-item>
+                    <v-icon>mdi-form-textbox-password</v-icon>
+                    <v-list-item-title>
+                        <router-link to="/changePassword">{{ $t("layout.changePassword") }}</router-link>
+                    </v-list-item-title>
+                </v-list-item>
 
-                    <v-list-item>
-                        <v-list-item-icon>
-                            <v-icon>mdi-two-factor-authentication</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>
-                            <router-link to="/twoFactorAuthentication">Authenticator Settings</router-link>
-                        </v-list-item-title>
-                    </v-list-item>
+                <v-list-item>
+                    <v-icon>mdi-two-factor-authentication</v-icon>
+                    <v-list-item-title>
+                        <router-link to="/twoFactorAuthentication">Authenticator Settings</router-link>
+                    </v-list-item-title>
+                </v-list-item>
 
-                    <v-list-item>
-                        <v-list-item-icon>
-                            <v-icon>mdi-logout</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title @click="performLogout">Logout</v-list-item-title>
-                    </v-list-item>
-                </v-list-item-group>
-                <v-subheader></v-subheader>
+                <v-list-item>
+                    <v-icon>mdi-logout</v-icon>
+                    <v-list-item-title @click="performLogout">Logout</v-list-item-title>
+                </v-list-item>
+                <!-- </v-list-group> -->
             </v-list>
         </v-navigation-drawer>
 
@@ -130,13 +111,12 @@
 </template>
 
 <script setup lang="ts">
-    import { inject } from "vue";
+    import { inject, ref } from "vue";
     import UserAvatar from "@components/util/userAvatar.vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
     import { useUserContextStore } from "@js/stores/appStore";
 
-    let drawer: boolean = false;
-    let group1: any = null;
+    let drawer = ref(false);
 
     const $buildNumber = inject("$buildNumber");
     const $buildDate = inject("$buildDate");
