@@ -1,17 +1,13 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { defineStore } from "pinia";
+import { ref } from "vue";
 import { UserContext } from "../dataModels/users/userContext";
 
-Vue.use(Vuex);
+export const useUserContextStore = defineStore("userContext", () => {
+    const userContext = ref(new UserContext());
 
-export default new Vuex.Store({
-    state: {
-        userContext: new UserContext()
-    },
-
-    mutations: {
-        setUserContext(state, userContext: UserContext) {
-            state.userContext = userContext;
-        }
+    function setUserContext(newUserContext: UserContext) {
+        userContext.value = newUserContext;
     }
+
+    return { userContext, setUserContext };
 });

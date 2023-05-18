@@ -2,8 +2,8 @@ import LocalAppStorage from "./localAppStorage";
 
 export default class LocalSessionStorage extends LocalAppStorage {
     public static readonly LAST_SERVER_REQUEST_KEY: string = "lastServerRequestDate";
-    public static readonly USER_IS_AUTHENTICATED: string = "authenticatedUser";
-    public static readonly USER_ID: string = "UserId";
+    public static readonly USER_IS_AUTHENTICATED_KEY: string = "authenticatedUser";
+    private static readonly API_URL_KEY: string = "apiUrl";
 
     public static updateLastServerRequestDate(): void {
         this.setValueForKey(this.LAST_SERVER_REQUEST_KEY, new Date().getTime().toString());
@@ -14,18 +14,18 @@ export default class LocalSessionStorage extends LocalAppStorage {
     }
 
     public static isUserAuthenticated(): boolean {
-        return this.getValueForKey(this.USER_IS_AUTHENTICATED) === "true";
+        return this.getValueForKey(this.USER_IS_AUTHENTICATED_KEY) === "true";
     }
 
     public static setUserAuthenticated(authenticated: boolean): void {
-        this.setValueForKey(this.USER_IS_AUTHENTICATED, authenticated ? "true" : "false");
+        this.setValueForKey(this.USER_IS_AUTHENTICATED_KEY, authenticated ? "true" : "false");
     }
 
-    public static setUserId(id: string): void {
-        this.setValueForKey(this.USER_ID, id);
+    public static setCustomApiUrl(url: string): void {
+        this.setValueForKey(this.API_URL_KEY, url);
     }
 
-    public static getUserId(): void {
-        this.getValueForKey(this.USER_ID);
+    public static getCustomApiUrl(): string {
+        return this.getValueForKey(this.API_URL_KEY)?.toString() ?? "";
     }
 }
