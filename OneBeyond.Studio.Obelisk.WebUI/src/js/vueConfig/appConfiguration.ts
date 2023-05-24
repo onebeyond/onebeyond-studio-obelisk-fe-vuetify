@@ -1,93 +1,166 @@
-import { PhoneValidator, ComplexPasswordValidator, DateRangeValidator } from "@js/util/custom-validator";
-import { showYesNo, shortDate, longDateTime, monthYearDate, currency, sizeInKb } from "@js/util/filters";
 import "reflect-metadata"; // Needed to make "class-transformer" work properly
-import VeeValidate from "vee-validate";
 import "@js/util/stringExtensions";
 
 //Global components
 //NOTE: Only add here if truly required globally, doing so inflates the bundle size
-import SessionTimeoutComponent from "@components/util/sessionTimeout.vue";
-import UserContextSetter from "@components/util/userContextSetter.vue";
+import SessionTimeoutComponent from "@components/obComponents/sessionTimeout.vue";
+import UserContextSetter from "@components/obComponents/userContextSetter.vue";
 import GlobalErrorHandler from "@components/util/globalErrorHandler.vue";
-import AlertModal from "@components/util/alertModal.vue";
-
+import ModalPopup from "@components/util/modalPopup.vue";
 //Language selector for VueI18n
-import LanguageSelector from "@components/util/languageSelector.vue";
+import LanguageSelector from "@components/obComponents/languageSelector.vue";
 import WebApiClient from "@js/api/webApiClient";
 import Configuration from "@js/configuration/configuration";
-
-const Vue = require("vue");
+import LocalSessionStorage from "@js/stores/localSessionStorage";
+import type { App } from "vue";
+import type AppSettings from "@js/dataModels/settings/appSettings";
+import { createPinia } from "pinia";
+import { i18n } from "@js/localizations/lang";
+import { SetGlobalProperties } from "@js/util/globalProperties";
+import "vuetify/styles";
+import { createVuetify } from "vuetify";
+import * as components from "vuetify/components";
+import * as directives from "vuetify/directives";
+import colors from "vuetify/lib/util/colors";
+// import additional languages if needed
+import { en, es } from "vuetify/lib/locale";
 
 export default class AppConfiguration {
-    private enableDebugLogging: boolean = false;
-    private readonly vueInstanceInit: Function;
+    private enableDebugLogging = false;
+    private readonly app: App;
+    private readonly rootContainerId: string;
 
-    constructor(enableDebugLogging: boolean, vueInstanceInit: Function) {
+    constructor(enableDebugLogging: boolean, app: App, rootContainerId: string) {
+        // eslint-disable-line @typescript-eslint/ban-types
         this.enableDebugLogging = enableDebugLogging;
-        this.vueInstanceInit = vueInstanceInit;
+        this.app = app;
+        this.rootContainerId = rootContainerId;
     }
 
-    public setup(): Promise<void> {
+    public async setup(): Promise<void> {
         this.log("App", `window.env = ${(window as any).env}`);
-        return Configuration.load((window as any).env, () => this.onSettingsLoaded());
+
+        await this.loadSettings();
     }
 
-    private onSettingsLoaded(): void {
-        // We can now access the whole configuration object as it has been fully loaded
+    private mount(): void {
+        this.app.mount(this.rootContainerId);
+    }
+
+    private async loadSettings(): Promise<void> {
+        await Configuration.load((window as any).env);
         this.inspect(Configuration.appSettings);
 
         this.setupVueVariables();
         this.registerPlugins();
         this.registerGlobalVueComponents();
-        this.registerGlobalFilters();
-        this.vueInstanceInit.call(this);
+        SetGlobalProperties(this.app);
+
+        this.mount();
     }
 
     private setupVueVariables(): void {
         //custom globals on the vue instance
-        Vue.prototype.$sessionTimeoutInMinutes = Configuration.appSettings.sessionTimeoutInMinutes || 60;
-        Vue.prototype.$rootPath = (window as any).location.origin;
+        this.app.config.globalProperties.$sessionTimeoutInMinutes =
+            Configuration.appSettings.sessionTimeoutInMinutes || 60;
+        this.app.config.globalProperties.$rootPath = (window as any).location.origin;
 
-        // The api URL is passed to the WebApiClient too
-        WebApiClient.WebApiRoot = Configuration.appSettings.apiUrl || "";
-        this.log("App", `WebApiRoot = ${WebApiClient.WebApiRoot}`);
+        this.setWebApiBaseUrl(Configuration.appSettings);
 
-        Vue.prototype.$buildNumber = process.env.BUILD_NUMBER;
-        Vue.prototype.$buildDate = process.env.BUILD_DATE;
-        this.log("App", `Vue.prototype.$buildNumber = ${Vue.prototype.$buildNumber}`);
-        this.log("App", `Vue.prototype.$buildDate = ${Vue.prototype.$buildDate}`);
-
-        const env = process.env.NODE_ENV || "development";
+        this.app.provide("$buildNumber", process.env.BUILD_NUMBER);
+        this.app.provide("$buildDate", process.env.BUILD_DATE);
+        this.app.config.globalProperties.$buildNumber = process.env.BUILD_NUMBER;
+        this.app.config.globalProperties.$buildDate = process.env.BUILD_DATE;
+        this.log(
+            "App",
+            `this.app.config.globalProperties.$buildNumber = ${this.app.config.globalProperties.$buildNumber}`,
+        );
+        this.log("App", `this.app.config.globalProperties.$buildDate = ${this.app.config.globalProperties.$buildDate}`);
 
         //Disable devtools in production
-        Vue.config.devtools = env == "development";
+        // const env = process.env.NODE_ENV || "development";
+        // this.app.config.devtools = env == "development";
+    }
+
+    private setWebApiBaseUrl(appSettings: AppSettings): void {
+        let customApiUrl: string | null = null;
+        if (appSettings.allowApiUrlOverrideFromDevTools) {
+            // Allow API Url to be overridden from console
+            (window as any).setApiUrl = (url: string) => {
+                LocalSessionStorage.setCustomApiUrl(url);
+                location.reload();
+            };
+            (window as any).resetApiUrl = () => {
+                LocalSessionStorage.setCustomApiUrl("");
+                location.reload();
+            };
+
+            customApiUrl = LocalSessionStorage.getCustomApiUrl();
+        }
+
+        WebApiClient.WebApiRoot = customApiUrl || appSettings.apiUrl || "";
+        this.log("App", `WebApiRoot = ${WebApiClient.WebApiRoot}`);
     }
 
     private registerPlugins(): void {
-        Vue.use(VeeValidate);
+        // const vuetify = createVuetify({
+        //     components,
+        //     directives,
+        //     lang: {
+        //         locales: { en, es },
+        //         current: "en"
+        //     },
+        //     theme: {
+        //         themes: {
+        //             light: {
+        //                 primary: colors.green.darken3,
+        //                 secondary: "#cccccc"
+        //             }
+        //         }
+        //     }
+        // });
 
-        //Validator extensions
-        VeeValidate.Validator.extend("phone", PhoneValidator);
-        VeeValidate.Validator.extend("complexPassword", ComplexPasswordValidator);
-        VeeValidate.Validator.extend("dateRange", DateRangeValidator);
+        const myCustomLightTheme = {
+            dark: false,
+            colors: {
+                background: "#AAAAAA",
+                surface: "#FFFFFF",
+                primary: colors.green.darken3,
+                "primary-darken-1": "#3700B3",
+                secondary: "#cccccc",
+                "secondary-darken-1": "#018786",
+                error: "#B00020",
+                info: "#2196F3",
+                success: "#4CAF50",
+                warning: "#FB8C00",
+            },
+        };
+
+        const vuetify = createVuetify({
+            components,
+            directives,
+            theme: {
+                defaultTheme: "myCustomLightTheme",
+                themes: {
+                    myCustomLightTheme,
+                },
+            },
+        });
+
+        this.app.use(vuetify);
+        const pinia = createPinia();
+        this.app.use(pinia);
+
+        this.app.use(i18n);
     }
 
     // NOTE: You should keep this to the minimum!
     private registerGlobalVueComponents(): void {
-        Vue.component("session-timeout", SessionTimeoutComponent);
-        Vue.component("user-context", UserContextSetter);
-        Vue.component("v-alertModal", AlertModal);
-        Vue.component("language-selector", LanguageSelector);
-        Vue.component("global-error-handler", GlobalErrorHandler);
-    }
-
-    private registerGlobalFilters(): void {
-        Vue.filter("showYesNo", showYesNo);
-        Vue.filter("shortDate", shortDate);
-        Vue.filter("longDateTime", longDateTime);
-        Vue.filter("monthYearDate", monthYearDate);
-        Vue.filter("currency", currency);
-        Vue.filter("sizeInKb", sizeInKb);
+        this.app.component("session-timeout", SessionTimeoutComponent);
+        this.app.component("user-context", UserContextSetter);
+        this.app.component("v-modalPopup", ModalPopup);
+        this.app.component("language-selector", LanguageSelector);
+        this.app.component("global-error-handler", GlobalErrorHandler);
     }
 
     private inspect(object: any): void {
