@@ -3,49 +3,49 @@
         <v-dialog v-model="showForm" persistent max-width="480px">
             <v-card>
                 <v-container>
-                    <h1>{{ $t("title") }}</h1>
+                    <h1>{{ t("title") }}</h1>
                     <v-row v-if="tfaSettings.is2faEnabled">
                         <v-col text cols="12" class="text-center">
                             <h2 v-if="message != ''">{{ message }}</h2>
 
                             <div v-if="tfaSettings.recoveryCodesLeft == 0">
-                                <strong>{{ $t("recoveryCodes.noneLeft") }}</strong>
+                                <strong>{{ t("recoveryCodes.noneLeft") }}</strong>
                                 <p>
-                                    {{ $t("message.youMust") }}
+                                    {{ t("message.youMust") }}
                                     <a @click="showGenerateRecoveryCodesCard">
-                                        {{ $t("message.generateNewRecoveryCodes") }}
+                                        {{ t("message.generateNewRecoveryCodes") }}
                                     </a>
-                                    {{ $t("message.beforeYouLogin") }}
+                                    {{ t("message.beforeYouLogin") }}
                                 </p>
                             </div>
                             <div v-else-if="tfaSettings.recoveryCodesLeft == 1">
-                                <strong>{{ $t("recoveryCodes.oneLeft") }}</strong>
+                                <strong>{{ t("recoveryCodes.oneLeft") }}</strong>
                                 <p>
-                                    {{ $t("message.youCan") }}
+                                    {{ t("message.youCan") }}
                                     <a @click="showGenerateRecoveryCodesCard">
-                                        {{ $t("message.generateNewRecoveryCodes") }}
+                                        {{ t("message.generateNewRecoveryCodes") }}
                                     </a>
                                 </p>
                             </div>
                             <div v-else-if="tfaSettings.recoveryCodesLeft <= 3">
-                                <strong>{{ $t("recoveryCodes.threeOrLess") }}</strong>
+                                <strong>{{ t("recoveryCodes.threeOrLess") }}</strong>
                                 <p>
-                                    {{ $t("message.youShould") }}
+                                    {{ t("message.youShould") }}
                                     <a @click="showGenerateRecoveryCodesCard">
-                                        {{ $t("message.generateNewRecoveryCodes") }}
+                                        {{ t("message.generateNewRecoveryCodes") }}
                                     </a>
                                 </p>
                             </div>
                             <div v-if="tfaSettings.isMachineRemembered">
-                                <a @click="forgetBrowser">{{ $t("link.forgetBrowser") }}</a>
+                                <a @click="forgetBrowser">{{ t("link.forgetBrowser") }}</a>
                             </div>
 
                             <div v-if="tfaSettings.is2faEnabled">
-                                <a @click="clickShowDisableTFA">{{ $t("link.disableTfa") }}</a>
+                                <a @click="clickShowDisableTFA">{{ t("link.disableTfa") }}</a>
                             </div>
 
                             <div>
-                                <a @click="showGenerateRecoveryCodesCard">{{ $t("link.resetRecoveryCodes") }}</a>
+                                <a @click="showGenerateRecoveryCodesCard">{{ t("link.resetRecoveryCodes") }}</a>
                             </div>
                         </v-col>
                     </v-row>
@@ -55,19 +55,19 @@
                                 To set up two-factor authentication first you must configure the app.
                             </p>
                             <div class="v-card__actions">
-                                <v-btn @click="dashboard">{{ $t("button.cancel") }}</v-btn>
+                                <v-btn @click="dashboard">{{ t("button.cancel") }}</v-btn>
 
                                 <div>
                                     <div v-if="!tfaSettings.is2faEnabled">
                                         <v-btn color="primary" @click="showEnableAuthenticatorCard">
-                                            {{ $t("link.enableAuthenticator") }}
+                                            {{ t("link.enableAuthenticator") }}
                                         </v-btn>
                                     </div>
                                 </div>
 
                                 <div v-if="tfaSettings.hasAuthenticator && tfaSettings.is2faEnabled">
                                     <v-btn color="primary" @click="showResetAuthenticatorCard">
-                                        {{ $t("link.resetAuthenticator") }}
+                                        {{ t("link.resetAuthenticator") }}
                                     </v-btn>
                                 </div>
                             </div>
@@ -77,136 +77,125 @@
             </v-card>
         </v-dialog>
 
-        <disableTfa
+        <DisableTfa
             @showTwoFactorAuthentication="showTwoFactorAuthentication"
             @showEnableAuthenticatorCard="showEnableAuthenticatorCard"
             :showDisableTFA="showDisableTFA"
             v-if="showDisableTFA"
-        ></disableTfa>
+        ></DisableTfa>
 
-        <generateRecoveryCodes
+        <GenerateRecoveryCodes
             @showTwoFactorAuthentication="showTwoFactorAuthentication"
             @showRecoveryCodesCard="showRecoveryCodesCard"
             @showGenerateRecoveryCodesCard="showGenerateRecoveryCodesCard"
             @howEnableAuthenticatorCard="showEnableAuthenticatorCard"
             :showGenerateRecoveryCodes="showGenerateRecoveryCodes"
             v-if="showGenerateRecoveryCodes"
-        ></generateRecoveryCodes>
+        ></GenerateRecoveryCodes>
 
-        <recoveryCodes
+        <RecoveryCodes
             @showTwoFactorAuthentication="showTwoFactorAuthentication"
             @showGenerateRecoveryCodesCard="showGenerateRecoveryCodesCard"
             :showRecoveryCodes="showRecoveryCodes"
             v-if="showRecoveryCodes"
-        ></recoveryCodes>
+        ></RecoveryCodes>
 
-        <enableAuthenticator
+        <EnableAuthenticator
             @showTwoFactorAuthentication="showTwoFactorAuthentication"
             :showEnableAuthenticator="showEnableAuthenticator"
             v-if="showEnableAuthenticator"
-        ></enableAuthenticator>
+        ></EnableAuthenticator>
 
-        <resetAuthenticator
+        <ResetAuthenticator
             @showEnableAuthenticatorCard="showEnableAuthenticatorCard"
             @showTwoFactorAuthentication="showTwoFactorAuthentication"
             :showResetAuthenticator="showResetAuthenticator"
             v-if="showResetAuthenticator"
-        ></resetAuthenticator>
+        ></ResetAuthenticator>
     </div>
 </template>
 
-<script lang="ts">
-    import { Component, Vue } from "vue-property-decorator";
+<script setup lang="ts">
+    import { onMounted, ref } from "vue";
     import TFAApiClient from "@js/api/tfa/tfaApiClient";
     import dictionary from "@js/localizations/resources/components/tfa/twoFactorAuthentication";
-    import LoginTfaSettings from "@js/dataModels/tfa/loginTfaSettings";
-    import DisableTFA from "./disableTfa.vue";
+    import loginTfaSettings from "@js/dataModels/tfa/loginTfaSettings";
+    import DisableTfa from "./disableTfa.vue";
     import ResetAuthenticator from "./resetAuthenticator.vue";
-    import resetAuthenticator from "@js/localizations/resources/components/tfa/resetAuthenticator";
     import GenerateRecoveryCodes from "./generateRecoveryCodes.vue";
     import EnableAuthenticator from "./enableAuthenticator.vue";
     import ShowRecoveryCodes from "./showRecoveryCodes.vue";
+    import { useI18n } from "vue-i18n";
+    import { useRouter } from "vue-router";
 
-    @Component({
-        name: "twoFactorAuthentication",
-        components: {
-            disableTfa: DisableTFA,
-            resetAuthenticator: ResetAuthenticator,
-            generateRecoveryCodes: GenerateRecoveryCodes,
-            enableAuthenticator: EnableAuthenticator,
-            recoveryCodes: ShowRecoveryCodes
-        },
-        i18n: {
-            messages: dictionary
-        }
-    })
-    export default class TwoFactorAuthentication extends Vue {
-        showForm: boolean = true;
-        errorMsg: string = "";
-        message: string = "";
-        statusMessageError: boolean = false;
-        tfaSettings: LoginTfaSettings = new LoginTfaSettings();
-        tfaApiClient: TFAApiClient = new TFAApiClient();
-        showDisableTFA: boolean = false;
-        showResetAuthenticator: boolean = false;
-        showEnableAuthenticator: boolean = false;
-        showGenerateRecoveryCodes: boolean = false;
-        showRecoveryCodes: boolean = false;
+    const $router = useRouter();
+    const { t } = useI18n({
+        messages: dictionary
+    });
+    let showForm = ref(false);
+    let errorMsg: string = "";
+    let message: string = "";
+    let statusMessageError: boolean = false;
+    let tfaSettings: loginTfaSettings = new loginTfaSettings();
+    let tfaApiClient: TFAApiClient = new TFAApiClient();
+    let showDisableTFA = ref(false);
+    let showResetAuthenticator = ref(false);
+    let showEnableAuthenticator = ref(false);
+    let showGenerateRecoveryCodes = ref(false);
+    let showRecoveryCodes = ref(false);
 
-        constructor() {
-            super();
-        }
+    function showTwoFactorAuthentication() {
+        showForm.value = true;
+        showDisableTFA.value = false;
+        showEnableAuthenticator.value = false;
+        showResetAuthenticator.value = false;
+        showGenerateRecoveryCodes.value = false;
+        showRecoveryCodes.value = false;
+    }
 
-        showTwoFactorAuthentication(): void {
-            this.showForm = true;
-            this.showDisableTFA = false;
-            this.showEnableAuthenticator = false;
-            this.showResetAuthenticator = false;
-            this.showGenerateRecoveryCodes = false;
-            this.showRecoveryCodes = false;
-        }
+    function showRecoveryCodesCard(): void {
+        showRecoveryCodes.value = true;
+        showGenerateRecoveryCodes.value = false;
+        showForm.value = false;
+    }
 
-        showRecoveryCodesCard(): void {
-            this.showRecoveryCodes = true;
-            this.showGenerateRecoveryCodes = false;
-            this.showForm = false;
-        }
+    function showGenerateRecoveryCodesCard(): void {
+        showRecoveryCodes.value = false;
+        showGenerateRecoveryCodes.value = true;
+        showForm.value = false;
+    }
 
-        showGenerateRecoveryCodesCard(): void {
-            this.showRecoveryCodes = false;
-            this.showGenerateRecoveryCodes = true;
-            this.showForm = false;
-        }
+    function showEnableAuthenticatorCard(): void {
+        showEnableAuthenticator.value = true;
+        showForm.value = false;
+    }
 
-        showEnableAuthenticatorCard(): void {
-            this.showEnableAuthenticator = true;
-            this.showForm = false;
-        }
+    function showResetAuthenticatorCard(): void {
+        showResetAuthenticator.value = true;
+        showForm.value = false;
+    }
 
-        showResetAuthenticatorCard(): void {
-            this.showResetAuthenticator = true;
-            this.showForm = false;
-        }
+    function clickShowDisableTFA(): void {
+        showDisableTFA.value = true;
+        showForm.value = false;
+    }
 
-        clickShowDisableTFA(): void {
-            this.showDisableTFA = true;
-            this.showForm = false;
-        }
+    onMounted(async () => {
+        const data = await tfaApiClient.getTfaSettings();
 
-        async mounted(): Promise<void> {
-            const data = await this.tfaApiClient.getTfaSettings();
+        tfaSettings = data;
+        console.log(tfaSettings);
+        showForm.value = true;
+    });
 
-            this.tfaSettings = data;
-        }
+    async function forgetBrowser() {
+        const data = await tfaApiClient.forgetBrowser();
 
-        async forgetBrowser(): Promise<void> {
-            const data = await this.tfaApiClient.forgetBrowser();
+        message = data;
+        $router.go();
+    }
 
-            this.message = data;
-        }
-
-        dashboard(): void {
-            this.$router.push({ name: "Dashboard" });
-        }
+    function dashboard() {
+        $router.push({ name: "Dashboard" });
     }
 </script>
