@@ -3,10 +3,11 @@ import "@js/util/stringExtensions";
 
 //Global components
 //NOTE: Only add here if truly required globally, doing so inflates the bundle size
-import SessionTimeoutComponent from "@components/obComponents/sessionTimeout.vue";
+import SessionTimeoutComponent from "@components/util/sessionTimeout.vue";
 import UserContextSetter from "@components/obComponents/userContextSetter.vue";
 import GlobalErrorHandler from "@components/util/globalErrorHandler.vue";
 import ModalPopup from "@components/util/modalPopup.vue";
+
 //Language selector for VueI18n
 import LanguageSelector from "@components/obComponents/languageSelector.vue";
 import WebApiClient from "@js/api/webApiClient";
@@ -22,6 +23,7 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import colors from "vuetify/lib/util/colors";
+
 // import additional languages if needed
 import { en, es } from "vuetify/lib/locale";
 

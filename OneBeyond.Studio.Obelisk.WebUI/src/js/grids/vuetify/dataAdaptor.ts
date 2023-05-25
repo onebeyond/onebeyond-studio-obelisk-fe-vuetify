@@ -1,34 +1,30 @@
 import ObeliskApiClient from "@js/api/obeliskApiClient";
+import type {
+    Query,
+    OrderBy
+} from "@js/grids/vuetify/types";
 
 export class DataAdaptor extends ObeliskApiClient {
     private readonly errorCallback: Function;
 
     constructor(apiBaseUrl: string, errorCallback: Function) {
-        super(apiBaseUrl);
+        const apiUrl = `${ObeliskApiClient.WebApiRoot}${apiBaseUrl}`;
+        super(apiUrl);
         this.errorCallback = errorCallback;
     }
 
-    public async executeApi(pagination: any, search: any): Promise<any> {
+    public async executeApi(query: Query, search: string): Promise<any> {
         let filters: string[] = [];
 
-        // Search box
-        if (typeof search === "string" && search.length > 0) {
+        if (search) {
             filters.push(`search=${search}`);
-        } else {
-            // Column filter
-            const columnFilters = Object.keys(search)
-                .filter((key) => search[key])
-                .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(search[k])}`);
-
-            filters = filters.concat(columnFilters);
         }
 
-        // OrderBy/Limit/Page/etc.
-        const otherParams = Object.keys(pagination)
-            .filter((k) => pagination[k] != null) // clean-up null values, if any
-            .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(pagination[k])}`);
+        filters.push(`page=${query.page}`);
+        filters.push(`limit=${query.limit}`);
+        filters.push(this.constructSortQuery(query.orderBy));
 
-        const finalQuery = `?${otherParams.concat(filters).join("&")}`;
+        const finalQuery = `?${filters.join("&")}`;
 
         try {
             let response = await this.get(finalQuery);
@@ -38,5 +34,15 @@ export class DataAdaptor extends ObeliskApiClient {
                 this.errorCallback(e);
             }
         }
+    }
+
+    public constructSortQuery(columns: OrderBy[]): string {
+        let sortQuery = "orderBy=";
+
+        sortQuery += columns
+            .map((x) => `${x.key}:${x.order}`)
+            .join(",");
+
+        return sortQuery;
     }
 }

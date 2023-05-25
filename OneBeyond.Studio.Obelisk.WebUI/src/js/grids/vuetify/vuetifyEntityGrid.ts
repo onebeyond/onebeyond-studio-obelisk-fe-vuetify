@@ -1,64 +1,73 @@
 import { EntityGrid, EntityGridAction } from "../entityGrid";
 import { DataAdaptor } from "./dataAdaptor";
+import type {
+    CrudAction,
+    Command,
+    Column,
+    Query
+} from "@js/grids/vuetify/types";
 
-//This interface represents functionality of a vue-tables-2 ServerTable control we're using at the moment
-export interface VueGrid {
-    page: number;
-    refresh(): void;
-}
-
-//encapsulates all the logic related to the grid vue component we're currently using in the template (vue-server-grid)
+//encapsulates all the logic related to the grid vue component we're currently using in the template 
 export class VuetifyEntityGrid extends EntityGrid {
-    protected _instance: VueGrid | null; //This is an instance of the backing grid, e.g. vue server grid
-    public data: Array<any> = [];
+    protected _instance: any | null; //This is an instance of the backing grid, e.g. vue server grid
+    public data: any[] = [];
     public count: number = 0;
     public isLoading: boolean = false;
-    public currentPage: number = 1; //Currently selected page
     public currentOrderByField: string = "";
     public currentOrderByDescending: boolean = false;
-
-    private readonly _columns: object[] = []; //List of columns to be displayed
-    private _dataAdaptor: DataAdaptor | null;
-    private _previousPage: number = 1; // used to return to the correct grid page after an entity was added/edited/deleted
-
-    query = {
+    public commands: Command[] = [];
+    public hasGlobalSearchEnabled: boolean = false;
+    public query: Query = {
         limit: 10,
-        page: this.currentPage,
-        orderBy: "",
-        ascending: ""
+        page: 1,
+        orderBy: [],
     };
 
-    search: any;
+    public search: string = "";
 
-    constructor(columns: object[], isGlobalSearch: boolean) {
+    private readonly _columns: Column[] = []; 
+    private _dataAdaptor: DataAdaptor | null;
+    private _previousPage: number = 1; // used to return to the correct grid page after an entity was added/edited/deleted
+    private _hasActionColumn = false;
+    private refreshMethod: Function | null = null;
+
+    constructor() {
         super();
 
         this._instance = null; //Note, we set instance separately, when the vue component is mounted already;
         this._dataAdaptor = null;
-
-        this._columns = this._columns.concat(columns);
-        this._columns.push({ text: "", value: "actions" });
-
-        if (isGlobalSearch) {
-            this.search = {};
-        } else {
-            this.search = "";
-        }
     }
 
     public setInstance(instance: any): void {
         this._instance = instance;
     }
 
-    public get columns(): object[] {
-        return this._columns;
+    public get columns(): Column[] {
+        const columns = [...this._columns];
+
+        if (this._hasActionColumn) {
+            columns.push({ title: "", key:"actions", sortable: false });
+        }
+
+        return columns;
     }
 
-    public get instance(): VueGrid {
+    public get instance(): any {
         if (this._instance == null) {
             throw new Error("Grid instance is not set");
         }
         return this._instance;
+    }
+
+    public addColumn(column: Column): VuetifyEntityGrid {
+        this._columns.push(column);
+
+        return this;
+    }
+
+    public enableGlobalSearch(): VuetifyEntityGrid {
+        this.hasGlobalSearchEnabled = true;
+        return this;
     }
 
     public rememberCurrentPageBeforeGridAction(gridAction: EntityGridAction): void {
@@ -67,7 +76,7 @@ export class VuetifyEntityGrid extends EntityGrid {
                 this._previousPage = 1;
                 break;
             case EntityGridAction.EntityEdit:
-                this._previousPage = this.instance.page;
+                this._previousPage = this.query.page;
                 break;
             case EntityGridAction.EntityDelete:
                 this._previousPage = 1;
@@ -76,9 +85,11 @@ export class VuetifyEntityGrid extends EntityGrid {
     }
 
     public async restoreCurrentPage(): Promise<void> {
-        //this.currentPage = this._previousPage;
         this.query.page = this._previousPage;
-        await this.refresh();
+
+        if (this.refreshMethod) {
+            this.refreshMethod();
+        }
     }
 
     public initDataAdaptor(apiUrl: string, errorCallback: Function): void {
@@ -96,27 +107,49 @@ export class VuetifyEntityGrid extends EntityGrid {
         }
     }
 
-    public async changePage(): Promise<void> {
-        this.query.page = this.currentPage;
-        await this.refresh();
+    public setEditBehaviour(editAction: CrudAction): VuetifyEntityGrid {
+        this._hasActionColumn = true;
+
+        this.commands.push({
+            buttonIcon: "mdi-pencil",
+            buttonLabel: "Edit",
+            action: editAction,
+        });
+
+        return this;
     }
 
-    public async changePageItemCount(count: number): Promise<void> {
-        if (this.query.limit !== count) {
-            this.query.limit = count < 0 ? null : count; // Set to null when "All" option is selected
-            await this.refresh();
-        }
+    public setDeleteBehaviour(deleteAction: CrudAction): VuetifyEntityGrid {
+        this._hasActionColumn = true;
+
+        this.commands.push({
+            buttonIcon: "mdi-trash-can",
+            buttonLabel: "Delete",
+            action: deleteAction,
+        });
+
+        return this;
     }
 
-    public async changeOrderByField(column: string): Promise<void> {
-        this.currentOrderByField = column;
-        this.query.orderBy = column;
-        await this.refresh();
+    public setViewDetailsBehaviour(viewAction: CrudAction): VuetifyEntityGrid {
+        this._hasActionColumn = true;
+
+        this.commands.push({
+            buttonIcon: "mdi-eye",
+            buttonLabel: "View",
+            action: viewAction,
+        });
+
+        return this;
     }
 
-    public async changeOrderByDirection(sortDesc: boolean): Promise<void> {
-        this.currentOrderByDescending = sortDesc;
-        this.query.ascending = sortDesc ? "desc" : "";
-        await this.refresh();
+    public addCustomCommand(command: Command) {
+        this._hasActionColumn = true;
+
+        this.commands
+    }
+
+    public setRefreshMethod(refresh: Function) {
+        this.refreshMethod = refresh;
     }
 }

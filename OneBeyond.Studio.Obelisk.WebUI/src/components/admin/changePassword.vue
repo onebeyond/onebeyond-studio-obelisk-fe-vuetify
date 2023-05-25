@@ -2,39 +2,37 @@
     <div>
         <v-dialog v-model="showForm" persistent max-width="480px">
             <v-card>
-                <v-form>
+                <v-form v-model="formValid">
                     <v-container>
                         <v-row>
                             <v-col text cols="12">
-                                <h1>{{ $t("title") }}</h1>
+                                <h1>{{ t("title") }}</h1>
                                 <v-card-text>
-                                    <p>{{ $t("instructions") }}</p>
+                                    <p>{{ t("instructions") }}</p>
 
                                     <div v-if="passwordError">
                                         <v-alert type="error">
-                                            {{ $t("password.unknownError") }}
+                                            {{ t("password.unknownError") }}
                                         </v-alert>
                                     </div>
 
                                     <div v-if="passwordChanged">
-                                        <v-alert dense text type="success">
-                                            {{ $t("password.passwordChanged") }}
+                                        <v-alert dense type="success">
+                                            {{ t("password.passwordChanged") }}
                                         </v-alert>
                                     </div>
 
                                     <v-text-field
                                         v-model="oldPassword"
-                                        type="text"
+                                        type="password"
                                         hide-details="auto"
                                         dense
                                         outlined
                                         :disabled="passwordChanged"
                                         name="oldPassword"
-                                        v-validate="'required'"
-                                        :data-vv-as="$t('oldPassword')"
-                                        :label="$t('oldPassword')"
-                                        @input="passwordError = false"
-                                        :error-messages="errors.collect('oldPassword')"
+                                        :rules="[rules.password]"
+                                        :data-vv-as="t('oldPassword')"
+                                        :label="t('oldPassword')"
                                     >
                                     </v-text-field>
 
@@ -47,11 +45,9 @@
                                         outlined
                                         name="newPassword"
                                         :disabled="passwordChanged"
-                                        v-validate="'required|min:10|max:100'"
-                                        :data-vv-as="$t('newPassword')"
-                                        :label="$t('newPassword')"
-                                        @input="passwordError = false"
-                                        :error-messages="errors.collect('newPassword')"
+                                        :rules="[rules.password, rules.min, rules.max]"
+                                        :data-vv-as="t('newPassword')"
+                                        :label="t('newPassword')"
                                     >
                                     </v-text-field>
 
@@ -64,23 +60,21 @@
                                         outlined
                                         name="confirmPassword"
                                         :disabled="passwordChanged"
-                                        v-validate="{ passwordMatch: [newPassword, confirmPassword], required: true }"
-                                        :data-vv-as="$t('confirmPassword')"
-                                        :label="$t('confirmPassword')"
-                                        @input="passwordError = false"
-                                        :error-messages="errors.collect('confirmPassword')"
+                                        :rules="[rules.password, rules.passwordMatch]"
+                                        :data-vv-as="t('confirmPassword')"
+                                        :label="t('confirmPassword')"
                                     >
                                     </v-text-field>
                                 </v-card-text>
                                 <div class="v-card__actions">
                                     <v-btn v-if="passwordChanged" color="primary" @click="cancel">
-                                        {{ $t("button.close") }}
+                                        {{ t("button.close") }}
                                     </v-btn>
                                     <v-btn v-if="!passwordChanged" @click="cancel">
-                                        {{ $t("button.cancel") }}
+                                        {{ t("button.cancel") }}
                                     </v-btn>
-                                    <v-btn v-if="!passwordChanged" color="primary" @click="change">
-                                        {{ $t("button.change") }}
+                                    <v-btn v-if="!passwordChanged" :disabled="!formValid" color="primary" @click="change">
+                                        {{ t("button.change") }}
                                     </v-btn>
                                 </div>
                             </v-col>
@@ -92,73 +86,53 @@
     </div>
 </template>
 
-<script lang="ts">
-    import { Component, Vue } from "vue-property-decorator";
-    import textFieldGridSearch from "@components/util/vuetify/textFieldGridSearch.vue";
+<script setup lang="ts">
+    import { ref } from "vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
-    import changePassword from "@js/localizations/resources/components/changePassword";
+    import changePasswordDictionary from "@js/localizations/resources/components/changePassword";
     import { ChangePasswordRequest } from "@js/dataModels/auth/changePasswordRequest";
+    import { useI18n } from "vue-i18n";
+    import { useRouter } from "vue-router";
 
-    @Component({
-        name: "usersApp",
-        components: {
-            textFieldGridSearch
-        },
-        i18n: {
-            messages: changePassword
-        }
-    })
-    export default class ChangePassword extends Vue {
-        showForm: boolean = true;
+    const { t } = useI18n({
+        messages: changePasswordDictionary,
+    });
 
-        oldPassword: string = "";
-        newPassword: string = "";
-        confirmPassword: string = "";
-        errorMsg: string = "";
-        passwordChanged: boolean = false;
-        passwordError: boolean = false;
+    const router = useRouter();
 
-        passwordMatch = {
-            getMessage(field, args) {
-                if (args[0] != args[1]) {
-                    return `The passwords must match}`;
-                }
+    const showForm: boolean = true;
 
-                return "";
-            },
-            validate(value, args) {
-                return args[0] == args[1];
-            }
-        };
+    const oldPassword = ref("");
+    const newPassword = ref("");
+    const confirmPassword = ref("");
+    const passwordChanged = ref(false);
+    const passwordError = ref(false);
+    const formValid = ref(false);
 
-        authApiClient!: AuthApiClient = new AuthApiClient();
+    const rules = {
+        password: (value) => !!value || t("message.passwordRequired"),
+        passwordMatch: (value) => value === newPassword.value || t('message.passwordMatch'),
+        min: (value) => value.length >= 10 || t("message.passwordMin"),
+        max: (value) => value.length <= 100 || t("message.passwordMax"),
+    };
 
-        constructor() {
-            super();
-        }
+    const authApiClient: AuthApiClient = new AuthApiClient();
 
-        created(): void {
-            this.$validator.extend("passwordMatch", this.passwordMatch);
-        }
+    function cancel(): void {
+        router.go(-1);
+    }
 
-        cancel(): void {
-            this.$router.go(-1);
-        }
+    async function change(): Promise<void> {
+        if (formValid) {
+            var response = await authApiClient.changePassword(
+                new ChangePasswordRequest(oldPassword.value, newPassword.value)
+            );
 
-        async change(): Promise<void> {
-            const validationPassed = await this.$validator.validateAll();
-
-            if (validationPassed) {
-                var response = await this.authApiClient.changePassword(
-                    new ChangePasswordRequest(this.oldPassword, this.newPassword)
-                );
-
-                var changePasswordResult = await response.json();
-                if (!changePasswordResult.success) {
-                    this.passwordError = true;
-                } else {
-                    this.passwordChanged = true;
-                }
+            var changePasswordResult = await response.json();
+            if (!changePasswordResult.success) {
+                passwordError.value = true;
+            } else {
+                passwordChanged.value = true;
             }
         }
     }

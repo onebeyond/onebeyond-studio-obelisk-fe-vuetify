@@ -1,5 +1,11 @@
 export default {
     en: {
+        message: {
+            passwordMatch: "The passwords must match",
+            passwordMin: "Min 10 characters",
+            passwordMax: "Max 100 characters",
+            passwordRequired: "Required"
+        },
         oldPassword: "Old Password",
         newPassword: "New Password",
         confirmPassword: "Confirm Password",
