@@ -72,7 +72,15 @@ export default {
             yes: "Yes",
             no: "No",
             itemsInCollection: "items in collection",
-            noElementsFound: "No elements found"
+            noElementsFound: "No elements found",
+            fieldRequired: "Required",
+            maxCharacters: "Must be less than {max} characters",
+            maxNumbers: "Must be less than {max}",
+            minCharacters: "Must be {min} or more characters",
+            minNumbers: "Must be {min} or more",
+            email: "Invalid email format",
+            phone: "Phone number must start with '0' and be 10 or 11 digits long",
+            afterToday: "Must be today or after"
         },
         notifications: {
             successTitle: "Upload Successful",

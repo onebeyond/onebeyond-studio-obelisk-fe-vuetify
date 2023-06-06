@@ -47,7 +47,7 @@
                                         outlined
                                         :label="t('entityColumn.emailAddress')"
                                         name="email"
-                                        :rules="[rules.required]"
+                                        :rules="[rules.required, rules.email]"
                                     ></v-text-field>
                                 </v-col>
                             </v-row>
@@ -61,7 +61,7 @@
                                         outlined
                                         :label="t('entityColumn.userName')"
                                         name="userName"
-                                        :rules="[rules.required, rules.max]"
+                                        :rules="[rules.required, rules.max(entity.userName, 150)]"
                                     ></v-text-field>
                                 </v-col>
                             </v-row>
@@ -130,6 +130,7 @@
 
     import useEntityGridCrud from "@js/entityCrud/useEntityGridCrud";
     import useUserContext from "@js/composables/useUserContext";
+    import useRules from "@js/composables/useRules";
     import { computed, onBeforeMount, ref, reactive } from "vue";
     import { useI18n } from "vue-i18n";
     import useAlert from "@js/composables/useAlert";
@@ -168,18 +169,7 @@
 
     const entityGrid = reactive(tGrid) as VuetifyEntityGrid;
 
-    // TODO: ensure all rules converted to vuetify rules
-    // const rules = {
-    //     email: { required, email },
-    //     userName: { required, max: 150 },
-    //     roleId: { required }
-    // };
-
-    const rules = {
-        required: (value) => !!value || t("message.fieldRequired"),
-        max: (value) => value.length <= 150 || t("message.userNameMax"),
-    };
-    
+    const rules = useRules();
 
     onBeforeMount(() => {
         entityGrid.initDataAdaptor(provideApiUrl(), onError);
@@ -206,9 +196,7 @@
         const entityGrid = new VuetifyEntityGrid();
 
         entityGrid
-            // TODO: check what these methods do and add them if required.
-            //.setInitialSorting("userName", "ascending")
-            //.setInitialFilters()
+            .setInitialSorting("userName", "asc")
             .setEditBehaviour(onEditButtonClicked)
             .addColumn({ title: t("entityColumn.emailAddress"), sortable: true, key: "email" })
             .addColumn({ title: t("entityColumn.userName"), sortable: true, key: "userName" })

@@ -143,6 +143,15 @@ export class VuetifyEntityGrid extends EntityGrid {
         return this;
     }
 
+    public setInitialSorting(key: string, direction: "asc" | "desc"): VuetifyEntityGrid {
+        this.query.orderBy.push({
+            key: key,
+            order: direction
+        })
+
+        return this;
+    }
+
     public addCustomCommand(command: Command) {
         this._hasActionColumn = true;
 
