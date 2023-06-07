@@ -126,6 +126,7 @@ export default class AppConfiguration {
             dark: false,
             colors: {
                 background: "#AAAAAA",
+                "on-background": "#000",
                 surface: "#FFFFFF",
                 primary: colors.green.darken3,
                 "primary-darken-1": "#3700B3",
