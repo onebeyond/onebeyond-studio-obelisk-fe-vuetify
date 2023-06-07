@@ -1,18 +1,18 @@
 <template>
     <div>
-        <v-dialog persistent max-width="480px">
+        <v-dialog v-model="showForm" persistent max-width="480px">
             <v-card>
                 <v-form>
                     <v-container>
                         <v-row>
                             <v-col text cols="12">
-                                <h1>{{ $t("title") }}</h1>
+                                <h1>{{ t("title") }}</h1>
 
-                                <p>{{ $t("instructions") }}.</p>
+                                <p>{{ t("instructions") }}.</p>
 
                                 <div class="v-card__actions">
                                     <v-btn id="submit-btn" color="primary" @click="cancel">
-                                        {{ $t("password.backToLogin") }}
+                                        {{ t("password.backToLogin") }}
                                     </v-btn>
                                 </div>
                             </v-col>
@@ -24,30 +24,19 @@
     </div>
 </template>
 
-<script lang="ts">
-    import { Component, Vue } from "vue-property-decorator";
-    import textFieldGridSearch from "@components/util/vuetify/textFieldGridSearch.vue";
-    import AuthApiClient from "@js/api/auth/authApiClient";
+<script setup lang="ts">
     import forgotPasswordConfirm from "@js/localizations/resources/components/forgotPasswordConfirm";
+    import { useI18n } from "vue-i18n";
+    import { useRouter } from "vue-router";
 
-    @Component({
-        name: "forgotPasswordConfirmed",
-        components: {
-            textFieldGridSearch
-        },
-        i18n: {
-            messages: forgotPasswordConfirm
-        }
-    })
-    export default class ForgotPasswordConfirmed extends Vue {
-        constructor() {
-            super();
-        }
+    const $router = useRouter();
+    const showForm = true;
 
-        created(): void {}
+    const { t } = useI18n({
+        messages: forgotPasswordConfirm
+    });
 
-        cancel(): void {
-            this.$router.push({ name: "SignIn" });
-        }
+    async function cancel() {
+        await $router.push({ name: "SignIn" });
     }
 </script>

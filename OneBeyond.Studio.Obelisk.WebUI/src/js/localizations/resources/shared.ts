@@ -80,7 +80,11 @@ export default {
             minNumbers: "Must be {min} or more",
             email: "Invalid email format",
             phone: "Phone number must start with '0' and be 10 or 11 digits long",
-            afterToday: "Must be today or after"
+            afterToday: "Must be today or after",
+            alphaDash: "Must only contain alphabetic characters, numbers, dashes or underscores.",
+            lengthCharacters: "Must be {length} characters long",
+            lengthNumbers: "Must be {length} digits long",   
+            numeric: "Must be numeric",        
         },
         notifications: {
             successTitle: "Upload Successful",

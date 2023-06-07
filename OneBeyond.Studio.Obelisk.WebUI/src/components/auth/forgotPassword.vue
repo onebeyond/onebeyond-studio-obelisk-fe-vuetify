@@ -2,40 +2,44 @@
     <div>
         <v-dialog v-model="showForm" persistent max-width="480px">
             <v-card>
-                <v-form>
+                <v-form v-model="isFormValid">
                     <v-container>
                         <v-row>
                             <v-col text cols="12">
-                                <h1>{{ $t("title") }}?</h1>
+                                <h1>{{ t("title") }}?</h1>
 
                                 <v-card-text>
-                                    <p>{{ $t("instructions") }}.</p>
+                                    <p>{{ t("instructions") }}.</p>
 
                                     <div v-if="passwordError">
                                         <v-alert type="error">
-                                            {{ $t("password.unknownError") }}
+                                            {{ t("password.unknownError") }}
                                         </v-alert>
                                     </div>
 
                                     <v-text-field
-                                        v-model="email"
+                                        v-model="emailInput"
                                         type="text"
                                         hide-details="auto"
                                         dense
                                         outlined
                                         name="email"
-                                        v-validate="'required|email'"
-                                        :data-vv-as="$t('password.email')"
-                                        :label="$t('password.email')"
+                                        :data-vv-as="t('password.email')"
+                                        :label="t('password.email')"
                                         @input="passwordError = false"
-                                        :error-messages="errors.collect('email')"
+                                        :rules="[rules.required, rules.email]"
                                     >
                                     </v-text-field>
                                 </v-card-text>
                                 <div class="v-card__actions">
-                                    <v-btn id="submit-btn" @click="cancel">{{ $t("button.cancel") }}</v-btn>
-                                    <v-btn id="submit-btn" color="primary" @click="sendResetPassword">
-                                        {{ $t("resetButton") }}
+                                    <v-btn id="submit-btn" @click="cancel">{{ t("button.cancel") }}</v-btn>
+                                    <v-btn 
+                                        id="submit-btn"
+                                         color="primary" 
+                                         @click="sendResetPassword"                             
+                                        :disabled="!isFormValid"
+                                    >
+                                        {{ t("resetButton") }}
                                     </v-btn>
                                 </div>
                             </v-col>
@@ -47,50 +51,37 @@
     </div>
 </template>
 
-<script lang="ts">
-    import { Component, Vue } from "vue-property-decorator";
-    import textFieldGridSearch from "@components/util/vuetify/textFieldGridSearch.vue";
+<script setup lang="ts">
+    import { ref } from "vue"; 
     import AuthApiClient from "@js/api/auth/authApiClient";
     import forgotPassword from "@js/localizations/resources/components/forgotPassword";
+    import { useI18n } from "vue-i18n";
+    import { useRouter } from "vue-router";
+    import useRules from "@js/composables/useRules"
 
-    @Component({
-        name: "forgotPassword",
-        components: {
-            textFieldGridSearch
-        },
-        i18n: {
-            messages: forgotPassword
+    const $router = useRouter();
+    const rules = useRules();
+
+    const { t } = useI18n({
+        messages: forgotPassword
+    });
+
+    const emailInput = ref("");
+    let showForm: boolean = true;
+    let passwordError = ref(false);
+    let authApiClient: AuthApiClient = new AuthApiClient();
+    const isFormValid = ref(false);
+
+    async function  sendResetPassword() {
+        try {
+            await authApiClient.forgotPassword(emailInput.value);
+            await $router.push({ name: "forgotPasswordConfirm" });
+        } catch {
+            passwordError.value = true;
         }
-    })
-    export default class ForgotPassword extends Vue {
-        showForm: boolean = true;
+    };
 
-        email: string = "";
-        passwordError: boolean = false;
-
-        authApiClient!: AuthApiClient = new AuthApiClient();
-
-        constructor() {
-            super();
-        }
-
-        created(): void {}
-
-        async sendResetPassword(): Promise<void> {
-            const validationPassed = await this.$validator.validateAll();
-
-            if (validationPassed) {
-                try {
-                    await this.authApiClient.forgotPassword(this.email, window.location.origin + "/auth/resetPassword");
-                    this.$router.push({ name: "forgotPasswordConfirm" });
-                } catch {
-                    this.passwordError = true;
-                }
-            }
-        }
-
-        cancel(): void {
-            this.$router.push({ name: "SignIn" });
-        }
+    async function cancel() {
+        await $router.push({ name: "SignIn" });
     }
 </script>

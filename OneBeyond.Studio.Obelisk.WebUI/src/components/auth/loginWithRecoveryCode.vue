@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="360px">
         <v-card>
-            <v-form @submit.prevent="signIn" ref="form">
+            <v-form v-model="isFormValid" ref="form">
                 <v-container>
                     <v-row>
                         <v-col cols="12">
@@ -10,18 +10,30 @@
                                 height="60"
                                 class="mx-auto d-block logo"
                             />
-                            <h3 class="text-center">{{ $t("title") }}</h3>
+                            <h3 class="text-center">{{ t("title") }}</h3>
                             <hr />
-                            <p class="text-center mb-4">{{ $t("message.recoveryInfo") }}</p>
+                            <p class="text-center mb-4">{{ t("message.recoveryInfo") }}</p>
 
                             <div>
-                                <label>{{ $t("field.recoveryCode") }}</label>
-                                <v-text-field dense outlined v-model="code" :rules="[rules.code]"></v-text-field>
+                                <label>{{ t("field.recoveryCode") }}</label>
+                                <v-text-field 
+                                    dense 
+                                    outlined 
+                                    v-model="code" 
+                                    :rules="[rules.required, rules.length(code, 11), rules.alphaDash]"
+                                >
+                                </v-text-field>
                             </div>
 
                             <div class="v-card__actions">
-                                <v-btn id="submit-btn" color="primary" type="submit" :disabled="signingIn">{{
-                                    $t("button.signIn")
+                                <v-btn 
+                                    id="submit-btn" 
+                                    color="primary" 
+                                    type="submit" 
+                                    :disabled="signingIn || !isFormValid"
+                                    @click="signIn"
+                                >{{
+                                    t("button.signIn")
                                 }}</v-btn>
                             </div>
 
@@ -38,71 +50,53 @@
     </v-dialog>
 </template>
 
-<script lang="ts">
-    import { Component, Vue } from "vue-property-decorator";
+<script setup lang="ts">
+    import { ref } from "vue";
     import dictionary from "@js/localizations/resources/components/loginWithRecoveryCode";
     import { SignInStatus } from "@js/dataModels/auth/signInStatus";
-    import { SignInWithRecoveryCodeResult } from "@js/dataModels/auth/signInResultWithRecoveryCode";
+    import type { SignInWithRecoveryCodeResult } from "@js/dataModels/auth/signInResultWithRecoveryCode";
     import AuthApiClient from "@js/api/auth/authApiClient";
     import { SignInWithRecoveryCode } from "@js/dataModels/auth/signInWithRecoveryCode";
     import LocalSessionStorage from "@js/stores/localSessionStorage";
+    import { useI18n } from "vue-i18n";
+    import useRules from "@js/composables/useRules";
 
-    @Component({
-        name: "loginWithRecoveryCode",
-        i18n: {
-            messages: dictionary
-        }
-    })
-    export default class LoginWithRecoveryCode extends Vue {
-        public signingIn: boolean = false;
-        public dialog: boolean = true;
-        code: string = "";
-        public errorMsg: string = "";
+    const { t } = useI18n({
+        messages: dictionary
+    });
 
-        private authApiClient: AuthApiClient;
+    const rules = useRules();
 
-        rules: object = {
-            code: (value) => !!value || this.$t("message.codeRequired")
-        };
+    const dialog = true;
+    const signingIn = ref(false);
+    const code = ref("");
+    const errorMsg = ref("");
+    const isFormValid = ref(false);
 
-        constructor() {
-            super();
-            this.authApiClient = new AuthApiClient();
-        }
+    let authApiClient: AuthApiClient = new AuthApiClient();
 
-        showDialog(): void {
-            this.dialog = true;
-        }
+    async function signIn(): Promise<void> {
+        signingIn.value = true;
 
-        async signIn(): Promise<void> {
-            if !(this.$refs.form.validate()) {
-                return;
+        errorMsg.value = "";
+        const defaultError: string = "An error occured while trying to log you in.";
+
+        const userCredentials = new SignInWithRecoveryCode(code.value);
+
+        try {
+            const data: SignInWithRecoveryCodeResult = await authApiClient.basicSignInWithRecoveryCode(userCredentials);
+
+            if (data.status === SignInStatus.Success) {
+                LocalSessionStorage.setUserAuthenticated(true);
+                window.location.href = `${(window as any).location.origin}/admin/`;
+            } else {
+                errorMsg.value = defaultError;
             }
-
-            this.signingIn = true;
-
-            this.errorMsg = "";
-            const defaultError: string = "An error occured while trying to log you in.";
-
-            const userCredentials = new SignInWithRecoveryCode(this.code);
-
-            try {
-                const data: SignInWithRecoveryCodeResult = await this.authApiClient.basicSignInWithRecoveryCode(
-                    userCredentials
-                );
-
-                console.log(data.status);
-                if (data.status === SignInStatus.Success) {
-                    LocalSessionStorage.setUserAuthenticated(true);
-                    window.location.href = `${(window as any).location.origin}/admin/`;
-                } else {
-                    this.errorMsg = defaultError;
-                }
-            } catch {
-                this.errorMsg = defaultError;
-            } finally {
-                this.signingIn = false;
-            }
+        } catch {
+            console.log("** ERROR **");
+            errorMsg.value = defaultError;
+        } finally {
+            signingIn.value = false;
         }
-    }
+    };
 </script>
