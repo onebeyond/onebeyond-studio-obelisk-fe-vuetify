@@ -368,3 +368,8 @@ FodyWeavers.xsd
 **/*.WebUI/cert.crt
 **/*.WebUI/cert.key
 **/*.WebUI/ca.key
+src/dist
+src/ca.crt
+src/ca.key
+src/cert.crt
+src/cert.key
