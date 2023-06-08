@@ -5,7 +5,7 @@
                 <v-container>
                     <v-row>
                         <v-col text cols="12">
-                            <div class="text-center"">
+                            <div class="text-center">
                                 <h1>{{ $t("title") }}</h1>
 
                                 <v-alert dense outlined type="warning">
