@@ -36,7 +36,7 @@
                 <v-container>
                     <h1>{{ t("message.addEditUserTitle") }}</h1>
                     <v-card-text>
-                        <v-form v-model="isFormValid">
+                        <v-form ref="formRef">
                             <v-row>
                                 <v-col class="pb-0" cols="12">
                                     <v-text-field
@@ -107,8 +107,7 @@
                             id="confirmSaveBtn"
                             color="primary"
                             :loading="isSaving"
-                            @click="saveEntity"
-                            :disabled="!isFormValid"
+                            @click="onSubmit"
                         >{{ t("button.save") }}</v-btn>
                     </v-card-actions>
                 </v-container>
@@ -138,12 +137,12 @@
     import userDictionary from "@js/localizations/resources/components/users";
     import ObVuetifyGrid from "@components/obComponents/grids/obVuetifyGrid.vue";
     import { EntityUpdateUsingModalAndGrid, type ConstructorParams } from "@js/entityCrud/entityUpdateStrategy";
+    import { VForm } from "vuetify/components";
 
     const entityApiClient = new UserApiClient();
 
     const entityGridRef = ref(null);
-
-    const isFormValid = ref(false);
+    const formRef = ref<VForm | null>(null);
 
     const { t } = useI18n({
         messages: userDictionary
@@ -208,6 +207,14 @@
     }
 
     const isMe = computed(() => entity.value.id == myId.value);
+
+    async function onSubmit() {
+        const { valid } = await formRef.value!.validate();
+
+        if (valid){
+            saveEntity();
+        }
+    };
 
     async function resetPassword(): Promise<void> {
         try {
