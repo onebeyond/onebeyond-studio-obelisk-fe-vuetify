@@ -20,11 +20,11 @@
             <v-card-text>
                 <ObVuetifyGrid ref="entityGridRef" :entityGrid="entityGrid">
                     <template #item.isActive="props">
-                        <v-checkbox v-model="props.item.isActive" disabled></v-checkbox>
+                        <v-checkbox v-model="props.item.raw.isActive" disabled></v-checkbox>
                     </template>
 
                     <template #item.isLockedOut="props">
-                        <v-checkbox v-model="props.item.isLockedOut" disabled></v-checkbox>
+                        <v-checkbox v-model="props.item.raw.isLockedOut" disabled></v-checkbox>
                     </template>
                 </ObVuetifyGrid>
             </v-card-text>
