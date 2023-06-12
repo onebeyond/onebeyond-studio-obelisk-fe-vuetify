@@ -115,7 +115,7 @@
         </v-dialog>
 
         <!--alert modal-->
-        <v-modalPopup :namespace="'alertModal'" v-model:visible="alertVisible" @close="hideAlert" />
+        <v-modalPopup :namespace="'alertModal'" v-model:visible="alertVisible" />
     </div>
 </template>
 
@@ -153,7 +153,6 @@
         showEntity,
         onError,
         alertVisible,
-        hideAlert,
         isSaving,
         saveEntity,
         closeEntityModal,

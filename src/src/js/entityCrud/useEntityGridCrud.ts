@@ -41,7 +41,6 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         deleteEntity,
         onError,
         alertVisible,
-        hideAlert,
         isMobile
     } = useEntityCrud(
         provideEntityBuilder,
@@ -126,7 +125,6 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         deleteEntity,
         onError,
         alertVisible,
-        hideAlert,
         isMobile
     };
 }

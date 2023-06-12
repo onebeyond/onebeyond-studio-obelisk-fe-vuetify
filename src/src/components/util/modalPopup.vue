@@ -54,7 +54,7 @@
     const innerTitle = ref(title.value);
     const innerMessage = ref(message.value);
 
-    const emit = defineEmits(["close"]);
+    const emit = defineEmits(["update:visible"]);
 
     const { t } = useI18n();
 
@@ -65,7 +65,7 @@
     });
 
     function onCloseClicked(): void {
-        emit("close", false);
+        emit("update:visible", false);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
