@@ -115,7 +115,7 @@
         </v-dialog>
 
         <!--alert modal-->
-        <v-modalPopup :namespace="'alertModal'" :visible="alertVisible" @close="hideAlert" />
+        <v-modalPopup :namespace="'alertModal'" v-model:visible="alertVisible" @close="hideAlert" />
     </div>
 </template>
 
@@ -132,7 +132,6 @@
     import useRules from "@js/composables/useRules";
     import { computed, onBeforeMount, ref, reactive } from "vue";
     import { useI18n } from "vue-i18n";
-    import useAlert from "@js/composables/useAlert";
     import { VuetifyEntityGrid } from "@js/grids/vuetify/vuetifyEntityGrid";
     import userDictionary from "@js/localizations/resources/components/users";
     import ObVuetifyGrid from "@components/obComponents/grids/obVuetifyGrid.vue";
@@ -153,6 +152,8 @@
         tGrid,
         showEntity,
         onError,
+        alertVisible,
+        hideAlert,
         isSaving,
         saveEntity,
         closeEntityModal,
@@ -174,7 +175,6 @@
         entityGrid.initDataAdaptor(provideApiUrl(), onError);
     });
 
-    const { alertVisible, hideAlert } = useAlert();
     const { isAdmin, myId } = useUserContext();
     const roles = UserRole.AllRoles;
 
@@ -212,7 +212,7 @@
         const { valid } = await formRef.value!.validate();
 
         if (valid){
-            saveEntity();
+            await saveEntity();
         }
     };
 

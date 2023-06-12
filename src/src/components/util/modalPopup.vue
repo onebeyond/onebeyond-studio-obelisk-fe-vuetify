@@ -2,30 +2,27 @@
     <div v-if="visible">
         <v-dialog v-model="visible" persistent max-width="480px">
             <v-card>
-                <!-- See globalErrorHandler.vue for an example of slot usage -->
                 <slot name="header">
-                    <v-card-title color="primary">{{ title }}</v-card-title>
+                    <v-card-title color="primary">{{ innerTitle }}</v-card-title>
                 </slot>
                 <v-form>
-                    <!-- See globalErrorHandler.vue for an example of slot usage -->
                     <slot name="content">
-                        <v-card-text>{{ message }}</v-card-text>
+                        <v-card-text>{{ innerMessage }}</v-card-text>
                     </slot>
                 </v-form>
+                <v-card-actions class="text-right">
+                    <v-spacer></v-spacer>
+                    <slot name="footer">
+                        <v-btn @click="onCloseClicked">{{ t("button.close") }}</v-btn>
+                    </slot>
+                </v-card-actions>
             </v-card>
-            <v-card-actions class="text-right">
-                <v-spacer></v-spacer>
-                <!-- See globalErrorHandler.vue for an example of slot usage -->
-                <slot name="footer">
-                    <v-btn @click="onCloseClicked">{{ t("button.close") }}</v-btn>
-                </slot>
-            </v-card-actions>
         </v-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { toRef, onMounted } from "vue";
+    import { ref, toRef, onMounted } from "vue";
     import { global } from "@js/util/globalProperties";
     import { useI18n } from "vue-i18n";
 
@@ -54,6 +51,9 @@
     const visible = toRef(props, "visible");
     const namespace = toRef(props, "namespace");
 
+    const innerTitle = ref(title.value);
+    const innerMessage = ref(message.value);
+
     const emit = defineEmits(["close"]);
 
     const { t } = useI18n();
@@ -70,7 +70,7 @@
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function setData(newTitle: string, newMessage: string): void {
-        title.value = newTitle;
-        message.value = newMessage;
+        innerTitle.value = newTitle;
+        innerMessage.value = newMessage;
     }
 </script>

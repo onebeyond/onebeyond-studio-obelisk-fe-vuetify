@@ -17,7 +17,7 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
     entityUpdateStrategyBuilder: (params: ConstructorParams<TEntity, T>) => EntityUpdateStrategy<TEntity, T>,
     overridableFunctions?: OverridableFunctions<T>
 ) {
-    const { showAlert } = useErrorPopup();
+    const { showAlert, alertVisible, hideAlert } = useErrorPopup();
 
     const entity = ref(new provideEntityBuilder()); //An entity being added/edited
 
@@ -190,6 +190,8 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         saveEntity,
         deleteEntity,
         onError,
+        alertVisible,
+        hideAlert,
         isMobile
     };
 }
