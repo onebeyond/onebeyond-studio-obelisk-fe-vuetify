@@ -1,0 +1,31 @@
+@import "_variables.scss";
+
+body .v-menu__content {
+    transform: translateY(10px);
+
+    .v-list-item {
+        min-height: 40px;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid #eee;
+        margin: 6px 16px;
+    }
+
+    a {
+        color: $greyDark;
+    }
+}
+
+.v-application--is-ltr {
+    .v-list-item__action:last-of-type:not(:only-child),
+    .v-list-item__avatar:last-of-type:not(:only-child),
+    .v-list-item__icon:last-of-type:not(:only-child) {
+        margin-left: 6px;
+    }
+
+    .v-list-item__action:first-child, .v-list-item__icon:first-child {
+        margin-right: 18px;
+    }
+}

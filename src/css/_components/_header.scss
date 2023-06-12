@@ -1,0 +1,63 @@
+@import "_variables.scss";
+
+header {
+    .v-toolbar__content {
+        padding: 4px 30px;
+
+        #headerLogo {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        #topNav,
+        #userActions {
+            display: none;
+        }
+        // Show top nav/user actions and hide burger menu
+        @media (min-width: 991px) {
+            #topNav {
+                display: flex;
+                margin: 0 15px;
+
+                a {
+                    color: white;
+                    text-decoration: none;
+                    margin: 0 12px;
+                    padding: 2px 0;
+
+                    &:hover,
+                    &.router-link-exact-active {
+                        border-bottom: 2px solid white;
+                    }
+                }
+            }
+
+            .v-app-bar-nav-icon {
+                display: none;
+            }
+
+            #userActions {
+                display: block;
+
+                .v-icon.v-icon {
+                    font-size: 30px;
+                }
+
+                a {
+                    color: white;
+                    text-decoration: none;
+                    margin: 0 7px;
+                    padding: 2px 0;
+
+                    &:hover {
+                        border-bottom: 2px solid white;
+                    }
+                }
+
+                .v-app-bar__nav-icon {
+                    display: none;
+                }
+            }
+        }
+    }
+}
