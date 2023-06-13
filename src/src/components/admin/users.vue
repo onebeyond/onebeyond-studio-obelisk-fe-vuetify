@@ -31,88 +31,85 @@
         </v-card>
 
         <!--add/edit modal-->
-        <v-dialog v-model="showEntity" persistent max-width="550px">
-            <v-card>
-                <v-container>
-                    <h1>{{ t("message.addEditUserTitle") }}</h1>
-                    <v-card-text>
-                        <v-form ref="formRef">
-                            <v-row>
-                                <v-col class="pb-0" cols="12">
-                                    <v-text-field
-                                        v-model="entity.email"
-                                        clearable
-                                        class="pt-1"
-                                        dense
-                                        outlined
-                                        :label="t('entityColumn.emailAddress')"
-                                        name="email"
-                                        :rules="[rules.required, rules.email]"
-                                    ></v-text-field>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col class="pt-0 pb-0" cols="12">
-                                    <v-text-field
-                                        v-model="entity.userName"
-                                        clearable
-                                        class="pt-1"
-                                        dense
-                                        outlined
-                                        :label="t('entityColumn.userName')"
-                                        name="userName"
-                                        :rules="[rules.required, rules.max(entity.userName, 150)]"
-                                    ></v-text-field>
-                                </v-col>
-                            </v-row>
-                            <v-row v-show="!isMe">
-                                <v-col class="pt-0 pb-0" cols="12">
-                                    <v-select
-                                        v-model="entity.roleId"
-                                        outlined
-                                        dense
-                                        :items="roles"
-                                        name="roleId"
-                                        :label="t('entityColumn.roleId')"
-                                        :rules="[rules.required]"
-                                    ></v-select>
-                                </v-col>
-                            </v-row>
-                            <v-row v-show="isMe">
-                                <v-col class="pt-0 pb-0" cols="12">
-                                    <v-checkbox
-                                        class="mt-0"
-                                        v-model="entity.isActive"
-                                        :label="t('entityColumn.isActive')"
-                                    ></v-checkbox>
-                                </v-col>
-                            </v-row>
-                        </v-form>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn id="closePopupBtn" @click="closeEntityModal">{{ t("button.close") }}</v-btn>
-                        <v-btn
-                            id="unlockBtn"
-                            color="success"
-                            v-if="!entity.isNew && entity.isLockedOut"
-                            @click="unlock"
-                        >{{ t("button.unlock") }}</v-btn>
-                        <v-btn
-                            v-if="!entity.isNew"
-                            color="blue"
-                            id="resetPasswordBtn"
-                            @click="resetPassword"
-                        >{{ t("button.resetPassword") }}</v-btn>
-                        <v-btn
-                            id="confirmSaveBtn"
-                            color="primary"
-                            :loading="isSaving"
-                            @click="onSubmit"
-                        >{{ t("button.save") }}</v-btn>
-                    </v-card-actions>
-                </v-container>
-            </v-card>
-        </v-dialog>
+        <v-modalPopup v-model:visible="showEntity" :title="t('message.addEditUserTitle')" >
+            <template #content>
+                <v-card-text>
+                    <v-form ref="formRef">
+                        <v-row>
+                            <v-col class="pb-0" cols="12">
+                                <v-text-field
+                                    v-model="entity.email"
+                                    clearable
+                                    class="pt-1"
+                                    dense
+                                    outlined
+                                    :label="t('entityColumn.emailAddress')"
+                                    name="email"
+                                    :rules="[rules.required, rules.email]"
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col class="pt-0 pb-0" cols="12">
+                                <v-text-field
+                                    v-model="entity.userName"
+                                    clearable
+                                    class="pt-1"
+                                    dense
+                                    outlined
+                                    :label="t('entityColumn.userName')"
+                                    name="userName"
+                                    :rules="[rules.required, rules.max(entity.userName, 150)]"
+                                ></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row v-show="!isMe">
+                            <v-col class="pt-0 pb-0" cols="12">
+                                <v-select
+                                    v-model="entity.roleId"
+                                    outlined
+                                    dense
+                                    :items="roles"
+                                    name="roleId"
+                                    :label="t('entityColumn.roleId')"
+                                    :rules="[rules.required]"
+                                ></v-select>
+                            </v-col>
+                        </v-row>
+                        <v-row v-show="isMe">
+                            <v-col class="pt-0 pb-0" cols="12">
+                                <v-checkbox
+                                    class="mt-0"
+                                    v-model="entity.isActive"
+                                    :label="t('entityColumn.isActive')"
+                                ></v-checkbox>
+                            </v-col>
+                        </v-row>
+                    </v-form>
+                </v-card-text>
+            </template>
+            <template #footer>
+                <v-btn id="closePopupBtn" @click="closeEntityModal">{{ t("button.close") }}</v-btn>
+                <v-btn
+                    id="unlockBtn"
+                    color="success"
+                    v-if="!entity.isNew && entity.isLockedOut"
+                    @click="unlock"
+                >{{ t("button.unlock") }}</v-btn>
+                <v-btn
+                    v-if="!entity.isNew"
+                    color="blue"
+                    id="resetPasswordBtn"
+                    @click="resetPassword"
+                >{{ t("button.resetPassword") }}</v-btn>
+                <v-btn
+                    id="confirmSaveBtn"
+                    color="primary"
+                    :loading="isSaving"
+                    @click="onSubmit"
+                >{{ t("button.save") }}</v-btn>
+            </template>
+        </v-modalPopup>
 
         <!--alert modal-->
         <v-modalPopup :namespace="'alertModal'" v-model:visible="alertVisible" />
