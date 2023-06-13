@@ -92,7 +92,6 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
 
     function onEntityUpdated(): void {
         //This event handler will be called after an entity (a new or an existing one) is sucessfully saved on server.
-        entity.value = new provideEntityBuilder();
         showEntity.value = false;
         isEditingEntityInline.value = false;
 
