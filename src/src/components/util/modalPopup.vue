@@ -1,15 +1,15 @@
 <template>
     <div v-if="visible">
-        <v-dialog v-model="visible" persistent max-width="480px">
+        <v-dialog v-model="visible" persistent max-width="500px">
             <v-card>
                 <slot name="header">
-                    <v-card-title color="primary">{{ innerTitle }}</v-card-title>
+                    <v-card-item>
+                        <v-card-title color="primary">{{ innerTitle }}</v-card-title>
+                    </v-card-item>
                 </slot>
-                <v-form>
-                    <slot name="content">
-                        <v-card-text>{{ innerMessage }}</v-card-text>
-                    </slot>
-                </v-form>
+                <slot name="content">
+                    <v-card-text>{{ innerMessage }}</v-card-text>
+                </slot>
                 <v-card-actions class="text-right">
                     <v-spacer></v-spacer>
                     <slot name="footer">
