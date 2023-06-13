@@ -35,56 +35,42 @@
             <template #content>
                 <v-card-text>
                     <v-form ref="formRef">
-                        <v-row>
-                            <v-col class="pb-0" cols="12">
-                                <v-text-field
-                                    v-model="entity.email"
-                                    clearable
-                                    class="pt-1"
-                                    dense
-                                    outlined
-                                    :label="t('entityColumn.emailAddress')"
-                                    name="email"
-                                    :rules="[rules.required, rules.email]"
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col class="pt-0 pb-0" cols="12">
-                                <v-text-field
-                                    v-model="entity.userName"
-                                    clearable
-                                    class="pt-1"
-                                    dense
-                                    outlined
-                                    :label="t('entityColumn.userName')"
-                                    name="userName"
-                                    :rules="[rules.required, rules.max(entity.userName, 150)]"
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row v-show="!isMe">
-                            <v-col class="pt-0 pb-0" cols="12">
-                                <v-select
-                                    v-model="entity.roleId"
-                                    outlined
-                                    dense
-                                    :items="roles"
-                                    name="roleId"
-                                    :label="t('entityColumn.roleId')"
-                                    :rules="[rules.required]"
-                                ></v-select>
-                            </v-col>
-                        </v-row>
-                        <v-row v-show="isMe">
-                            <v-col class="pt-0 pb-0" cols="12">
-                                <v-checkbox
-                                    class="mt-0"
-                                    v-model="entity.isActive"
-                                    :label="t('entityColumn.isActive')"
-                                ></v-checkbox>
-                            </v-col>
-                        </v-row>
+                        <v-text-field
+                            v-model="entity.email"
+                            class="py-1"
+                            clearable
+                            dense
+                            outlined
+                            :label="t('entityColumn.emailAddress')"
+                            name="email"
+                            :rules="[rules.required, rules.email]"
+                        ></v-text-field>
+                        <v-text-field
+                            v-model="entity.userName"
+                            class="py-1"
+                            clearable
+                            dense
+                            outlined
+                            :label="t('entityColumn.userName')"
+                            name="userName"
+                            :rules="[rules.required, rules.max(entity.userName, 150)]"
+                        ></v-text-field>
+                        <v-select
+                            v-show="!isMe"
+                            v-model="entity.roleId"
+                            class="py-1"
+                            outlined
+                            dense
+                            :items="roles"
+                            name="roleId"
+                            :label="t('entityColumn.roleId')"
+                            :rules="[rules.required]"
+                        ></v-select>
+                        <v-checkbox
+                            v-show="isMe"
+                            v-model="entity.isActive"
+                            :label="t('entityColumn.isActive')"
+                        ></v-checkbox>
                     </v-form>
                 </v-card-text>
             </template>
