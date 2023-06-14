@@ -47,7 +47,7 @@ import TFAApiClient from "@js/api/tfa/tfaApiClient";
 import dictionary from "@js/localizations/resources/components/tfa/showRecoveryCodes";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 const router = useRouter();
 
@@ -55,18 +55,12 @@ const { t } = useI18n({
     messages: dictionary,
 });
 
-// recoveryCodes: string[] = [];
 const tfaApiClient = new TFAApiClient();
 let recoveryCodes = ref<string[]>([]);
-let showRecoveryCodes = false;
 const emit = defineEmits(["showTwoFactorAuthentication"]);
 const props = defineProps(["showRecoveryCodes"]);
-// @Prop() showRecoveryCodes!: boolean;
 
 await getRecoveryCodes();
-// onMounted(async () => {
-    
-// });
 
 async function getRecoveryCodes(): Promise<void> {
     const response = await tfaApiClient.generateRecoveryCodes();
