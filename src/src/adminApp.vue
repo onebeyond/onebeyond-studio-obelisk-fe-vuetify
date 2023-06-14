@@ -85,7 +85,9 @@
             <global-error-handler>
                 <!-- Provides the application the proper gutter -->
                 <v-container fluid>
-                    <router-view></router-view>
+                    <Suspense>
+                        <router-view></router-view>
+                    </Suspense>
                 </v-container>
             </global-error-handler>
         </v-main>

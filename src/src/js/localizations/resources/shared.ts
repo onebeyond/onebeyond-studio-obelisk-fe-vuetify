@@ -7,8 +7,6 @@ export default {
             language: "English"
         },
         button: {
-            add: "Add",
-            quickAdd: "Quick Add",
             authSettings: "Authentication settings",
             cancel: "Cancel",
             changePassword: "Change password",
@@ -44,7 +42,6 @@ export default {
             logoImage: "Obelisk Template Homepage"
         },
         layout: {
-            bannerTitle: "Obelisk Template",
             dashboard: "Dashboard",
             users: "Users",
             fileManager: "File Manager",
@@ -72,19 +69,7 @@ export default {
             yes: "Yes",
             no: "No",
             itemsInCollection: "items in collection",
-            noElementsFound: "No elements found",
-            fieldRequired: "Required",
-            maxCharacters: "Must be less than {max} characters",
-            maxNumbers: "Must be less than {max}",
-            minCharacters: "Must be {min} or more characters",
-            minNumbers: "Must be {min} or more",
-            email: "Invalid email format",
-            phone: "Phone number must start with '0' and be 10 or 11 digits long",
-            afterToday: "Must be today or after",
-            alphaDash: "Must only contain alphabetic characters, numbers, dashes or underscores.",
-            lengthCharacters: "Must be {length} characters long",
-            lengthNumbers: "Must be {length} digits long",   
-            numeric: "Must be numeric",        
+            noElementsFound: "No elements found"
         },
         notifications: {
             successTitle: "Upload Successful",
@@ -115,6 +100,28 @@ export default {
             backToLogin: "Back to login page",
             passwordChanged: "The password has been successfully changed",
             email: "Email"
+        },
+        validation: {
+            email: "Invalid email format.",
+            maxCharacters: "The input field must contain less than {max} characters.",
+            maxNumber: "The input field must be less than {max}.",
+            minCharacters: "The input field must contain atleast {min} characters.",
+            minNumber: "The input field must be atleast {min}.",
+            lengthCharacters: "The input field must be {length} characters long.",
+            lengthNumber: "The input field must be {length} digits.",
+            maxDateInvalid: "Date must be before {limit}.",
+            minDateInvalid: "Date must be after {limit}.",
+            phone: "Phone number must start with '0' and be 10 or 11 digits long.",
+            afterToday: "The input field must be today or after",
+            alphaDash: "The input field must only contain alphabetic characters, numbers, dashes or underscores.",
+            numeric: "The input field must be numeric.",
+            required: "Required.",
+            requiresDigit: "The input field must contain at least one digit.",
+            requiresNonAlphanumeric: "The input field must contain at least one special character.",
+            requiresCapital: "The input field must contain at least one capital letter.",
+            requiresNonCapital: "The input field must contain at least one non-capital character.",
+            requiresUniqueCharacters: "The input field must contain at least {count} unique characters.",
+            requiresPasswordMatch: "The passwords must match."
         }
     }
 };

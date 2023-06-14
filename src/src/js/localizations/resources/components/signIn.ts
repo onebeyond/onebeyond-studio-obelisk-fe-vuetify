@@ -15,7 +15,7 @@ export default {
             forgottenPassword: "Forgotten your password?",
             or: "or",
             Azure: "Sign in via Azure AD",
-            signInWithTFA: "Sign in With TFA"
+            signInWith2FA: "Sign in With 2fa"
         }
     }
 };

@@ -4,6 +4,10 @@ export default {
         userName: "User Name",
         password: "Password",
         confirmPassword: "Confirm Password",
-        SetPasswordButton: "Set New Password"
+        SetPasswordButton: "Set New Password",
+        field: {
+            username: "Username",
+            password: "Password"
+        }
     }
 };
