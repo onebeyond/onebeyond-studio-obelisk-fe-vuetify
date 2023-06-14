@@ -7,29 +7,29 @@
                         <v-col text cols="12">
                             <div>
                                 <div class="text-center">
-                                    <h1>{{ $t("title") }}</h1>
+                                    <h1>{{ t("title") }}</h1>
 
                                     <v-alert dense outlined type="warning">
                                         <p>
-                                            <strong>{{ $t("recoveryCodesInfo") }}</strong>
+                                            <strong>{{ t("recoveryCodesInfo") }}</strong>
                                         </p>
                                         <p>
-                                            {{ $t("reminder") }}
+                                            {{ t("reminder") }}
                                         </p>
                                     </v-alert>
                                     <p>
-                                        {{ $t("generateInfo") }}
-                                        <a @click="showEnableAuthenticatorCard">{{ $t("resetLink") }}</a>
+                                        {{ t("generateInfo") }}
+                                        <a @click="showEnableAuthenticatorCard">{{ t("resetLink") }}</a>
                                     </p>
                                     <div></div>
                                 </div>
                             </div>
                             <div class="text-center mt-4">
                                 <div class="v-card__actions">
-                                    <v-btn @click="showTwoFactorAuthentication"> {{ $t("button.cancel") }}</v-btn>
+                                    <v-btn @click="showTwoFactorAuthentication"> {{ t("button.cancel") }}</v-btn>
 
                                     <v-btn color="primary" type="button" @click="showRecoveryCodesCard">{{
-                                        $t("button.generate")
+                                        t("button.generate")
                                     }}</v-btn>
                                 </div>
                             </div>
@@ -41,33 +41,28 @@
     </div>
 </template>
 
-<script lang="ts">
-    import { Component, Vue, Prop, Emit } from "vue-property-decorator";
-    import TFAApiClient from "@js/api/tfa/tfaApiClient";
-    import dictionary from "@js/localizations/resources/components/tfa/generateRecoveryCodes";
+<script setup lang="ts">
+import dictionary from "@js/localizations/resources/components/tfa/generateRecoveryCodes";
+import { useI18n } from "vue-i18n";
 
-    @Component({
-        name: "generateRecoveryCodes",
-        i18n: {
-            messages: dictionary
-        }
-    })
-    export default class GenerateRecoveryCodes extends Vue {
-        tfaApiClient: TFAApiClient = new TFAApiClient();
-        @Prop() showGenerateRecoveryCodes!: boolean;
-        @Prop() showRecoveryCodes!: boolean;
+const { t } = useI18n({
+    messages: dictionary,
+});
+const props = defineProps(["showGenerateRecoveryCodes", "showRecoveryCodes"]);
+const emit = defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticatorCard", "showRecoveryCodesCard"]);
+let showGenerateRecoveryCodes = props.showGenerateRecoveryCodes;
 
-        generateCodes(): void {
-            this.showRecoveryCodesCard();
-        }
+function showEnableAuthenticatorCard(): void {
+    console.log("emit")
+    emit('showEnableAuthenticatorCard');
+}
 
-        @Emit("showEnableAuthenticatorCard")
-        showEnableAuthenticatorCard(): void {}
+function showRecoveryCodesCard(): void {
+    emit('showRecoveryCodesCard')
+}
 
-        @Emit("showRecoveryCodesCard")
-        showRecoveryCodesCard(): void {}
-
-        @Emit("showTwoFactorAuthentication")
-        showTwoFactorAuthentication(): void {}
-    }
+function showTwoFactorAuthentication(): void {
+    emit('showTwoFactorAuthentication')
+}
+// }
 </script>
