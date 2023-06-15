@@ -3,7 +3,7 @@ import { useI18n } from "vue-i18n";
 import { isToday, isFuture } from "date-fns";
 import type AuthApiClient from "@js/api/auth/authApiClient";
 
-export default function useRules(params: { fieldToMatch?: Ref<string> }) {
+export default function useRules(params?: { fieldToMatch?: Ref<string> }) {
     const { t } = useI18n();
     
     const required = (value) => !!value || t("validation.required");
@@ -75,7 +75,7 @@ export default function useRules(params: { fieldToMatch?: Ref<string> }) {
         ]
     };
     
-    const passwordMatch = (value) => value === params.fieldToMatch?.value || t('validation.requiresPasswordMatch');
+    const passwordMatch = (value) => value === params?.fieldToMatch?.value || t('validation.requiresPasswordMatch');
 
     return {
         required,
