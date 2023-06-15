@@ -53,7 +53,6 @@ const emit = defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticato
 let showGenerateRecoveryCodes = props.showGenerateRecoveryCodes;
 
 function showEnableAuthenticatorCard(): void {
-    console.log("emit")
     emit('showEnableAuthenticatorCard');
 }
 
@@ -64,5 +63,4 @@ function showRecoveryCodesCard(): void {
 function showTwoFactorAuthentication(): void {
     emit('showTwoFactorAuthentication')
 }
-// }
 </script>
