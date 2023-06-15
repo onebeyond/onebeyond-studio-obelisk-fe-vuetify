@@ -97,13 +97,13 @@
         messages: resetPassword
     });
     
-    let showForm: boolean = true;
-    let userName = ref("");
-    let password = ref("");
-    let confirmPassword = ref("");
-    let code: string | undefined = "";
-    let passwordChanged = ref(false);
-    let passwordError = ref(false);
+    const showForm: boolean = true;
+    const userName = ref("");
+    const password = ref("");
+    const confirmPassword = ref("");
+    const code: string | undefined = $route.query.code?.toString();
+    const passwordChanged = ref(false);
+    const passwordError = ref(false);
     
     let authApiClient: AuthApiClient = new AuthApiClient();
     const rules = useRules({ fieldToMatch: password});
@@ -112,8 +112,6 @@
     function cancel(): void {
         window.location.href = "/";
     }
-
-    code = $route.query.code?.toString();
 
     async function change(_values) {
         if (!code) {
