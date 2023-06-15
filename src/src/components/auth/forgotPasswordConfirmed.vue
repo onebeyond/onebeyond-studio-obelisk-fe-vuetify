@@ -10,7 +10,7 @@
 
                                 <p>{{ t("instructions") }}.</p>
 
-                                <div class="v-card__actions">
+                                <div class="v-card-actions">
                                     <v-btn id="submit-btn" color="primary" @click="cancel">
                                         {{ t("password.backToLogin") }}
                                     </v-btn>

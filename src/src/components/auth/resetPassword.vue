@@ -2,7 +2,7 @@
     <div>
         <v-dialog v-model="showForm" persistent max-width="480px">
             <v-card>
-                <v-form>
+                <v-form ref="formRef">
                     <v-container>
                         <v-row>
                             <v-col text cols="12">
@@ -64,7 +64,7 @@
                                 >
                                 </v-text-field>
 
-                                <div class="v-card__actions">
+                                <div class="v-card-actions">
                                     <v-btn id="submit-btn" color="primary" @click="cancel">
                                         {{ t("password.backToLogin") }}
                                     </v-btn>
@@ -89,6 +89,7 @@
     import { useI18n } from "vue-i18n";
     import { useRouter, useRoute } from "vue-router";
     import useRules from "@js/composables/useRules"
+    import { VForm } from "vuetify/components";
 
     const $route = useRoute();
     const $router = useRouter();
@@ -97,6 +98,8 @@
         messages: resetPassword
     });
     
+    const formRef = ref<VForm | null>(null);
+
     const showForm: boolean = true;
     const userName = ref("");
     const password = ref("");
@@ -113,19 +116,22 @@
         window.location.href = "/";
     }
 
-    async function change(_values) {
+    async function change() {
         if (!code) {
             passwordError.value = true;
             return;
         }
+        const { valid } = await formRef.value!.validate();
 
-        try {
-            await authApiClient.resetPassword(userName.value, password.value, code);
-            passwordChanged.value = true;
-
-            await $router.push({ name: "forgotPasswordConfirm" });
-        } catch {
-            passwordError.value = true;
+        if (valid) {
+            try {
+                await authApiClient.resetPassword(userName.value, password.value, code);
+                passwordChanged.value = true;
+    
+                await $router.push({ name: "forgotPasswordConfirm" });
+            } catch {
+                passwordError.value = true;
+            }
         }
     };
 </script>

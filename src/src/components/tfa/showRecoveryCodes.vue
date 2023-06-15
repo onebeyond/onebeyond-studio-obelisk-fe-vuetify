@@ -30,7 +30,7 @@
                                     </v-row>
                                 </v-container>
                             </div>
-                            <div class="v-card__actions">
+                            <div class="v-card-actions">
                                 <v-btn @click="showTwoFactorAuthentication"> {{ t("button.cancel") }}</v-btn>
                                 <v-btn color="primary" @click="returnToDashboard">{{ t("button.generate") }}</v-btn>
                             </div>

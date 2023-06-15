@@ -25,7 +25,7 @@
                                 </div>
                             </div>
                             <div class="text-center mt-4">
-                                <div class="v-card__actions">
+                                <div class="v-card-actions">
                                     <v-btn @click="showTwoFactorAuthentication"> {{ t("button.cancel") }}</v-btn>
 
                                     <v-btn color="primary" type="button" @click="showRecoveryCodesCard">{{

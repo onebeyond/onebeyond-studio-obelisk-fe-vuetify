@@ -2,7 +2,7 @@
     <div>
         <v-dialog v-model="dialog" persistent max-width="360px">
             <v-card>
-                <v-form ref="formRef" v-model="formValid" @submit.prevent="signIn">
+                <v-form ref="formRef">
                     <v-container>
                         <v-row>
                             <v-col cols="12">
@@ -20,7 +20,7 @@
                                         density="compact"
                                         variant="outlined"
                                         v-model="username"
-                                        :rules="[rules.username]"
+                                        :rules="[rules.required]"
                                         data-cy="inputUserName"
                                     ></v-text-field>
                                 </div>
@@ -32,7 +32,7 @@
                                         variant="outlined"
                                         type="password"
                                         v-model="password"
-                                        :rules="[rules.password]"
+                                        :rules="[rules.required]"
                                         data-cy="inputPassword"
                                     ></v-text-field>
                                 </div>
@@ -52,17 +52,18 @@
                                         }}</label>
                                     </div>
                                 </div>
-                                <div class="v-card__actions border-0">
+                                <div class="v-card-actions border-0">
                                     <v-btn
                                         id="submit-btn"
                                         color="primary"
                                         type="submit"
                                         :disabled="signingIn"
+                                        @click="signIn"
                                         data-cy="submitBtn"
                                         >{{ t("button.signIn") }}</v-btn
                                     >
                                 </div>
-                                <p class="v-card__actions border-0">
+                                <p class="v-card-actions border-0">
                                     <router-link to="forgotPassword">{{ t("button.forgottenPassword") }}</router-link>
                                 </p>
 
@@ -90,6 +91,8 @@
     import { useI18n } from "vue-i18n";
     import { ref } from "vue";
     import { useRouter } from "vue-router";
+    import useRules from "@js/composables/useRules";
+    import { VForm } from "vuetify/components";
 
     const router = useRouter();
 
@@ -97,51 +100,47 @@
         messages: signInDictionary,
     });
 
-    const dialog = true;
-    let signingIn = false;
-    let username = ref("");
-    let password = ref("");
-    let rememberMe = false;
-    let errorMsg = ref("");
-    const authApiClient = new AuthApiClient();
-    let formValid = false;
-    const formRef = ref(null);
+    const rules = useRules();
 
-    const rules = {
-        username: (value) => !!value || t("message.userNameRequired"),
-        password: (value) => !!value || t("message.passwordRequired"),
-    };
+    const dialog = true;
+    const signingIn = ref(false);
+    const username = ref("");
+    const password = ref("");
+    const rememberMe = false;
+    const errorMsg = ref("");
+    const authApiClient = new AuthApiClient();
+    const formRef = ref<VForm | null>(null);
 
     async function signIn(): Promise<void> {
-        if (!formValid) {
-            return;
-        }
+        const { valid } = await formRef.value!.validate();
 
-        signingIn = true;
-        errorMsg.value = "";
-        const defaultError: string = "An error occured while trying to log you in.";
-
-        const userCredentials = new SignInRequest(username.value, password.value, rememberMe);
-
-        try {
-            const data: SignInResult = await authApiClient.basicSignIn(userCredentials);
-
-            if (data.status === SignInStatus.Success) {
-                LocalSessionStorage.setUserAuthenticated(true);
-                window.location.href = `${(window as any).location.origin}/admin/`;
-            } else if (data.status === SignInStatus.RequiresVerification) {
-                router.push({
-                    name: "loginWithTfa",
-                    query: { rememberMe: rememberMe.toString() },
-                });
-            } else {
+        if (valid) {
+            signingIn.value = true;
+            errorMsg.value = "";
+            const defaultError: string = "An error occured while trying to log you in.";
+    
+            const userCredentials = new SignInRequest(username.value, password.value, rememberMe);
+    
+            try {
+                const data: SignInResult = await authApiClient.basicSignIn(userCredentials);
+    
+                if (data.status === SignInStatus.Success) {
+                    LocalSessionStorage.setUserAuthenticated(true);
+                    window.location.href = `${(window as any).location.origin}/admin/`;
+                } else if (data.status === SignInStatus.RequiresVerification) {
+                    router.push({
+                        name: "loginWithTfa",
+                        query: { rememberMe: rememberMe.toString() },
+                    });
+                } else {
+                    errorMsg.value = defaultError;
+                }
+            } catch {
+                console.log("** ERROR **");
                 errorMsg.value = defaultError;
+            } finally {
+                signingIn.value = false;
             }
-        } catch {
-            console.log("** ERROR **");
-            errorMsg.value = defaultError;
-        } finally {
-            signingIn = false;
         }
     }
 </script>
