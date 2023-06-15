@@ -121,9 +121,7 @@ const { t } = useI18n({
     messages: dictionary
 });
 let showForm = ref(false);
-let errorMsg: string = "";
 let message: string = "";
-let statusMessageError: boolean = false;
 let tfaSettings: loginTfaSettings = new loginTfaSettings();
 let tfaApiClient: TFAApiClient = new TFAApiClient();
 let showDisableTFA = ref(false);
@@ -155,7 +153,6 @@ function showGenerateRecoveryCodesCard(): void {
 }
 
 function showEnableAuthenticatorCard(): void {
-    console.log("test 23");
     showEnableAuthenticator.value = true;
     showForm.value = false;
 }
@@ -171,8 +168,7 @@ function clickShowDisableTFA(): void {
 }
 
 onMounted(async () => {
-    const data = await tfaApiClient.getTfaSettings();
-
+    const data = await tfaApiClient.getTfaSettings();0
     tfaSettings = data;
     showForm.value = true;
 });
