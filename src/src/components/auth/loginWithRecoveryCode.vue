@@ -98,7 +98,6 @@
                     errorMsg.value = defaultError;
                 }
             } catch {
-                console.log("** ERROR **");
                 errorMsg.value = defaultError;
             } finally {
                 signingIn.value = false;
