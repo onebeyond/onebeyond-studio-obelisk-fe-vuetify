@@ -7,6 +7,7 @@ import { UserContext } from "@js/dataModels/users/userContext";
 import { plainToInstance } from "class-transformer";
 import type { SignInWithRecoveryCode } from "@js/dataModels/auth/signInWithRecoveryCode";
 import type { ChangePasswordRequest } from "@js/dataModels/auth/changePasswordRequest";
+import type { PasswordRequirements } from "@js/dataModels/auth/passwordRequirements";
 
 //We derive from WebApiClient, not from ObeliskApiClient, because the Account controller does not have api folder
 export default class AuthApiClient extends ObeliskResourceApiClient {
@@ -29,7 +30,7 @@ export default class AuthApiClient extends ObeliskResourceApiClient {
     }
 
     public async basicSignInWithRecoveryCode(
-        userCredentials: SignInWithRecoveryCode,
+        userCredentials: SignInWithRecoveryCode
     ): Promise<SignInWithRecoveryCodeResult> {
         const response = await this.post("basic/signinWithRecoveryCode", userCredentials);
         return (await response.json()) as SignInWithRecoveryCodeResult;
@@ -48,7 +49,7 @@ export default class AuthApiClient extends ObeliskResourceApiClient {
         return this.post("ResetPassword", {
             username: username,
             password: password,
-            code: code,
+            code: code
         });
     }
 
@@ -58,5 +59,10 @@ export default class AuthApiClient extends ObeliskResourceApiClient {
 
     public async signOut(): Promise<void> {
         await this.post("signout");
+    }
+
+    public async getPasswordRequirements(): Promise<PasswordRequirements> {
+        const response = await this.get("PasswordRequirements");
+        return (await response.json()) as PasswordRequirements;
     }
 }

@@ -30,7 +30,7 @@
                                         outlined
                                         :disabled="passwordChanged"
                                         name="oldPassword"
-                                        :rules="[rules.password]"
+                                        :rules="[rules.required]"
                                         :data-vv-as="t('oldPassword')"
                                         :label="t('oldPassword')"
                                     >
@@ -45,7 +45,7 @@
                                         outlined
                                         name="newPassword"
                                         :disabled="passwordChanged"
-                                        :rules="[rules.password, rules.min, rules.max]"
+                                        :rules="passwordRules"
                                         :data-vv-as="t('newPassword')"
                                         :label="t('newPassword')"
                                     >
@@ -60,7 +60,7 @@
                                         outlined
                                         name="confirmPassword"
                                         :disabled="passwordChanged"
-                                        :rules="[rules.password, rules.passwordMatch]"
+                                        :rules="[rules.required, rules.passwordMatch]"
                                         :data-vv-as="t('confirmPassword')"
                                         :label="t('confirmPassword')"
                                     >
@@ -93,31 +93,27 @@
     import { ChangePasswordRequest } from "@js/dataModels/auth/changePasswordRequest";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
+    import useRules from "@js/composables/useRules"
 
     const { t } = useI18n({
         messages: changePasswordDictionary,
     });
 
     const router = useRouter();
-
+    
     const showForm: boolean = true;
-
+    
     const oldPassword = ref("");
     const newPassword = ref("");
     const confirmPassword = ref("");
     const passwordChanged = ref(false);
     const passwordError = ref(false);
     const formValid = ref(false);
-
-    const rules = {
-        password: (value) => !!value || t("message.passwordRequired"),
-        passwordMatch: (value) => value === newPassword.value || t('message.passwordMatch'),
-        min: (value) => value.length >= 10 || t("message.passwordMin"),
-        max: (value) => value.length <= 100 || t("message.passwordMax"),
-    };
-
+    
     const authApiClient: AuthApiClient = new AuthApiClient();
-
+    const rules = useRules({ fieldToMatch: newPassword});
+    const passwordRules = await rules.getPasswordValidationRules(authApiClient);
+    
     function cancel(): void {
         router.go(-1);
     }

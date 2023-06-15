@@ -45,7 +45,7 @@
                                     :disabled="passwordChanged"
                                     :label="t('password')"
                                     @input="passwordError = false"
-                                    :rules="[rules.required, rules.min(password, 10), rules.max(password, 100)]"
+                                    :rules="passwordRules"
                                 >
                                 </v-text-field>
 
@@ -60,7 +60,7 @@
                                     :disabled="passwordChanged"
                                     :label="t('confirmPassword')"
                                     @input="passwordError = false"
-                                    :rules="[rules.required, customRules.passwordMatch]"
+                                    :rules="[rules.required, rules.passwordMatch]"
                                 >
                                 </v-text-field>
 
@@ -83,6 +83,7 @@
 </template>
 
 <script setup lang="ts">
+    import { ref } from "vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
     import resetPassword from "@js/localizations/resources/components/resetPassword";
     import { useI18n } from "vue-i18n";
@@ -91,45 +92,40 @@
 
     const $route = useRoute();
     const $router = useRouter();
-    const rules = useRules();
-
+    
     const { t } = useI18n({
         messages: resetPassword
     });
-
-    let showForm: boolean = true;
-    let userName: string = "";
-    let password: string = "";
-    let confirmPassword: string = "";
-    let code: string | undefined = "";
-    let passwordChanged: boolean = false;
-    let passwordError: boolean = false;
-
+    
+    const showForm: boolean = true;
+    const userName = ref("");
+    const password = ref("");
+    const confirmPassword = ref("");
+    const code: string | undefined = $route.query.code?.toString();
+    const passwordChanged = ref(false);
+    const passwordError = ref(false);
+    
     let authApiClient: AuthApiClient = new AuthApiClient();
-
-    const customRules = {
-        passwordMatch: (value) => value === confirmPassword || t('message.passwordMatch'),
-    };
+    const rules = useRules({ fieldToMatch: password});
+    const passwordRules = await rules.getPasswordValidationRules(authApiClient);
 
     function cancel(): void {
         window.location.href = "/";
     }
 
-    code = $route.query.code?.toString();
-
     async function change(_values) {
         if (!code) {
-            passwordError = true;
+            passwordError.value = true;
             return;
         }
 
         try {
-            await authApiClient.resetPassword(userName, password, code);
-            passwordChanged = true;
+            await authApiClient.resetPassword(userName.value, password.value, code);
+            passwordChanged.value = true;
 
             await $router.push({ name: "forgotPasswordConfirm" });
         } catch {
-            passwordError = true;
+            passwordError.value = true;
         }
     };
 </script>
