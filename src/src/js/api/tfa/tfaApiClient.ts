@@ -1,10 +1,10 @@
-import ObeliskResourceApiClient from "@js/api/obeliskResourceApiClient";
+import ObResourceApiClient from "@js/api/obResourceApiClient";
 import EnableAuthenticatorSettings from "@js/dataModels/tfa/enableAuthenticatorSettings";
 import type EnableTfaRequest from "@js/dataModels/tfa/enableTfaRequest";
 import LoginTfaSettings from "@js/dataModels/tfa/loginTfaSettings";
 import { plainToInstance } from "class-transformer";
 
-export default class tfaApiClient extends ObeliskResourceApiClient {
+export default class tfaApiClient extends ObResourceApiClient {
     constructor() {
         super("tfa", "v1");
     }

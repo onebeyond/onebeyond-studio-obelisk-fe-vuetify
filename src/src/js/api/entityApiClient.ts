@@ -1,9 +1,9 @@
 import { plainToInstance } from "class-transformer";
 
 import type { Entity, EntityBuilder } from "@js/dataModels/entity";
-import ObeliskResourceApiClient from "@js/api/obeliskResourceApiClient";
+import ObResourceApiClient from "@js/api/obResourceApiClient";
 
-export default class EntityApiClient<TEntity extends Entity<T>, T> extends ObeliskResourceApiClient {
+export default class EntityApiClient<TEntity extends Entity<T>, T> extends ObResourceApiClient {
     constructor(private readonly entityBuilder: EntityBuilder<TEntity, T>, resource: string, version: string | null) {
         super(resource, version);
     }

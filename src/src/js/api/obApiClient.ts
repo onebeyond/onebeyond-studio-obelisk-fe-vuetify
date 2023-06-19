@@ -3,7 +3,7 @@ import RedirectToNotFoundResponseInterceptor from "@js/api/interceptors/response
 import RedirectToLoginResponseInterceptor from "@js/api/interceptors/response/redirectToLoginResponseInterceptor";
 import RefreshClientSessionRequestInterceptor from "@js/api/interceptors/request/refreshClientSessionRequestInterceptor";
 
-export default abstract class ObeliskApiClient extends WebApiClient {
+export default abstract class ObApiClient extends WebApiClient {
     constructor(apiUrl: string) {
         super(apiUrl);
 
@@ -25,6 +25,6 @@ export default abstract class ObeliskApiClient extends WebApiClient {
         // clear all interceptors as unnecessary while logging out
         this.requestInterceptors.splice(0, this.requestInterceptors.length);
         this.responseInterceptors.splice(0, this.responseInterceptors.length);
-        await this.fetch("signout", WebApiClient.buildRequest("POST"), `${ObeliskApiClient.WebApiRoot}api/auth/v1/`);
+        await this.fetch("signout", WebApiClient.buildRequest("POST"), `${ObApiClient.WebApiRoot}api/auth/v1/`);
     }
 }
