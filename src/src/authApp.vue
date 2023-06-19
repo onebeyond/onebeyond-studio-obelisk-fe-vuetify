@@ -2,8 +2,10 @@
     <v-app>
         <v-main>
             <global-error-handler>
-                <main id="page-account">
-                    <router-view :key="$route.fullPath"></router-view>
+                <main id="page-account">                    
+                    <Suspense>
+                        <router-view :key="$route.fullPath"></router-view>
+                    </Suspense>
                 </main>
             </global-error-handler>
         </v-main>

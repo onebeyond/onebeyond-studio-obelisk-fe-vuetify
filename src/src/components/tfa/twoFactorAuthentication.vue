@@ -77,125 +77,110 @@
             </v-card>
         </v-dialog>
 
-        <DisableTfa
-            @showTwoFactorAuthentication="showTwoFactorAuthentication"
-            @showEnableAuthenticatorCard="showEnableAuthenticatorCard"
-            :showDisableTFA="showDisableTFA"
-            v-if="showDisableTFA"
-        ></DisableTfa>
+        <DisableTfa @showTwoFactorAuthentication="showTwoFactorAuthentication"
+            @showEnableAuthenticatorCard="showEnableAuthenticatorCard" :showDisableTFA="showDisableTFA"
+            v-if="showDisableTFA"></DisableTfa>
 
-        <GenerateRecoveryCodes
-            @showTwoFactorAuthentication="showTwoFactorAuthentication"
-            @showRecoveryCodesCard="showRecoveryCodesCard"
-            @showGenerateRecoveryCodesCard="showGenerateRecoveryCodesCard"
-            @howEnableAuthenticatorCard="showEnableAuthenticatorCard"
-            :showGenerateRecoveryCodes="showGenerateRecoveryCodes"
-            v-if="showGenerateRecoveryCodes"
-        ></GenerateRecoveryCodes>
+        <GenerateRecoveryCodes @showTwoFactorAuthentication="showTwoFactorAuthentication"
+            @showRecoveryCodesCard="showRecoveryCodesCard" @showGenerateRecoveryCodesCard="showGenerateRecoveryCodesCard"
+            @showEnableAuthenticatorCard="showEnableAuthenticatorCard" :showGenerateRecoveryCodes="showGenerateRecoveryCodes"
+            v-if="showGenerateRecoveryCodes"></GenerateRecoveryCodes>
 
-        <RecoveryCodes
-            @showTwoFactorAuthentication="showTwoFactorAuthentication"
-            @showGenerateRecoveryCodesCard="showGenerateRecoveryCodesCard"
-            :showRecoveryCodes="showRecoveryCodes"
-            v-if="showRecoveryCodes"
-        ></RecoveryCodes>
+        <Suspense>
+            <EnableAuthenticator @showTwoFactorAuthentication="showTwoFactorAuthentication"
+                :showEnableAuthenticator="showEnableAuthenticator" v-if="showEnableAuthenticator"></EnableAuthenticator>
+        </Suspense>
 
-        <EnableAuthenticator
-            @showTwoFactorAuthentication="showTwoFactorAuthentication"
-            :showEnableAuthenticator="showEnableAuthenticator"
-            v-if="showEnableAuthenticator"
-        ></EnableAuthenticator>
+        <Suspense>
+            <ShowRecoveryCodes @showTwoFactorAuthentication="showTwoFactorAuthentication"
+                @showGenerateRecoveryCodesCard="showGenerateRecoveryCodesCard" :showRecoveryCodes="showRecoveryCodes"
+                v-if="showRecoveryCodes"></ShowRecoveryCodes>
+        </Suspense>
 
-        <ResetAuthenticator
-            @showEnableAuthenticatorCard="showEnableAuthenticatorCard"
-            @showTwoFactorAuthentication="showTwoFactorAuthentication"
-            :showResetAuthenticator="showResetAuthenticator"
-            v-if="showResetAuthenticator"
-        ></ResetAuthenticator>
+        <ResetAuthenticator @showEnableAuthenticatorCard="showEnableAuthenticatorCard"
+            @showTwoFactorAuthentication="showTwoFactorAuthentication" :showResetAuthenticator="showResetAuthenticator"
+            v-if="showResetAuthenticator"></ResetAuthenticator>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref } from "vue";
-    import TFAApiClient from "@js/api/tfa/tfaApiClient";
-    import dictionary from "@js/localizations/resources/components/tfa/twoFactorAuthentication";
-    import loginTfaSettings from "@js/dataModels/tfa/loginTfaSettings";
-    import DisableTfa from "./disableTfa.vue";
-    import ResetAuthenticator from "./resetAuthenticator.vue";
-    import GenerateRecoveryCodes from "./generateRecoveryCodes.vue";
-    import EnableAuthenticator from "./enableAuthenticator.vue";
-    import ShowRecoveryCodes from "./showRecoveryCodes.vue";
-    import { useI18n } from "vue-i18n";
-    import { useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
+import TFAApiClient from "@js/api/tfa/tfaApiClient";
+import dictionary from "@js/localizations/resources/components/tfa/twoFactorAuthentication";
+import loginTfaSettings from "@js/dataModels/tfa/loginTfaSettings";
+import DisableTfa from "./disableTfa.vue";
+import ResetAuthenticator from "./resetAuthenticator.vue";
+import GenerateRecoveryCodes from "./generateRecoveryCodes.vue";
+import EnableAuthenticator from "./enableAuthenticator.vue";
+import ShowRecoveryCodes from "./showRecoveryCodes.vue";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
-    const $router = useRouter();
-    const { t } = useI18n({
-        messages: dictionary
-    });
-    let showForm = ref(false);
-    let errorMsg: string = "";
-    let message: string = "";
-    let statusMessageError: boolean = false;
-    let tfaSettings: loginTfaSettings = new loginTfaSettings();
-    let tfaApiClient: TFAApiClient = new TFAApiClient();
-    let showDisableTFA = ref(false);
-    let showResetAuthenticator = ref(false);
-    let showEnableAuthenticator = ref(false);
-    let showGenerateRecoveryCodes = ref(false);
-    let showRecoveryCodes = ref(false);
+const $router = useRouter();
+const { t } = useI18n({
+    messages: dictionary
+});
+let showForm = ref(false);
+let message: string = "";
+let tfaSettings: loginTfaSettings = new loginTfaSettings();
+let tfaApiClient: TFAApiClient = new TFAApiClient();
+let showDisableTFA = ref(false);
+let showResetAuthenticator = ref(false);
+let showEnableAuthenticator = ref(false);
+let showGenerateRecoveryCodes = ref(false);
+let showRecoveryCodes = ref(false);
+defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticatorCard", "showRecoveryCodesCard"]);
 
-    function showTwoFactorAuthentication() {
-        showForm.value = true;
-        showDisableTFA.value = false;
-        showEnableAuthenticator.value = false;
-        showResetAuthenticator.value = false;
-        showGenerateRecoveryCodes.value = false;
-        showRecoveryCodes.value = false;
-    }
+function showTwoFactorAuthentication() {
+    showForm.value = true;
+    showDisableTFA.value = false;
+    showEnableAuthenticator.value = false;
+    showResetAuthenticator.value = false;
+    showGenerateRecoveryCodes.value = false;
+    showRecoveryCodes.value = false;
+}
 
-    function showRecoveryCodesCard(): void {
-        showRecoveryCodes.value = true;
-        showGenerateRecoveryCodes.value = false;
-        showForm.value = false;
-    }
+function showRecoveryCodesCard(): void {
+    showRecoveryCodes.value = true;
+    showGenerateRecoveryCodes.value = false;
+    showForm.value = false;
+}
 
-    function showGenerateRecoveryCodesCard(): void {
-        showRecoveryCodes.value = false;
-        showGenerateRecoveryCodes.value = true;
-        showForm.value = false;
-    }
+function showGenerateRecoveryCodesCard(): void {
+    showRecoveryCodes.value = false;
+    showGenerateRecoveryCodes.value = true;
+    showForm.value = false;
+}
 
-    function showEnableAuthenticatorCard(): void {
-        showEnableAuthenticator.value = true;
-        showForm.value = false;
-    }
+function showEnableAuthenticatorCard(): void {
+    showEnableAuthenticator.value = true;
+    showForm.value = false;
+}
 
-    function showResetAuthenticatorCard(): void {
-        showResetAuthenticator.value = true;
-        showForm.value = false;
-    }
+function showResetAuthenticatorCard(): void {
+    showResetAuthenticator.value = true;
+    showForm.value = false;
+}
 
-    function clickShowDisableTFA(): void {
-        showDisableTFA.value = true;
-        showForm.value = false;
-    }
+function clickShowDisableTFA(): void {
+    showDisableTFA.value = true;
+    showForm.value = false;
+}
 
-    onMounted(async () => {
-        const data = await tfaApiClient.getTfaSettings();
+onMounted(async () => {
+    const data = await tfaApiClient.getTfaSettings();0
+    tfaSettings = data;
+    showForm.value = true;
+});
 
-        tfaSettings = data;
-        console.log(tfaSettings);
-        showForm.value = true;
-    });
+async function forgetBrowser() {
+    const data = await tfaApiClient.forgetBrowser();
 
-    async function forgetBrowser() {
-        const data = await tfaApiClient.forgetBrowser();
+    message = data;
+    $router.go(-1);
+}
 
-        message = data;
-        $router.go();
-    }
-
-    function dashboard() {
-        $router.push({ name: "Dashboard" });
-    }
+function dashboard() {
+    $router.push({ name: "Dashboard" });
+}
 </script>

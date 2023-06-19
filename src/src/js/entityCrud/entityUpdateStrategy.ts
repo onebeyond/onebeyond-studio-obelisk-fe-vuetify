@@ -157,7 +157,7 @@ export class EntityUpdateUsingSeparatePage<TEntity extends Entity<T>, T> extends
         if (this.editView) {
             this.$router.push({ name: this.editView, params: { id: entityId } });
         } else {
-            super.doEdit(entityId);
+            await super.doEdit(entityId);
         }
     }
 
@@ -170,6 +170,7 @@ export class EntityUpdateUsingSeparatePage<TEntity extends Entity<T>, T> extends
     }
 
     public doEntitySaved(): void {
+        super.doEntitySaved();
         this.doReturn();
     }
 

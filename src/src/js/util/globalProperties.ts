@@ -1,5 +1,4 @@
 import type { App, ComponentCustomProperties } from "vue";
-import http from "@js/httpClient/httpConfig";
 import eventBus from "@js/eventBus";
 import filters from "@js/util/filters";
 import Configuration from "@js/configuration/configuration";
@@ -14,7 +13,6 @@ const SetGlobalProperties = (app: App) => {
     app.config.globalProperties.$basePath = basePath;
     app.config.globalProperties.$rootPath = rootPath;
     app.config.globalProperties.$rootApiPath = rootPath + "api/";
-    app.config.globalProperties.$http = http();
     app.config.globalProperties.$bus = eventBus;
     app.config.globalProperties.$filters = filters;
 

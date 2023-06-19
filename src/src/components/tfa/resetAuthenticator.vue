@@ -1,28 +1,27 @@
 <template>
     <div>
-        <v-dialog v-model="showResetAuthenticator" persistent max-width="480px">
+        <v-dialog v-model="props.showResetAuthenticator" persistent max-width="480px">
             <v-card>
                 <v-container>
                     <v-row>
                         <v-col text cols="12">
                             <div>
                                 <div class="text-center">
-                                    <h1>{{ $t("title") }}</h1>
+                                    <h1>{{ t("title") }}</h1>
 
                                     <v-alert dense outlined type="warning">
-                                        <strong>{{ $t("resetKey") }}</strong>
+                                        <strong>{{ t("resetKey") }}</strong>
                                     </v-alert>
                                     <p>
-                                        {{ $t("disableTfaInfo") }}
+                                        {{ t("disableTfaInfo") }}
                                     </p>
                                     <div>
                                         <v-form method="post" class="form-group" @submit.prevent="resetTfa">
                                             <div class="v-card__actions">
                                                 <v-btn @click="showTwoFactorAuthentication">
-                                                    {{ $t("button.cancel") }}</v-btn
-                                                >
+                                                    {{ t("button.cancel") }}</v-btn>
                                                 <v-btn color="error" class="white--text" type="submit">{{
-                                                    $t("button.resetBtn")
+                                                    t("button.resetBtn")
                                                 }}</v-btn>
                                             </div>
                                         </v-form>
@@ -37,35 +36,31 @@
     </div>
 </template>
 
-<script lang="ts">
-    import { Component, Emit, Prop, Vue } from "vue-property-decorator";
-    import TFAApiClient from "@js/api/tfa/tfaApiClient";
-    import dictionary from "@js/localizations/resources/components/tfa/resetAuthenticator";
+<script setup lang="ts">
+import TFAApiClient from "@js/api/tfa/tfaApiClient";
+import dictionary from "@js/localizations/resources/components/tfa/resetAuthenticator";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
-    @Component({
-        name: "resetAuthenticator",
-        i18n: {
-            messages: dictionary
-        }
-    })
-    export default class ResetAuthenticator extends Vue {
-        errorMsg: string = "";
-        tfaApiClient: TFAApiClient = new TFAApiClient();
-        @Prop() showResetAuthenticator!: boolean;
+const router = useRouter();
 
-        constructor() {
-            super();
-        }
+const { t } = useI18n({
+    messages: dictionary,
+});
+const emit = defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticatorCard"]);
+const tfaApiClient = new TFAApiClient();
+const props = defineProps(["showResetAuthenticator"]);
 
-        @Emit("showTwoFactorAuthentication")
-        showTwoFactorAuthentication(): void {}
+function showTwoFactorAuthentication(): void {
+    emit('showTwoFactorAuthentication');
+}
 
-        @Emit("showEnableAuthenticatorCard")
-        showEnableAuthenticatorCard(): void {}
+function showEnableAuthenticatorCard(): void {
+    emit('showEnableAuthenticatorCard');
+}
 
-        async resetTfa(): Promise<void> {
-            await this.tfaApiClient.reset();
-            this.$router.push({ name: "Dashboard" });
-        }
-    }
+async function resetTfa(): Promise<void> {
+    await tfaApiClient.reset();
+    router.push({ name: "Dashboard" });
+}
 </script>
