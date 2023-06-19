@@ -8,8 +8,7 @@ export class DataAdaptor extends ObApiClient {
     private readonly errorCallback: Function;
 
     constructor(apiBaseUrl: string, errorCallback: Function) {
-        const apiUrl = `${ObApiClient.WebApiRoot}${apiBaseUrl}`;
-        super(apiUrl);
+        super(apiBaseUrl);
         this.errorCallback = errorCallback;
     }
 

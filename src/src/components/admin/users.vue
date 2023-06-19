@@ -154,15 +154,11 @@
     const rules = useRules();
 
     onBeforeMount(() => {
-        entityGrid.initDataAdaptor(provideApiUrl(), onError);
+        entityGrid.initDataAdaptor(entityApiClient.apiUrl, onError);
     });
 
     const { isAdmin, myId } = useUserContext();
     const roles = UserRole.AllRoles;
-
-    function provideApiUrl() {
-        return "api/Users/v1/";
-    }
 
     function provideEntityUpdateStrategy() {
         return (params: ConstructorParams<User, string>, entityGrid: VuetifyEntityGrid) => 
