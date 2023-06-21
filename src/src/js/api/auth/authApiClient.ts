@@ -45,11 +45,11 @@ export default class AuthApiClient extends ObResourceApiClient {
         return this.post("ForgotPassword", { email: email });
     }
 
-    public async resetPassword(username: string, password: string, code: string): Promise<Response> {
+    public async resetPassword(userId: string, password: string, token: string): Promise<Response> {
         return this.post("ResetPassword", {
-            username: username,
+            userId: userId,
             password: password,
-            code: code
+            token: token
         });
     }
 
