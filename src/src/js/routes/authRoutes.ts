@@ -17,13 +17,6 @@ const authRouter = createRouter({
             component: () => import("@components/auth/forgotPassword.vue"),
             meta: { title: "Change Password" }
         },
-        //-- Forgot password confirm -------------------------------------------------
-        {
-            path: "/forgotPasswordConfirm",
-            name: "forgotPasswordConfirm",
-            component: () => import("@components/auth/forgotPasswordConfirmed.vue"),
-            meta: { title: "Change Password" }
-        },
         //-- Access Denied Page -------------------------------------------------
         {
             path: "/AccessDenied",

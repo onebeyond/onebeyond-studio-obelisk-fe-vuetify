@@ -9,30 +9,10 @@
                                 <h1>{{ t("title") }}</h1>
 
                                 <div v-if="passwordError">
-                                    <v-alert type="error">
+                                    <div class="alert alert-danger">
                                         {{ t("password.unknownError") }}
-                                    </v-alert>
+                                    </div>
                                 </div>
-
-                                <div v-if="passwordChanged">
-                                    <v-alert dense type="success">
-                                        {{ t("password.passwordChanged") }}
-                                    </v-alert>
-                                </div>
-
-                                <v-text-field
-                                    v-model="userName"
-                                    type="text"
-                                    hide-details="auto"
-                                    dense
-                                    outlined
-                                    :disabled="passwordChanged"
-                                    name="userName"
-                                    :label="t('userName')"
-                                    @input="passwordError = false"
-                                    :rules="[rules.required]"
-                                >
-                                </v-text-field>
 
                                 <v-text-field
                                     class="pt-3"
@@ -79,6 +59,24 @@
                 </v-form>
             </v-card>
         </v-dialog>
+        <v-modalPopup :visible="passwordChanged" :title="t('confirmationMessage.title')" @close="cancel">
+            <template #content>
+                <v-container>
+                    <v-row>
+                        <v-col class="col" text cols="12">
+                            <p>{{ t("confirmationMessage.instructions") }}.</p>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </template>
+            <template #footer>
+                <div class="v-card__actions">
+                    <v-btn id="submit-btn" color="primary" @click="cancel">
+                        {{ t("password.backToLogin") }}
+                    </v-btn>
+                </div>
+            </template>
+        </v-modalPopup>
     </div>
 </template>
 
@@ -98,10 +96,10 @@
     });
     
     const showForm: boolean = true;
-    const userName = ref("");
     const password = ref("");
     const confirmPassword = ref("");
-    const code: string | undefined = $route.query.code?.toString();
+    const token: string | undefined = $route.query.code?.toString();
+    let userId: string | undefined = $route.query.loginId?.toString();
     const passwordChanged = ref(false);
     const passwordError = ref(false);
     
@@ -114,18 +112,16 @@
     }
 
     async function change(_values) {
-        if (!code) {
+        if (!(token && userId)) {
             passwordError.value = true;
             return;
         }
 
         try {
-            await authApiClient.resetPassword(userName.value, password.value, code);
+            await authApiClient.resetPassword(userId, password.value, token);
             passwordChanged.value = true;
-
-            await $router.push({ name: "forgotPasswordConfirm" });
         } catch {
             passwordError.value = true;
         }
-    };
+    }
 </script>

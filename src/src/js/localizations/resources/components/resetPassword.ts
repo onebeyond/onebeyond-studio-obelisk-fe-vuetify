@@ -8,6 +8,10 @@ export default {
         field: {
             username: "Username",
             password: "Password"
+        },
+        confirmationMessage: {
+            instructions: "Thank you! Your password has been reset successfully. Please try login.",
+            title: "The password changed"
         }
     }
 };
