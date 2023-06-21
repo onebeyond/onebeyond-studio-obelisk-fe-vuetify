@@ -112,7 +112,7 @@
     }
 
     async function change(_values) {
-        if (!token || !userId) {
+        if (!(token && userId)) {
             passwordError.value = true;
             return;
         }
