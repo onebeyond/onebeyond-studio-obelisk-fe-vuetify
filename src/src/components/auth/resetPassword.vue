@@ -92,21 +92,21 @@
     import useRules from "@js/composables/useRules"
 
     const $route = useRoute();
-    
+
     const { t } = useI18n({
         messages: resetPassword
     });
-    
+
     const password = ref("");
     const confirmPassword = ref("");
     const token: string | undefined = $route.query.code?.toString();
     let userId: string | undefined = $route.query.loginId?.toString();
-    const showForm= ref(true);
+    const showForm = ref(true);
     const passwordChanged = ref(false);
     const passwordError = ref(false);
-    
+
     let authApiClient: AuthApiClient = new AuthApiClient();
-    const rules = useRules({ fieldToMatch: password});
+    const rules = useRules({ fieldToMatch: password });
     const passwordRules = await rules.getPasswordValidationRules(authApiClient);
 
     function cancel(): void {

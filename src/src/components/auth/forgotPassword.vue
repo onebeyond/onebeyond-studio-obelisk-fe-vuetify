@@ -88,7 +88,7 @@
     });
 
     const emailInput = ref("");
-    let showForm= ref(true);
+    let showForm = ref(true);
     let passwordError = ref(false);
     let showPasswordConfirmation = ref(false);
     let authApiClient: AuthApiClient = new AuthApiClient();
