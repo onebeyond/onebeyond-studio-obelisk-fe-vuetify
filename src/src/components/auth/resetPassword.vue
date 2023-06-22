@@ -59,24 +59,27 @@
                 </v-form>
             </v-card>
         </v-dialog>
-        <v-modalPopup :visible="passwordChanged" :title="t('confirmationMessage.title')" @close="cancel">
-            <template #content>
-                <v-container>
-                    <v-row>
-                        <v-col class="col" text cols="12">
-                            <p>{{ t("confirmationMessage.instructions") }}.</p>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </template>
-            <template #footer>
-                <div class="v-card__actions">
-                    <v-btn id="submit-btn" color="primary" @click="cancel">
-                        {{ t("password.backToLogin") }}
-                    </v-btn>
-                </div>
-            </template>
-        </v-modalPopup>
+        <v-dialog v-model="passwordChanged" persistent max-width="480px">
+            <v-card>
+                <v-form>
+                    <v-container>
+                        <v-row>
+                            <v-col text cols="12">
+                                <h1>{{ t("confirmationMessage.title") }}</h1>
+
+                                <p>{{ t("confirmationMessage.instructions") }}.</p>
+
+                                <div class="v-card__actions">
+                                    <v-btn id="submit-btn" color="primary" @click="cancel">
+                                        {{ t("password.backToLogin") }}
+                                    </v-btn>
+                                </div>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-form>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -85,21 +88,20 @@
     import AuthApiClient from "@js/api/auth/authApiClient";
     import resetPassword from "@js/localizations/resources/components/resetPassword";
     import { useI18n } from "vue-i18n";
-    import { useRouter, useRoute } from "vue-router";
+    import { useRoute } from "vue-router";
     import useRules from "@js/composables/useRules"
 
     const $route = useRoute();
-    const $router = useRouter();
     
     const { t } = useI18n({
         messages: resetPassword
     });
     
-    const showForm: boolean = true;
     const password = ref("");
     const confirmPassword = ref("");
     const token: string | undefined = $route.query.code?.toString();
     let userId: string | undefined = $route.query.loginId?.toString();
+    const showForm= ref(true);
     const passwordChanged = ref(false);
     const passwordError = ref(false);
     
@@ -120,6 +122,7 @@
         try {
             await authApiClient.resetPassword(userId, password.value, token);
             passwordChanged.value = true;
+            showForm.value = false;
         } catch {
             passwordError.value = true;
         }
