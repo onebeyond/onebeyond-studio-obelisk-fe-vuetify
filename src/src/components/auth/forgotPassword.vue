@@ -48,24 +48,27 @@
                 </v-form>
             </v-card>
         </v-dialog>
-        <v-modalPopup :visible="showPasswordConfirmation" :title="t('confirmationMessage.title')" @close="cancel">
-            <template #content>
-                <v-container>
-                    <v-row>
-                        <v-col text cols="12">
-                            <p>{{ t("confirmationMessage.instructions") }}.</p>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </template>
-            <template #footer>
-                <div class="v-card__actions">
-                    <v-btn id="submit-btn" color="primary" @click="cancel">
-                        {{ t("password.backToLogin") }}
-                    </v-btn>
-                </div>
-            </template>
-        </v-modalPopup>
+        <v-dialog v-model="showPasswordConfirmation" persistent max-width="480px">
+            <v-card>
+                <v-form>
+                    <v-container>
+                        <v-row>
+                            <v-col text cols="12">
+                                <h1>{{ t("confirmationMessage.title") }}</h1>
+
+                                <p>{{ t("confirmationMessage.instructions") }}.</p>
+
+                                <div class="v-card__actions">
+                                    <v-btn id="submit-btn" color="primary" @click="cancel">
+                                        {{ t("password.backToLogin") }}
+                                    </v-btn>
+                                </div>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-form>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -85,7 +88,7 @@
     });
 
     const emailInput = ref("");
-    let showForm: boolean = true;
+    let showForm= ref(true);
     let passwordError = ref(false);
     let showPasswordConfirmation = ref(false);
     let authApiClient: AuthApiClient = new AuthApiClient();
@@ -95,6 +98,7 @@
         try {
             await authApiClient.forgotPassword(emailInput.value);
             showPasswordConfirmation.value = true;
+            showForm.value = false;
         } catch {
             passwordError.value = true;
         }
