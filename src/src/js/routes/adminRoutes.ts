@@ -18,6 +18,13 @@ const adminRouter = createRouter({
             component: () => import("@components/admin/users.vue"),
             meta: { title: "Users" }
         },
+        //--Tests Pages-------------------------------------------------------------------
+        {
+            path: "/tests",
+            name: "Tests",
+            component: () => import("@components/tests/tests.vue"),
+            meta: { title: "Tests" }
+        },
         //-- password option ---------------------------------------------------
         {
             path: "/changePassword",

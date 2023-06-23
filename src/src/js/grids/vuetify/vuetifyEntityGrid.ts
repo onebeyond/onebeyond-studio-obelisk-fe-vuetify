@@ -17,15 +17,17 @@ export class VuetifyEntityGrid extends EntityGrid {
     public currentOrderByDescending: boolean = false;
     public commands: Command[] = [];
     public hasGlobalSearchEnabled: boolean = false;
+    public hasComplexFilter: boolean = false;
     public query: Query = {
         limit: 10,
         page: 1,
         orderBy: [],
     };
+    public extraFilters: any[] = [];
 
     public search: string = "";
 
-    private readonly _columns: Column[] = []; 
+    private readonly _columns: Column[] = [];
     private _dataAdaptor: DataAdaptor | null;
     private _previousPage: number = 1; // used to return to the correct grid page after an entity was added/edited/deleted
     private _hasActionColumn = false;
@@ -46,7 +48,7 @@ export class VuetifyEntityGrid extends EntityGrid {
         const columns = [...this._columns];
 
         if (this._hasActionColumn) {
-            columns.push({ title: "", key:"actions", sortable: false });
+            columns.push({ title: "", key: "actions", sortable: false });
         }
 
         return columns;
@@ -62,6 +64,11 @@ export class VuetifyEntityGrid extends EntityGrid {
     public addColumn(column: Column): VuetifyEntityGrid {
         this._columns.push(column);
 
+        return this;
+    }
+
+    public enableComplexFilter(): VuetifyEntityGrid {
+        this.hasComplexFilter = true;
         return this;
     }
 
@@ -99,7 +106,7 @@ export class VuetifyEntityGrid extends EntityGrid {
     public async refresh(): Promise<void> {
         try {
             this.isLoading = true;
-            const response = await this._dataAdaptor?.executeApi(this.query, this.search);
+            const response = await this._dataAdaptor?.executeApi(this.query, this.search, this.extraFilters);
             this.data = response.data;
             this.count = response.count;
         } finally {
