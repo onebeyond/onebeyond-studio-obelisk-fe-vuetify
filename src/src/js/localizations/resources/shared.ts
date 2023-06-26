@@ -99,7 +99,8 @@ export default {
             unknownError: "An unknown error has occured",
             backToLogin: "Back to login page",
             passwordChanged: "The password has been successfully changed",
-            email: "Email"
+            email: "Email",
+            defaultError: "An error occured while trying to log you in."
         },
         validation: {
             email: "Invalid email format.",

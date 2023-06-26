@@ -2,7 +2,7 @@
     <div>
         <v-dialog v-model="showForm" persistent max-width="480px">
             <v-card>
-                <v-form v-model="formValid">
+                <v-form ref="formRef">
                     <v-container>
                         <v-row>
                             <v-col text cols="12">
@@ -66,14 +66,14 @@
                                     >
                                     </v-text-field>
                                 </v-card-text>
-                                <div class="v-card__actions">
+                                <div class="v-card-actions">
                                     <v-btn v-if="passwordChanged" color="primary" @click="cancel">
                                         {{ t("button.close") }}
                                     </v-btn>
                                     <v-btn v-if="!passwordChanged" @click="cancel">
                                         {{ t("button.cancel") }}
                                     </v-btn>
-                                    <v-btn v-if="!passwordChanged" :disabled="!formValid" color="primary" @click="change">
+                                    <v-btn v-if="!passwordChanged" color="primary" @click="change">
                                         {{ t("button.change") }}
                                     </v-btn>
                                 </div>
@@ -94,10 +94,13 @@
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
     import useRules from "@js/composables/useRules"
+    import { VForm } from "vuetify/components";
 
     const { t } = useI18n({
         messages: changePasswordDictionary,
     });
+
+    const formRef = ref<VForm | null>(null);
 
     const router = useRouter();
     
@@ -108,7 +111,6 @@
     const confirmPassword = ref("");
     const passwordChanged = ref(false);
     const passwordError = ref(false);
-    const formValid = ref(false);
     
     const authApiClient: AuthApiClient = new AuthApiClient();
     const rules = useRules({ fieldToMatch: newPassword});
@@ -119,7 +121,9 @@
     }
 
     async function change(): Promise<void> {
-        if (formValid) {
+        const { valid } = await formRef.value!.validate();
+
+        if (valid) {
             var response = await authApiClient.changePassword(
                 new ChangePasswordRequest(oldPassword.value, newPassword.value)
             );

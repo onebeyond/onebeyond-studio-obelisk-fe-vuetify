@@ -26,5 +26,5 @@
         messages: accessDenied,
     });
 
-    let showForm: boolean = true;
+    const showForm = true;
 </script>

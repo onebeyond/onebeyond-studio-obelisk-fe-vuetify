@@ -17,7 +17,7 @@
                                     </p>
                                     <div>
                                         <v-form method="post" class="form-group" @submit.prevent="resetTfa">
-                                            <div class="v-card__actions">
+                                            <div class="v-card-actions">
                                                 <v-btn @click="showTwoFactorAuthentication">
                                                     {{ t("button.cancel") }}</v-btn>
                                                 <v-btn color="error" class="white--text" type="submit">{{
