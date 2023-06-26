@@ -106,8 +106,7 @@
             rememberMe = rememberMeFromUrl;
     
             errorMsg.value = "";
-            const defaultError: string = "An error occured while trying to log you in.";
-    
+            
             const userCredentials = new SignInTfa(code.value, rememberThisMachine.value, rememberMe);
     
             try {
@@ -117,10 +116,10 @@
                     LocalSessionStorage.setUserAuthenticated(true);
                     window.location.href = `${(window as any).location.origin}/admin/`;
                 } else {
-                    errorMsg.value = defaultError;
+                    errorMsg.value = t("password.defaultError");
                 }
             } catch {
-                errorMsg.value = defaultError;
+                errorMsg.value = t("password.defaultError");
             } finally {
                 signingIn.value = false;
             }

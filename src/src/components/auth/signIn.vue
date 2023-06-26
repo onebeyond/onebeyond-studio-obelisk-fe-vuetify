@@ -117,7 +117,6 @@
         if (valid) {
             signingIn.value = true;
             errorMsg.value = "";
-            const defaultError: string = "An error occured while trying to log you in.";
     
             const userCredentials = new SignInRequest(username.value, password.value, rememberMe);
     
@@ -133,11 +132,10 @@
                         query: { rememberMe: rememberMe.toString() },
                     });
                 } else {
-                    errorMsg.value = defaultError;
+                    errorMsg.value = t("password.defaultError");;
                 }
             } catch {
-                console.log("** ERROR **");
-                errorMsg.value = defaultError;
+                errorMsg.value = t("password.defaultError");;
             } finally {
                 signingIn.value = false;
             }
