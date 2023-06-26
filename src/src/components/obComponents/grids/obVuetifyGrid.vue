@@ -53,6 +53,12 @@
                                                   @click:clear="addFilter(column.filterType, column.key, multiSearch[column.key])"
                                                   @click:prepend-inner="addFilter(column.filterType, column.key, multiSearch[column.key])" />
                                 </template>
+                                 <template v-if="column.filterType == filterType.SimpleDate">
+                                    <v-date-picker :key="column.key"
+                                                   v-model="multiSearch[column.key]"
+                                                   no-title
+                                                   @update:modelValue="addDateFilter(column.filterType, column.key, multiSearch[column.key], column.dataType)"/>
+                                </template>
                                 <template v-if="column.filterType == filterType.SimpleDropdown">
                                     <v-select :key="column.key"
                                               v-model="multiSearch[column.key]"
@@ -256,8 +262,9 @@
 <script setup lang="ts">
     import { ref, onMounted, nextTick } from "vue";
     import { VuetifyEntityGrid } from "@js/grids/vuetify/vuetifyEntityGrid";
-    import { VDataTableServer } from "vuetify/lib/labs/components";
+    import { VDataTableServer, VDatePicker } from "vuetify/lib/labs/components";
     import { FilterType, StringOperators, NumberOperators } from "@js/grids/vuetify/types";
+    import { DateTime } from "@js/util/dateTime";
 
     const entityGridRef = ref(0);
     defineExpose({ entityGridRef });
@@ -297,8 +304,21 @@
     }
 
     async function addFilter(type: FilterType, key: string, value: any): Promise<void> {
+    console.log(111);
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter(element => element.key != key);
         props.entityGrid.extraFilters.push({ type, key, value });
+        console.log(props.entityGrid.extraFilters);
+        props.entityGrid.refresh();
+        menuNumber++;
+    }
+
+    async function addDateFilter(type: FilterType, key: string, value: any, dataType: null): Promise<void> {
+        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter(element => element.key != key);
+        if(value[0] != null)
+        {
+            props.entityGrid.extraFilters.push({ type, key, value, dataType });
+        }
+        console.log(props.entityGrid.extraFilters);
         props.entityGrid.refresh();
         menuNumber++;
     }

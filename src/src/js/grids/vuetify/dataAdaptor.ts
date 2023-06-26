@@ -6,6 +6,7 @@ import {
     StringOperators,
     NumberOperators
 } from "@js/grids/vuetify/types";
+import { DateTime } from "@js/util/dateTime";
 export class DataAdaptor extends ObApiClient {
     private readonly errorCallback: Function;
 
@@ -28,6 +29,14 @@ export class DataAdaptor extends ObApiClient {
                     if (filter.value.trim() != ''
                         && filter.value != undefined) {
                         filters.push(`${filterKey}=${filter.value}`);
+                    }
+                }
+                if (filter.type == FilterType.SimpleDate) {
+                    if (filter.value != null) {
+                           const utcFlag = filter.dataType == null ? true : false;
+                           const startDate = DateTime.getConvertedDate(filter.value[0],utcFlag); 
+                           const endDate = DateTime.getConvertedDate(DateTime.getEndOfDay(filter.value[0]), utcFlag); 
+                           filters.push(`${filterKey}=${startDate}%26${endDate}`);
                     }
                 }
                 else if (filter.type == FilterType.ComplexText) {
@@ -124,4 +133,5 @@ export class DataAdaptor extends ObApiClient {
 
         return sortQuery;
     }
+
 }
