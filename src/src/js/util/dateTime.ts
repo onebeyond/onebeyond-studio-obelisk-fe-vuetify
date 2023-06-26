@@ -64,6 +64,10 @@ export abstract class DateTime {
         return dateTime.toISOString();
     }
 
+    public static getDateOnly(value: Date): string {
+        return format(value, 'dd/MM/yyyy');
+    }
+
     private static parseDateAndTime(date: string): [Date, string] {
         const [dateString, timeString] = date.split(" ");
         return [new Date(`${dateString} 00:00:00`), timeString];

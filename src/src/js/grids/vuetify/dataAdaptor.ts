@@ -31,12 +31,19 @@ export class DataAdaptor extends ObApiClient {
                         filters.push(`${filterKey}=${filter.value}`);
                     }
                 }
-                if (filter.type == FilterType.SimpleDate) {
+                else if (filter.type == FilterType.SimpleDate 
+                    || filter.type == FilterType.ComplexDate) {
                     if (filter.value != null) {
-                           const utcFlag = filter.dataType == null ? true : false;
-                           const startDate = DateTime.getConvertedDate(filter.value[0],utcFlag); 
-                           const endDate = DateTime.getConvertedDate(DateTime.getEndOfDay(filter.value[0]), utcFlag); 
-                           filters.push(`${filterKey}=${startDate}%26${endDate}`);
+                        const utcFlag = filter.dataType == null ? true : false;
+                        const startDate = DateTime.getConvertedDate(filter.value[0],utcFlag); 
+                        const endDate = DateTime.getConvertedDate(DateTime.getEndOfDay(filter.value[0]), utcFlag); 
+                        filters.push(`${filterKey}=${startDate}%26${endDate}`);
+                    }
+                }
+                else if (filter.type == FilterType.SimpleDateOnly
+                    || filter.type == FilterType.ComplexDateOnly) { 
+                    if (filter.value != null) {
+                           filters.push(`${filterKey}=${DateTime.getDateOnly(filter.value[0])}`);
                     }
                 }
                 else if (filter.type == FilterType.ComplexText) {

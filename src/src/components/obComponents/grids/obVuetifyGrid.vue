@@ -53,7 +53,7 @@
                                                   @click:clear="addFilter(column.filterType, column.key, multiSearch[column.key])"
                                                   @click:prepend-inner="addFilter(column.filterType, column.key, multiSearch[column.key])" />
                                 </template>
-                                 <template v-if="column.filterType == filterType.SimpleDate">
+                                <template v-if="column.filterType == filterType.SimpleDate || column.filterType == filterType.SimpleDateOnly ">
                                     <v-date-picker :key="column.key"
                                                    v-model="multiSearch[column.key]"
                                                    no-title
@@ -139,6 +139,22 @@
                                                               type="text"
                                                               :placeholder="column.title"
                                                               :autofocus="true" />
+                                            </div>
+                                        </template>
+                                        <template v-if="column.filterType == filterType.ComplexDate || column.filterType == filterType.ComplexDateOnly ">
+                                          <div :key="getColumnKey(column.key)">
+                                                <v-row no-gutters>
+                                                    <v-col cols="6">
+                                                        <v-btn text block @click="addDateFilter(column.filterType, column.key, multiSearch[column.key], column.dataType)" color="success">Filter</v-btn>
+                                                    </v-col>
+                                                    <v-col cols="6">
+                                                        <v-btn text block @click="clearComplexFilter(column.key, column.filterType)" color="warning">Clear</v-btn>
+                                                    </v-col>
+                                                </v-row>
+                                              
+                                                <v-date-picker :key="column.key"
+                                                   v-model="multiSearch[column.key]"
+                                                   no-title/>
                                             </div>
                                         </template>
                                         <template v-if="column.filterType == filterType.ComplexNumber">
@@ -318,7 +334,6 @@
         {
             props.entityGrid.extraFilters.push({ type, key, value, dataType });
         }
-        console.log(props.entityGrid.extraFilters);
         props.entityGrid.refresh();
         menuNumber++;
     }
