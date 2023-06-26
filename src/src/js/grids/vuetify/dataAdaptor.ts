@@ -1,15 +1,14 @@
-import ObeliskApiClient from "@js/api/obeliskApiClient";
+import ObApiClient from "@js/api/obApiClient";
 import type {
     Query,
     OrderBy
 } from "@js/grids/vuetify/types";
 
-export class DataAdaptor extends ObeliskApiClient {
+export class DataAdaptor extends ObApiClient {
     private readonly errorCallback: Function;
 
     constructor(apiBaseUrl: string, errorCallback: Function) {
-        const apiUrl = `${ObeliskApiClient.WebApiRoot}${apiBaseUrl}`;
-        super(apiUrl);
+        super(apiBaseUrl);
         this.errorCallback = errorCallback;
     }
 

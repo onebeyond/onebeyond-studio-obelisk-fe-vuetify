@@ -1,4 +1,4 @@
-import ObeliskResourceApiClient from "@js/api/obeliskResourceApiClient";
+import ObResourceApiClient from "@js/api/obResourceApiClient";
 import type { SignInRequest } from "@js/dataModels/auth/signInRequest";
 import type { SignInResult } from "@js/dataModels/auth/signInResult";
 import type { SignInWithRecoveryCodeResult } from "@js/dataModels/auth/signInResultWithRecoveryCode";
@@ -9,8 +9,8 @@ import type { SignInWithRecoveryCode } from "@js/dataModels/auth/signInWithRecov
 import type { ChangePasswordRequest } from "@js/dataModels/auth/changePasswordRequest";
 import type { PasswordRequirements } from "@js/dataModels/auth/passwordRequirements";
 
-//We derive from WebApiClient, not from ObeliskApiClient, because the Account controller does not have api folder
-export default class AuthApiClient extends ObeliskResourceApiClient {
+//We derive from WebApiClient, not from ObApiClient, because the Account controller does not have api folder
+export default class AuthApiClient extends ObResourceApiClient {
     constructor() {
         super("auth", "v1");
     }
@@ -45,11 +45,11 @@ export default class AuthApiClient extends ObeliskResourceApiClient {
         return this.post("ForgotPassword", { email: email });
     }
 
-    public async resetPassword(username: string, password: string, code: string): Promise<Response> {
+    public async resetPassword(userId: string, password: string, token: string): Promise<Response> {
         return this.post("ResetPassword", {
-            username: username,
+            userId: userId,
             password: password,
-            code: code
+            token: token
         });
     }
 

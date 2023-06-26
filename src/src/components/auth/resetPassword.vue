@@ -9,30 +9,10 @@
                                 <h1>{{ t("title") }}</h1>
 
                                 <div v-if="passwordError">
-                                    <v-alert type="error">
+                                    <div class="alert alert-danger">
                                         {{ t("password.unknownError") }}
-                                    </v-alert>
+                                    </div>
                                 </div>
-
-                                <div v-if="passwordChanged">
-                                    <v-alert dense type="success">
-                                        {{ t("password.passwordChanged") }}
-                                    </v-alert>
-                                </div>
-
-                                <v-text-field
-                                    v-model="userName"
-                                    type="text"
-                                    hide-details="auto"
-                                    dense
-                                    outlined
-                                    :disabled="passwordChanged"
-                                    name="userName"
-                                    :label="t('userName')"
-                                    @input="passwordError = false"
-                                    :rules="[rules.required]"
-                                >
-                                </v-text-field>
 
                                 <v-text-field
                                     class="pt-3"
@@ -79,6 +59,27 @@
                 </v-form>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="passwordChanged" persistent max-width="480px">
+            <v-card>
+                <v-form>
+                    <v-container>
+                        <v-row>
+                            <v-col text cols="12">
+                                <h1>{{ t("confirmationMessage.title") }}</h1>
+
+                                <p>{{ t("confirmationMessage.instructions") }}.</p>
+
+                                <div class="v-card__actions">
+                                    <v-btn id="submit-btn" color="primary" @click="cancel">
+                                        {{ t("password.backToLogin") }}
+                                    </v-btn>
+                                </div>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-form>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -87,29 +88,28 @@
     import AuthApiClient from "@js/api/auth/authApiClient";
     import resetPassword from "@js/localizations/resources/components/resetPassword";
     import { useI18n } from "vue-i18n";
-    import { useRouter, useRoute } from "vue-router";
+    import { useRoute } from "vue-router";
     import useRules from "@js/composables/useRules"
     import { VForm } from "vuetify/components";
 
     const $route = useRoute();
-    const $router = useRouter();
-    
+
     const { t } = useI18n({
         messages: resetPassword
     });
     
     const formRef = ref<VForm | null>(null);
 
-    const showForm: boolean = true;
-    const userName = ref("");
     const password = ref("");
     const confirmPassword = ref("");
-    const code: string | undefined = $route.query.code?.toString();
+    const token: string | undefined = $route.query.code?.toString();
+    const userId: string | undefined = $route.query.loginId?.toString();
+    const showForm = ref(true);
     const passwordChanged = ref(false);
     const passwordError = ref(false);
-    
+
     let authApiClient: AuthApiClient = new AuthApiClient();
-    const rules = useRules({ fieldToMatch: password});
+    const rules = useRules({ fieldToMatch: password });
     const passwordRules = await rules.getPasswordValidationRules(authApiClient);
 
     function cancel(): void {
@@ -117,21 +117,21 @@
     }
 
     async function change() {
-        if (!code) {
+        if (!(token && userId)) {
             passwordError.value = true;
             return;
         }
+        
         const { valid } = await formRef.value!.validate();
 
         if (valid) {
             try {
-                await authApiClient.resetPassword(userName.value, password.value, code);
+                await authApiClient.resetPassword(userId, password.value, token);
                 passwordChanged.value = true;
-    
-                await $router.push({ name: "forgotPasswordConfirm" });
+                showForm.value = false;
             } catch {
                 passwordError.value = true;
             }
         }
-    };
+    }
 </script>

@@ -47,6 +47,27 @@
                 </v-form>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="showPasswordConfirmation" persistent max-width="480px">
+            <v-card>
+                <v-form>
+                    <v-container>
+                        <v-row>
+                            <v-col text cols="12">
+                                <h1>{{ t("confirmationMessage.title") }}</h1>
+
+                                <p>{{ t("confirmationMessage.instructions") }}.</p>
+
+                                <div class="v-card__actions">
+                                    <v-btn id="submit-btn" color="primary" @click="cancel">
+                                        {{ t("password.backToLogin") }}
+                                    </v-btn>
+                                </div>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-form>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -64,12 +85,13 @@
     const formRef = ref<VForm | null>(null);
 
     const { t } = useI18n({
-        messages: forgotPassword
+        messages: forgotPassword,
     });
 
     const emailInput = ref("");
-    const showForm = true;
+    const showForm = ref(true);
     const passwordError = ref(false);
+    const showPasswordConfirmation = ref(false);
     const authApiClient: AuthApiClient = new AuthApiClient();
 
     async function  sendResetPassword() {
@@ -78,12 +100,13 @@
         if (valid) {
             try {
                 await authApiClient.forgotPassword(emailInput.value);
-                await $router.push({ name: "forgotPasswordConfirm" });
+                showPasswordConfirmation.value = true;
+                showForm.value = false;
             } catch {
                 passwordError.value = true;
             }
         }
-    };
+    }
 
     async function cancel() {
         await $router.push({ name: "SignIn" });

@@ -1,9 +1,9 @@
-import ObeliskResourceApiClient from "@js/api/obeliskResourceApiClient";
+import ObResourceApiClient from "@js/api/obResourceApiClient";
 import { UserContext } from "@js/dataModels/users/userContext";
 import { plainToInstance } from "class-transformer";
 
 //We derive from WebApiClient, not from DcslApiClient, because the Account controller does not have api folder
-export default class AccountApiClient extends ObeliskResourceApiClient {
+export default class AccountApiClient extends ObResourceApiClient {
     constructor() {
         super("auth", "v1");
     }
