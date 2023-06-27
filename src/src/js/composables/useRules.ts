@@ -43,7 +43,13 @@ export default function useRules(params?: { fieldToMatch?: Ref<string> }) {
     const phoneRegex = /^\(?0( *\d\)?){9,10}$/;
     const phone = (value) => phoneRegex.test(value) || t("validation.phone");
 
-    const afterToday = (value) => isToday(value) || isFuture(value) || t("validation.afterToday");
+    // parse date string in format dd/mm/yyyy
+    function parseDate(dateString: string) : Date {
+        const dateParts = dateString.split("/");
+        return new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]));
+    }
+
+    const afterToday = (value) => isToday(parseDate(value)) || isFuture(parseDate(value)) || t("validation.afterToday");
 
     const alphaDashRegex = /^[A-Za-z0-9_-]+$/;
     const alphaDash = (value) => alphaDashRegex.test(value) || t("validation.alphaDash");
