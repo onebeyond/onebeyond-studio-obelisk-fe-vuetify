@@ -10,8 +10,8 @@ export default {
             password: "Password"
         },
         confirmationMessage: {
-            instructions: "Thank you! Your password has been reset successfully. Please try login.",
-            title: "The password changed"
+            instructions: "Thank you! Your password has been reset successfully.",
+            title: "Password changed"
         }
     }
 };

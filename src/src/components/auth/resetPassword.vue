@@ -8,9 +8,9 @@
                             <v-col text cols="12">
                                 <h1>{{ t("title") }}</h1>
 
-                                <div v-if="passwordError">
+                                <div v-if="errorMessage">
                                     <div class="alert alert-danger">
-                                        {{ t("password.unknownError") }}
+                                        {{ errorMessage }}
                                     </div>
                                 </div>
 
@@ -24,7 +24,7 @@
                                     name="password"
                                     :disabled="passwordChanged"
                                     :label="t('password')"
-                                    @input="passwordError = false"
+                                    @input="resetErrorMessage"
                                     :rules="passwordRules"
                                 >
                                 </v-text-field>
@@ -39,7 +39,7 @@
                                     name="confirmPassword"
                                     :disabled="passwordChanged"
                                     :label="t('confirmPassword')"
-                                    @input="passwordError = false"
+                                    @input="resetErrorMessage"
                                     :rules="[rules.required, rules.passwordMatch]"
                                 >
                                 </v-text-field>
@@ -89,26 +89,28 @@
     import resetPassword from "@js/localizations/resources/components/resetPassword";
     import { useI18n } from "vue-i18n";
     import { useRoute } from "vue-router";
-    import useRules from "@js/composables/useRules"
+    import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
+    import { ResetPasswordStatus } from "@js/dataModels/auth/resetPasswordStatus";
 
     const $route = useRoute();
 
     const { t } = useI18n({
-        messages: resetPassword
+        messages: resetPassword,
     });
-    
+
     const formRef = ref<VForm | null>(null);
 
     const password = ref("");
     const confirmPassword = ref("");
-    const token: string | undefined = $route.query.code?.toString();
-    const userId: string | undefined = $route.query.loginId?.toString();
     const showForm = ref(true);
     const passwordChanged = ref(false);
-    const passwordError = ref(false);
+    const errorMessage = ref("");
 
-    let authApiClient: AuthApiClient = new AuthApiClient();
+    const token = $route.query.code?.toString();
+    const userId = $route.query.loginId?.toString();
+    const authApiClient = new AuthApiClient();
+
     const rules = useRules({ fieldToMatch: password });
     const passwordRules = await rules.getPasswordValidationRules(authApiClient);
 
@@ -116,12 +118,16 @@
         window.location.href = "/";
     }
 
+    function resetErrorMessage(): void {
+        errorMessage.value = "";
+    }
+
     async function change() {
         if (!(token && userId)) {
-            passwordError.value = true;
+            errorMessage.value = t("password.resetPasswordInvalidToken");
             return;
         }
-        
+
         const { valid } = await formRef.value!.validate();
 
         if (valid) {
@@ -129,8 +135,22 @@
                 await authApiClient.resetPassword(userId, password.value, token);
                 passwordChanged.value = true;
                 showForm.value = false;
+
+                const response = await authApiClient.resetPassword(userId, password.value, token);
+                switch (response) {
+                    case ResetPasswordStatus.Success:
+                        passwordChanged.value = true;
+                        showForm.value = false;
+                        break;
+                    case ResetPasswordStatus.InvalidToken:
+                        errorMessage.value = t("password.resetPasswordInvalidToken");
+                        break;
+                    default:
+                        errorMessage.value = t("password.unknownError");
+                        break;
+                }
             } catch {
-                passwordError.value = true;
+                errorMessage.value = t("password.unknownError");
             }
         }
     }
