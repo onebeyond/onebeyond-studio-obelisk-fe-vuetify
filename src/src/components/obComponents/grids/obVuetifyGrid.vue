@@ -22,17 +22,20 @@
                       item-value="id"
                       @update:options="async() => await entityGrid.refresh()">
         <template v-slot:headers="{ columns, isSorted, getSortIcon, toggleSort }">
-            <tr>
+            <tr v-if="!entityGrid.hasColumnComplexFilter && !entityGrid.hasColumnSimpleFilter">
                 <template v-for="column in columns" :key="column.key">
                     <td>
-                        <div v-if="!entityGrid.hasComplexFilter">
-
-                            <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{ column.title }}</span>
+                     <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{ column.title }}</span>
                             <template v-if="isSorted(column)">
                                 <v-icon :icon="getSortIcon(column)"></v-icon>
                             </template>
-
-                            <div v-if="column.allowFiltering">
+                    </td>
+                </template>
+            </tr>
+            <tr v-if="entityGrid.hasColumnSimpleFilter">
+                <template v-for="column in columns" :key="column.key">
+                <td>
+                    <div v-if="column.allowFiltering">
                                 <template v-if="column.filterType == filterType.SimpleText">
                                     <v-text-field :key="column.key"
                                                   v-model="multiSearch[column.key]"
@@ -95,15 +98,18 @@
                                         </v-select>
                                     </div>
                                 </template>
-                            </div>
-                        </div>
-
-                        <div v-if="entityGrid.hasComplexFilter">
-                            <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{ column.title }}</span>
+                    </div>
+                    </td>
+                </template>
+            </tr>
+            <tr v-if="entityGrid.hasColumnComplexFilter">
+                <template v-for="column in columns" :key="column.key">
+                 <td>
+                     <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{ column.title }}</span>
                             <template v-if="isSorted(column)">
                                 <v-icon :icon="getSortIcon(column)"></v-icon>
                             </template>
-                            <v-menu offset-y :close-on-content-click="false" v-if="column.allowFiltering" :key="getMenuKey(column.key)">
+                     <v-menu offset-y :close-on-content-click="false" v-if="column.allowFiltering" :key="getMenuKey(column.key)">
                                 <template v-slot:activator="{ props }">
 
                                     <v-btn icon v-bind="props" v-if="column.filterType != FilterType.ComplexNumberRange">
@@ -253,8 +259,7 @@
 
                                 </v-card>
                             </v-menu>
-                        </div>
-                    </td>
+                     </td>
                 </template>
             </tr>
         </template>
@@ -320,7 +325,6 @@
     }
 
     async function addFilter(type: FilterType, key: string, value: any): Promise<void> {
-    console.log(111);
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter(element => element.key != key);
         props.entityGrid.extraFilters.push({ type, key, value });
         console.log(props.entityGrid.extraFilters);

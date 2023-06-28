@@ -17,7 +17,8 @@ export class VuetifyEntityGrid extends EntityGrid {
     public currentOrderByDescending: boolean = false;
     public commands: Command[] = [];
     public hasGlobalSearchEnabled: boolean = false;
-    public hasComplexFilter: boolean = false;
+    public hasColumnComplexFilter: boolean = false;
+    public hasColumnSimpleFilter: boolean = false;
     public query: Query = {
         limit: 10,
         page: 1,
@@ -67,8 +68,13 @@ export class VuetifyEntityGrid extends EntityGrid {
         return this;
     }
 
-    public enableComplexFilter(): VuetifyEntityGrid {
-        this.hasComplexFilter = true;
+    public enableColumnComplexFilter(): VuetifyEntityGrid {
+        this.hasColumnComplexFilter = true;
+        return this;
+    }
+
+    public enableColumnSimpleFilter(): VuetifyEntityGrid {
+        this.hasColumnSimpleFilter = true;
         return this;
     }
 

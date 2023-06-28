@@ -163,20 +163,21 @@
 
         entityGrid
             .setInitialSorting("userName", "asc")
-            // .enableComplexFilter()
+        .enableColumnComplexFilter()
+         //   .enableColumnSimpleFilter()
             .setEditBehaviour(onEditButtonClicked)
-            /*.addColumn({ title: t("entityColumn.identity"), sortable: true, key: "identity", allowFiltering: true, filterType: FilterType.ComplexNumberRange })
+            .addColumn({ title: t("entityColumn.identity"), sortable: true, key: "identity", allowFiltering: true, filterType: FilterType.ComplexNumberRange })
             .addColumn({ title: t("entityColumn.emailAddress"), sortable: true, key: "email", allowFiltering: true, filterType: FilterType.ComplexText })
             .addColumn({ title: t("entityColumn.userName"), sortable: true, key: "userName", allowFiltering: true, filterType: FilterType.ComplexText })
             .addColumn({ title: t("entityColumn.roleId"), sortable: true, key: "roleId", allowFiltering: true, filterType: FilterType.ComplexMultiSelectCheckbox, valueAccessor: roleArray })
             .addColumn({ title: t("entityColumn.isActive"), sortable: true, key: "isActive", allowFiltering: true, filterType: FilterType.ComplexBoolean })
-            .addColumn({ title: t("entityColumn.isLockedOut"), sortable: true, key: "isLockedOut", allowFiltering: true, filterType: FilterType.ComplexBoolean });*/
-            .addColumn({ title: t("entityColumn.identity"), sortable: true, key: "identity", allowFiltering: true, filterType: FilterType.SimpleNumber })
+            .addColumn({ title: t("entityColumn.isLockedOut"), sortable: true, key: "isLockedOut", allowFiltering: true, filterType: FilterType.ComplexBoolean })
+           /* .addColumn({ title: t("entityColumn.identity"), sortable: true, key: "identity", allowFiltering: true, filterType: FilterType.SimpleNumber })
             .addColumn({ title: t("entityColumn.emailAddress"), sortable: true, key: "email", allowFiltering: true, filterType: FilterType.SimpleText })
             .addColumn({ title: t("entityColumn.userName"), sortable: true, key: "userName", allowFiltering: true, filterType: FilterType.SimpleText })
             .addColumn({ title: t("entityColumn.roleId"), sortable: true, key: "roleId", allowFiltering: true, filterType: FilterType.SimpleMultiSelectCheckbox, valueAccessor: roleArray })
             .addColumn({ title: t("entityColumn.isActive"), sortable: true, key: "isActive", allowFiltering: true, filterType: FilterType.SimpleBoolean })
-            .addColumn({ title: t("entityColumn.isLockedOut"), sortable: true, key: "isLockedOut", allowFiltering: true, filterType: FilterType.SimpleBoolean });
+            .addColumn({ title: t("entityColumn.isLockedOut"), sortable: true, key: "isLockedOut", allowFiltering: true, filterType: FilterType.SimpleBoolean });*/
         return entityGrid;
     }
 
