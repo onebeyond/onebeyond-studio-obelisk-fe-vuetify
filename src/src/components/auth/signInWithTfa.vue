@@ -49,7 +49,7 @@
 
                             <p class="text-center mb-4">
                                 {{ t("field.recoveryInfo") }}
-                                <router-link to="loginWithRecoveryCode">{{ t("field.recoveryCode") }}</router-link>
+                                <router-link to="signInWithRecoveryCode">{{ t("field.recoveryCode") }}</router-link>
                             </p>
 
                             <div v-if="errorMsg">
@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
     import { ref } from "vue";
-    import dictionary from "@js/localizations/resources/components/loginWithTfa";
+    import dictionary from "@js/localizations/resources/components/signInWithTfa";
     import { SignInStatus } from "@js/dataModels/auth/signInStatus";
     import type { SignInResult } from "@js/dataModels/auth/signInResult";
     import AuthApiClient from "@js/api/auth/authApiClient";

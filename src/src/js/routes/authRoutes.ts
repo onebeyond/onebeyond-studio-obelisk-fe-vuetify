@@ -33,17 +33,17 @@ const authRouter = createRouter({
         },
         //-- login with 2 fa ---------------------------------------------------
         {
-            path: "/loginWithTfa",
-            name: "loginWithTfa",
-            component: () => import("@components/auth/loginWithTfa.vue"),
-            meta: { title: "Login with Two Factor Authentication" }
+            path: "/signInWithTfa",
+            name: "signInWithTfa",
+            component: () => import("@components/auth/signInWithTfa.vue"),
+            meta: { title: "Sign In with Two Factor Authentication" }
         },
         //-- login with recovery code ---------------------------------------------------
         {
-            path: "/loginWithRecoveryCode",
-            name: "loginWithRecoveryCode",
-            component: () => import("@components/auth/loginWithRecoveryCode.vue"),
-            meta: { title: "Login with Recovery Code" }
+            path: "/signInWithRecoveryCode",
+            name: "signInWithRecoveryCode",
+            component: () => import("@components/auth/signInWithRecoveryCode.vue"),
+            meta: { title: "Sign In with Recovery Code" }
         },
         //-- 404 Error page ---------------------------------------------------
         {

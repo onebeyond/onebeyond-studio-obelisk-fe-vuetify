@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
     import { ref } from "vue";
-    import dictionary from "@js/localizations/resources/components/loginWithRecoveryCode";
+    import dictionary from "@js/localizations/resources/components/signInWithRecoveryCode";
     import { SignInStatus } from "@js/dataModels/auth/signInStatus";
     import type { SignInWithRecoveryCodeResult } from "@js/dataModels/auth/signInResultWithRecoveryCode";
     import AuthApiClient from "@js/api/auth/authApiClient";

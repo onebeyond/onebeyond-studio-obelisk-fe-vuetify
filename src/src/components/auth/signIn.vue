@@ -128,7 +128,7 @@
                     window.location.href = `${(window as any).location.origin}/admin/`;
                 } else if (data.status === SignInStatus.RequiresVerification) {
                     router.push({
-                        name: "loginWithTfa",
+                        name: "signInWithTfa",
                         query: { rememberMe: rememberMe.toString() },
                     });
                 } else {
