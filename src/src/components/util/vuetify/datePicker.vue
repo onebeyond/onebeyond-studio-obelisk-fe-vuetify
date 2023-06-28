@@ -1,115 +1,85 @@
 <template>
     <div>
         <v-menu
-            v-model="menu1"
+            v-model="isMenuVisible"
             :close-on-content-click="false"
             transition="scale-transition"
-            offset-y
             max-width="290px"
             min-width="auto"
         >
-            <template v-slot:activator="{ on, attrs }">
+            <template v-slot:activator="{ props }">
                 <v-text-field
                     v-model="dateFormatted"
                     outlined
                     dense
-                    :name="fieldName"
-                    :label="fieldLabel + ' - DD/MM/YYYY'"
-                    prepend-icon="mdi-calendar"
-                    @click:clear="clearClick"
+                    :name="name"
+                    :label="label"
+                    prepend-inner-icon="mdi-calendar"
+                    @click:clear="clear"
                     :clearable="clearable"
-                    v-bind="attrs"
+                    v-bind="props"
                     hide-details="auto"
-                    v-validate="rules"
-                    :data-vv-name="fieldName"
-                    :data-vv-as="fieldLabel"
-                    :error-messages="errors.collect(scope ? scope + '.' + fieldName : fieldName)"
-                    @blur="dateChanged"
-                    v-on="on"
+                    readonly
+                    :rules="rules"
                 >
                 </v-text-field>
             </template>
-            <v-date-picker v-model="date" no-title @change="pickerChanged" @input="menu1 = false"></v-date-picker>
+            <v-date-picker 
+                v-model="date"
+                @update:modelValue="save"
+                @click:cancel="cancel"
+            />
         </v-menu>
     </div>
 </template>
 
-<script lang="ts">
-    import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-    import { format } from 'date-fns';
+<script setup lang="ts">
+    import { ref, watch, onMounted } from "vue";
+    import { VDatePicker } from "vuetify/lib/labs/VDatePicker";
+    import { DateTime } from "@js/util/dateTime";
 
-    @Component({
-        name: "vuerifyDatePicker",
-        components: {
-        },
-    })
+    const props = defineProps<{
+        clearable: boolean
+        label: string
+        name?: string
+        modelValue: Date | null
+        rules?: ((value) => string | true)[]
+    }>();
 
-    export default class ZDatePicker extends Vue {
-        @Prop({ required: true }) validator!: any;
-        @Prop({ required: true }) clearable!: boolean;
-        @Prop({ required: true }) fieldLabel!: string;
-        @Prop({ required: true }) fieldName!: string;
-        @Prop({ required: false }) rules!: string;
-        @Prop({ required: false, default: '' }) scope!: string;
+    const isMenuVisible = ref(false);
+    const date = ref<Date[] | null>([]);
+    const dateFormatted = ref("");
 
-        menu1: boolean = false;
-        date: any = "";
-        dateFormatted: string = "";
+    const emit = defineEmits(["update:modelValue"]);
 
-        @Watch("date")
-        public onIsReadOnlyChanged(val, oldVal) {
-            this.$emit("change", val ? val : null);
-        }
+    watch(date, (value) => emit("update:modelValue", value ? value[0] : null));
 
-        constructor() {
-            super();
-        }
+    watch(() => props.modelValue, updateFieldsFromModelValue);
 
-        created(): void {
-            this.$validator = this.validator;
-        }
+    onMounted(() => {
+        updateFieldsFromModelValue();
+    });
 
-        public setInitialDate(date: any): void {
-            if (date) {
-                this.date = this.formatDate(date, "yyyy-MM-dd");
-                this.dateFormatted = this.formatDate(date, "dd/MM/yyyy");
-            }
-            else {
-                this.dateFormatted = "");
-            }
-        }
+    function updateFieldsFromModelValue(): void {
+        date.value = props.modelValue ? [props.modelValue] : null;
+        dateFormatted.value = formatDate(date.value ? date.value[0] : null);
+    }
 
-        pickerChanged(): void {
-            this.dateFormatted = this.formatDate(this.date, "dd/MM/yyyy");
-        }
+    function clear(): void {
+        date.value = null;
+        dateFormatted.value = "";
+    }
 
-        clearClick(): void {
-            this.dateFormatted = "";
-            this.$emit("change", null);
-        }
+    function save(): void {
+        isMenuVisible.value = false;
+        dateFormatted.value = formatDate(date.value ? date.value[0] : null);
+    }
 
-        dateChanged(): void {
-            if (!this.menu1) {
-                if (!this.dateFormatted) {
-                    this.date = "";
-                }
-                else {
-                    const regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/\-]\d{4}$/;
+    function cancel(): void {
+        isMenuVisible.value = false;
+    }
 
-                    if (this.dateFormatted.match(regex) !== null) {
-                        const [day, month, year] = this.dateFormatted.split('/');
-                        this.date = `${year}-${month}-${day}`;
-                    }
-                    else {
-                        this.date = "";
-                    }
-                }
-            }
-        }
-
-        formatDate(date, formatString): string {
-            return date ? format(new Date(date), formatString) : "";
-        };
-
+    function formatDate(date: Date | null): string {
+        return date ? DateTime.formatDate(date) : "";
     }
 </script>
