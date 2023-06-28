@@ -7,7 +7,7 @@ const authRouter = createRouter({
         {
             path: "/",
             name: "SignIn",
-            component: () => import("@components/auth/signIn.vue"),
+            component: () => import("@components/auth/login.vue"),
             meta: { title: "Sign in" }
         },
         //-- Forgot password -------------------------------------------------
