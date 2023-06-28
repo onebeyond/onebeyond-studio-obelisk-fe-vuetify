@@ -22,7 +22,7 @@
                       item-value="id"
                       @update:options="async() => await entityGrid.refresh()">
         <template v-slot:headers="{ columns, isSorted, getSortIcon, toggleSort }">
-            <tr v-if="!entityGrid.hasColumnComplexFilter && !entityGrid.hasColumnSimpleFilter">
+            <tr v-if="(!entityGrid.hasColumnComplexFilter && !entityGrid.hasColumnSimpleFilter) || entityGrid.hasColumnSimpleFilter">
                 <template v-for="column in columns" :key="column.key">
                     <td>
                      <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{ column.title }}</span>
@@ -99,7 +99,9 @@
                                     </div>
                                 </template>
                     </div>
+                
                     </td>
+                  
                 </template>
             </tr>
             <tr v-if="entityGrid.hasColumnComplexFilter">
