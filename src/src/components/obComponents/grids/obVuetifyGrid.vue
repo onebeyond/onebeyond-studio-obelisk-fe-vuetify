@@ -32,7 +32,7 @@
                     </td>
                 </template>
             </tr>
-            <tr v-if="entityGrid.hasColumnSimpleFilter">
+            <tr v-if="entityGrid.hasColumnSimpleFilter" class="table-filter_row">
                 <template v-for="column in columns" :key="column.key">
                 <td>
                     <div v-if="column.allowFiltering">
@@ -40,7 +40,7 @@
                                     <v-text-field :key="column.key"
                                                   v-model="multiSearch[column.key]"
                                                   type="text"
-                                                  :placeholder="column.title"
+                                                  placeholder="Filter"
                                                   :autofocus="true"
                                                   @input="addFilter(column.filterType, column.key, multiSearch[column.key])"
                                                   @click:clear="addFilter(column.filterType, column.key, multiSearch[column.key])"
@@ -50,7 +50,7 @@
                                     <v-text-field :key="column.key"
                                                   v-model="multiSearch[column.key]"
                                                   type="number"
-                                                  :placeholder="column.title"
+                                                  placeholder="Filter"
                                                   :autofocus="true"
                                                   @input="addFilter(column.filterType, column.key, multiSearch[column.key])"
                                                   @click:clear="addFilter(column.filterType, column.key, multiSearch[column.key])"
@@ -66,7 +66,7 @@
                                     <v-select :key="column.key"
                                               v-model="multiSearch[column.key]"
                                               :items="column.valueAccessor"
-                                              :label="column.title"
+                                              label="Filter"
                                               persistent-hint
                                               item-value="id"
                                               item-title="name"
@@ -78,7 +78,7 @@
                                         <v-select :key="column.key"
                                                   v-model="multiSearch[column.key]"
                                                   :items="column.filterType == filterType.SimpleBoolean ? booleanArray : column.valueAccessor"
-                                                  :label="column.title"
+                                                  label="Filter"
                                                   multiple
                                                   persistent-hint
                                                   item-value="id"
