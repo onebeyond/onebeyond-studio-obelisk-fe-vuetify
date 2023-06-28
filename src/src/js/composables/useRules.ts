@@ -43,9 +43,9 @@ export default function useRules(params?: { fieldToMatch?: Ref<string> }) {
     const phoneRegex = /^\(?0( *\d\)?){9,10}$/;
     const phone = (value) => phoneRegex.test(value) || t("validation.phone");
 
-    // parse date string in format dd/mm/yyyy
+    // parse date string in format dd/mm/yyyy (hh:mm)
     function parseDate(dateString: string) : Date {
-        const dateParts = dateString.split("/");
+        const dateParts = dateString.split(" ")[0].split("/");
         return new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]));
     }
 

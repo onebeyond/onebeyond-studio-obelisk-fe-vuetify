@@ -34,16 +34,16 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, watch,onMounted } from "vue";
-    import { format } from 'date-fns';
+    import { ref, watch, onMounted } from "vue";
     import { VDatePicker } from "vuetify/lib/labs/VDatePicker";
- 
+    import { DateTime } from "@js/util/dateTime";
+
     const props = defineProps<{
         clearable: boolean
         label: string
         name?: string
         modelValue: Date | null
-        rules?: any[]
+        rules?: ((value) => string | true)[]
     }>();
 
     const isMenuVisible = ref(false);
@@ -62,7 +62,7 @@
 
     function updateFieldsFromModelValue(): void {
         date.value = props.modelValue ? [props.modelValue] : null;
-        dateFormatted.value = formatDate(date.value ? date.value[0] : null, "dd/MM/yyyy");
+        dateFormatted.value = formatDate(date.value ? date.value[0] : null);
     }
 
     function clear(): void {
@@ -72,14 +72,14 @@
 
     function save(): void {
         isMenuVisible.value = false;
-        dateFormatted.value = formatDate(date.value ? date.value[0] : null, "dd/MM/yyyy");
+        dateFormatted.value = formatDate(date.value ? date.value[0] : null);
     }
 
     function cancel(): void {
         isMenuVisible.value = false;
     }
 
-    function formatDate(date, formatString): string {
-        return date ? format(new Date(date), formatString) : "";
+    function formatDate(date: Date | null): string {
+        return date ? DateTime.formatDate(date) : "";
     }
 </script>

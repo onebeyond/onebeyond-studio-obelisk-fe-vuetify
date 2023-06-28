@@ -1,163 +1,110 @@
 <template>
     <div>
         <v-menu
-            v-model="showPicker"
-            :close-on-click="false"
+            v-model="isMenuVisible"
             :close-on-content-click="false"
             transition="scale-transition"
-            offset-y
-            max-width="290px"
             min-width="auto"
         >
-            <template v-slot:activator="{ on, attrs }">
+            <template v-slot:activator="{ props }">
                 <v-text-field
                     v-model="dateFormatted"
                     outlined
                     dense
-                    :name="fieldName"
-                    :label="fieldLabel + ' - DD/MM/YYYY'"
-                    prepend-icon="mdi-calendar"
-                    @click:clear="clearClick"
+                    :name="name"
+                    :label="label"
+                    prepend-inner-icon="mdi-calendar"
+                    @click:clear="clear"
                     :clearable="clearable"
+                    v-bind="props"
                     hide-details="auto"
-                    v-bind="attrs"
-                    v-validate="rules"
-                    :data-vv-name="fieldName"
-                    :data-vv-as="fieldLabel"
-                    :error-messages="errors.collect(scope ? scope + '.' + fieldName : fieldName)"
-                    v-on="on"
+                    readonly
+                    :rules="rules"
                 >
                 </v-text-field>
             </template>
             <v-card>
-                <v-date-picker id="customDatePicker" v-model="date" no-title @change="pickerChanged"></v-date-picker>
                 <v-card-text>
                     <v-text-field
                         v-model="time"
-                        v-validate="{ required: true, regex: timeRegex }"
-                        :name="fieldName + 'time'"
-                        :data-vv-name="fieldName + 'time'"
-                        :error-messages="errors.collect(fieldName + 'time')"
-                        data-vv-as="time"
-                        @change="timeChanged"
+                        type="time"
                         dense
-                        label="Time (24h) - HH:MM"
                     ></v-text-field>
                 </v-card-text>
-                <v-card-actions class="pt-0">
-                    <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="saveChanges"> OK </v-btn>
-                    <v-btn text @click="cancel"> Cancel </v-btn>
-                </v-card-actions>
+                <v-card-text>
+                    <v-date-picker 
+                        v-model="date"
+                        @update:modelValue="save"
+                        @click:cancel="cancel"
+                    />
+                </v-card-text>
             </v-card>
         </v-menu>
     </div>
 </template>
 
-<script lang="ts">
-    import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-    import { format } from "date-fns";
 
-    @Component({
-        name: "vuerifyDatePicker",
-        components: {}
-    })
-    export default class ZDatePicker extends Vue {
-        @Prop({ required: true }) validator!: any;
-        @Prop({ required: true }) clearable!: boolean;
-        @Prop({ required: true }) fieldLabel!: string;
-        @Prop({ required: true }) fieldName!: string;
-        @Prop({ required: false }) rules!: string;
-        @Prop({ required: false, default: null }) scope!: string;
+<script setup lang="ts">
+    import { ref, watch,onMounted } from "vue";
+    import { VDatePicker } from "vuetify/lib/labs/VDatePicker";
+    import { DateTime } from "@js/util/dateTime";
 
-        showPicker: boolean = false;
-        date: string = "";
-        dateFormatted: string = "";
-        time: string = "";
+    const props = defineProps<{
+        clearable: boolean
+        label: string
+        name?: string
+        modelValue: Date | null
+        rules?: ((value) => string | true)[]
+    }>();
 
-        oldDate: string = "";
-        oldTime: string = "";
+    const isMenuVisible = ref(false);
+    const date = ref<Date[] | null>([]);
+    const time = ref("");
+    const dateFormatted = ref("");
 
-        timeRegex: string = "^([01][0-9]|2[0-3]):([0-5][0-9])$";
+    const emit = defineEmits(["update:modelValue"]);
 
-        @Watch("showPicker")
-        public onIsReadOnlyChanged(val, oldVal) {
-            if (val && this.date == "") {
-                this.date = this.formatDate(new Date(), "yyyy-MM-dd");
-                this.time = "00:00";
-                this.dateFormatted = this.formatDate(new Date(), "dd/MM/yyyy") + " " + this.time;
+    watch(() => props.modelValue, updateFieldsFromModelValue);
 
-                this.oldDate = "";
-                this.oldTime = "";
-            }
+    onMounted(() => {
+        updateFieldsFromModelValue();
+    });
+
+    function updateFieldsFromModelValue(): void {
+        if (props.modelValue) {
+            const dateTimeParts = DateTime.splitDateAndTime(props.modelValue, DateTime.getCurrentTimeZoneId());
+            date.value = props.modelValue ? [dateTimeParts[0]] : null;
+            time.value = dateTimeParts[1];
+            dateFormatted.value = DateTime.formatDateTime(props.modelValue);
+        } 
+        else {
+            date.value = null;
+            time.value = "";
+            dateFormatted.value = "";
         }
+    }
 
-        constructor() {
-            super();
+    function clear(): void {
+        date.value = null;
+        time.value = "";
+        dateFormatted.value = "";
+        emit("update:modelValue", null);
+    }
+
+    function save(): void {
+        isMenuVisible.value = false;
+
+        if (date.value) {
+            const dateTime = DateTime.toZonedDate(date.value[0], DateTime.getCurrentTimeZoneId(), time.value);
+            dateFormatted.value = DateTime.formatDateTime(dateTime);
+            emit("update:modelValue", dateTime);
         }
-
-        created(): void {
-            //this.$validator = this.validator;
+        else {
+            clear();
         }
+    }
 
-        public setInitialDate(date: string): void {
-            if (date) {
-                this.date = this.formatDate(date, "yyyy-MM-dd");
-                this.time = this.formatDate(date, "HH:mm");
-                this.dateFormatted = this.formatDate(date, "dd/MM/yyyy") + " " + this.time;
-
-                this.oldDate = this.date;
-                this.oldTime = this.time;
-            } else {
-                this.time = "";
-                this.date = "";
-                this.dateFormatted = "";
-            }
-        }
-
-        clearClick(): void {
-            this.time = "";
-            this.date = "";
-            this.dateFormatted = "";
-
-            this.$emit("change", null);
-        }
-
-        pickerChanged(): void {
-            this.dateFormatted = this.formatDate(this.date, "dd/MM/yyyy") + " " + this.time;
-        }
-
-        formatDate(date, formatString): string {
-            return date ? format(new Date(date), formatString) : "";
-        }
-
-        timeChanged(): void {
-            this.dateFormatted = this.formatDate(this.date, "dd/MM/yyyy") + " " + this.time;
-        }
-
-        async saveChanges(): Promise<void> {
-            const validationPassed = await this.$validator.validateAll();
-
-            if (validationPassed) {
-                this.$emit("change", this.date ? this.date + "T" + this.time : null);
-                this.showPicker = false;
-            }
-        }
-
-        cancel(): void {
-            this.date = this.oldDate;
-            this.time = this.oldTime;
-            this.dateFormatted = this.formatDate(this.date, "dd/MM/yyyy") + " " + this.time;
-
-            this.$emit("change", this.date);
-
-            this.showPicker = false;
-        }
+    function cancel(): void {
+        isMenuVisible.value = false;
     }
 </script>
-
-<style>
-    #customDatePicker {
-        margin-bottom: -30px;
-    }
-</style>
