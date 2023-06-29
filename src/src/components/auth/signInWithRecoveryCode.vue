@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="360px">
         <v-card>
-            <v-form v-model="isFormValid" ref="form">
+            <v-form ref="formRef">
                 <v-container>
                     <v-row>
                         <v-col cols="12">
@@ -25,12 +25,12 @@
                                 </v-text-field>
                             </div>
 
-                            <div class="v-card__actions">
+                            <div class="v-card-actions">
                                 <v-btn 
                                     id="submit-btn" 
                                     color="primary" 
                                     type="submit" 
-                                    :disabled="signingIn || !isFormValid"
+                                    :disabled="signingIn"
                                     @click="signIn"
                                 >{{
                                     t("button.signIn")
@@ -52,14 +52,15 @@
 
 <script setup lang="ts">
     import { ref } from "vue";
-    import dictionary from "@js/localizations/resources/components/loginWithRecoveryCode";
+    import dictionary from "@js/localizations/resources/components/signInWithRecoveryCode";
     import { SignInStatus } from "@js/dataModels/auth/signInStatus";
     import type { SignInWithRecoveryCodeResult } from "@js/dataModels/auth/signInResultWithRecoveryCode";
     import AuthApiClient from "@js/api/auth/authApiClient";
     import { SignInWithRecoveryCode } from "@js/dataModels/auth/signInWithRecoveryCode";
     import LocalSessionStorage from "@js/stores/localSessionStorage";
     import { useI18n } from "vue-i18n";
-    import useRules from "@js/composables/useRules";
+    import useRules from "@js/composables/useRules";    
+    import { VForm } from "vuetify/components";
 
     const { t } = useI18n({
         messages: dictionary
@@ -67,36 +68,39 @@
 
     const rules = useRules();
 
+    const formRef = ref<VForm | null>(null);
+
     const dialog = true;
     const signingIn = ref(false);
     const code = ref("");
     const errorMsg = ref("");
-    const isFormValid = ref(false);
 
-    let authApiClient: AuthApiClient = new AuthApiClient();
+    const authApiClient: AuthApiClient = new AuthApiClient();
 
     async function signIn(): Promise<void> {
-        signingIn.value = true;
+        const { valid } = await formRef.value!.validate();
 
-        errorMsg.value = "";
-        const defaultError: string = "An error occured while trying to log you in.";
-
-        const userCredentials = new SignInWithRecoveryCode(code.value);
-
-        try {
-            const data: SignInWithRecoveryCodeResult = await authApiClient.basicSignInWithRecoveryCode(userCredentials);
-
-            if (data.status === SignInStatus.Success) {
-                LocalSessionStorage.setUserAuthenticated(true);
-                window.location.href = `${(window as any).location.origin}/admin/`;
-            } else {
-                errorMsg.value = defaultError;
+        if (valid) {
+            signingIn.value = true;
+    
+            errorMsg.value = "";
+    
+            const userCredentials = new SignInWithRecoveryCode(code.value);
+    
+            try {
+                const data: SignInWithRecoveryCodeResult = await authApiClient.basicSignInWithRecoveryCode(userCredentials);
+    
+                if (data.status === SignInStatus.Success) {
+                    LocalSessionStorage.setUserAuthenticated(true);
+                    window.location.href = `${(window as any).location.origin}/admin/`;
+                } else {
+                    errorMsg.value = t("password.defaultError");
+                }
+            } catch {
+                errorMsg.value = t("password.defaultError");
+            } finally {
+                signingIn.value = false;
             }
-        } catch {
-            console.log("** ERROR **");
-            errorMsg.value = defaultError;
-        } finally {
-            signingIn.value = false;
         }
     };
 </script>

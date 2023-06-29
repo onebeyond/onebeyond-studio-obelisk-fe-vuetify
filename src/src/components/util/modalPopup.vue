@@ -1,21 +1,20 @@
 <template>
     <div v-if="visible">
         <v-dialog v-model="visible" persistent max-width="500px">
-            <v-card>
+            <v-card class="py-5">
                 <slot name="header">
-                    <v-card-item>
-                        <v-card-title color="primary">{{ innerTitle }}</v-card-title>
-                    </v-card-item>
+                    <h1>
+                        {{ innerTitle }}
+                    </h1>
                 </slot>
                 <slot name="content">
                     <v-card-text>{{ innerMessage }}</v-card-text>
                 </slot>
-                <v-card-actions class="text-right">
-                    <v-spacer></v-spacer>
+                <div class="v-card-actions">
                     <slot name="footer">
                         <v-btn @click="onCloseClicked">{{ t("button.close") }}</v-btn>
                     </slot>
-                </v-card-actions>
+                </div>
             </v-card>
         </v-dialog>
     </div>

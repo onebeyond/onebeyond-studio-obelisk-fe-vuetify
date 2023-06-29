@@ -2,7 +2,7 @@
     <div>
         <v-dialog v-model="showForm" persistent max-width="480px">
             <v-card>
-                <v-form v-model="isFormValid">
+                <v-form ref="formRef">
                     <v-container>
                         <v-row>
                             <v-col text cols="12">
@@ -31,13 +31,12 @@
                                     >
                                     </v-text-field>
                                 </v-card-text>
-                                <div class="v-card__actions">
+                                <div class="v-card-actions">
                                     <v-btn id="submit-btn" @click="cancel">{{ t("button.cancel") }}</v-btn>
                                     <v-btn 
                                         id="submit-btn"
-                                        color="primary"
-                                        @click="sendResetPassword"
-                                        :disabled="!isFormValid"
+                                         color="primary" 
+                                         @click="sendResetPassword"                             
                                     >
                                         {{ t("resetButton") }}
                                     </v-btn>
@@ -79,30 +78,35 @@
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
     import useRules from "@js/composables/useRules"
+    import { VForm } from "vuetify/components";
 
     const $router = useRouter();
     const rules = useRules();
+    const formRef = ref<VForm | null>(null);
 
     const { t } = useI18n({
         messages: forgotPassword,
     });
 
     const emailInput = ref("");
-    let showForm = ref(true);
-    let passwordError = ref(false);
-    let showPasswordConfirmation = ref(false);
-    let authApiClient: AuthApiClient = new AuthApiClient();
-    const isFormValid = ref(false);
+    const showForm = ref(true);
+    const passwordError = ref(false);
+    const showPasswordConfirmation = ref(false);
+    const authApiClient: AuthApiClient = new AuthApiClient();
 
-    async function sendResetPassword(): Promise<void> {
-        try {
-            await authApiClient.forgotPassword(emailInput.value);
-            showPasswordConfirmation.value = true;
-            showForm.value = false;
-        } catch {
-            passwordError.value = true;
+    async function  sendResetPassword() {
+        const { valid } = await formRef.value!.validate();
+
+        if (valid) {
+            try {
+                await authApiClient.forgotPassword(emailInput.value);
+                showPasswordConfirmation.value = true;
+                showForm.value = false;
+            } catch {
+                passwordError.value = true;
+            }
         }
-    };
+    }
 
     async function cancel() {
         await $router.push({ name: "SignIn" });

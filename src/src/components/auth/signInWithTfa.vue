@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="360px">
         <v-card>
-            <v-form v-model="isFormValid" @submit.prevent="signIn" ref="form">
+            <v-form @submit.prevent="signIn" ref="formRef">
                 <v-container>
                     <v-row>
                         <v-col cols="12">
@@ -41,7 +41,7 @@
                                 </div>
                             </div>
 
-                            <div class="v-card__actions">
+                            <div class="v-card-actions">
                                 <v-btn id="submit2-btn" color="primary" type="submit" :disabled="signingIn || !isFormValid">{{
                                     t("button.signIn")
                                 }}</v-btn>
@@ -49,7 +49,7 @@
 
                             <p class="text-center mb-4">
                                 {{ t("field.recoveryInfo") }}
-                                <router-link to="loginWithRecoveryCode">{{ t("field.recoveryCode") }}</router-link>
+                                <router-link to="signInWithRecoveryCode">{{ t("field.recoveryCode") }}</router-link>
                             </p>
 
                             <div v-if="errorMsg">
@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
     import { ref } from "vue";
-    import dictionary from "@js/localizations/resources/components/loginWithTfa";
+    import dictionary from "@js/localizations/resources/components/signInWithTfa";
     import { SignInStatus } from "@js/dataModels/auth/signInStatus";
     import type { SignInResult } from "@js/dataModels/auth/signInResult";
     import AuthApiClient from "@js/api/auth/authApiClient";
@@ -76,6 +76,7 @@
     import { useI18n } from "vue-i18n";
     import { useRoute } from "vue-router";
     import useRules from "@js/composables/useRules"
+    import { VForm } from "vuetify/components";
 
     const $route = useRoute();
     const rules = useRules();
@@ -84,12 +85,13 @@
         messages: dictionary
     });
 
+    const formRef = ref<VForm | null>(null);
+
     const signingIn = ref(false);
     const dialog = true;
     const code = ref("");
     const rememberThisMachine = ref(false);
     const errorMsg= ref("");
-    const isFormValid = ref(false);
     let rememberMe: any;
 
     const authApiClient: AuthApiClient = new AuthApiClient();
@@ -97,27 +99,30 @@
     const rememberMeFromUrl = $route.query.rememberMe;
 
     async function signIn(): Promise<void> {
-        signingIn.value = true;
-        rememberMe = rememberMeFromUrl;
+        const { valid } = await formRef.value!.validate();
 
-        errorMsg.value = "";
-        const defaultError: string = "An error occured while trying to log you in.";
-
-        const userCredentials = new SignInTfa(code.value, rememberThisMachine.value, rememberMe);
-
-        try {
-            const data: SignInResult = await authApiClient.basicSignInTfa(userCredentials);
-
-            if (data.status === SignInStatus.Success) {
-                LocalSessionStorage.setUserAuthenticated(true);
-                window.location.href = `${(window as any).location.origin}/admin/`;
-            } else {
-                errorMsg.value = defaultError;
+        if (valid) {
+            signingIn.value = true;
+            rememberMe = rememberMeFromUrl;
+    
+            errorMsg.value = "";
+            
+            const userCredentials = new SignInTfa(code.value, rememberThisMachine.value, rememberMe);
+    
+            try {
+                const data: SignInResult = await authApiClient.basicSignInTfa(userCredentials);
+    
+                if (data.status === SignInStatus.Success) {
+                    LocalSessionStorage.setUserAuthenticated(true);
+                    window.location.href = `${(window as any).location.origin}/admin/`;
+                } else {
+                    errorMsg.value = t("password.defaultError");
+                }
+            } catch {
+                errorMsg.value = t("password.defaultError");
+            } finally {
+                signingIn.value = false;
             }
-        } catch {
-            errorMsg.value = defaultError;
-        } finally {
-            signingIn.value = false;
         }
     };
 </script>

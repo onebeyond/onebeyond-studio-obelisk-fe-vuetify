@@ -27,7 +27,13 @@ export abstract class DateTime {
         return DateTime.parseDateAndTime(dateAsString);
     }
 
-    public static toZonedDate(date: Date, timeZoneId: string): Date {
+    public static toZonedDate(date: Date, timeZoneId: string, timespan: string = ''): Date {
+        const dateTime = DateTime.setTime(date, timespan);
+        const dateTimeAsString = format(dateTime, 'yyyy-MM-dd HH:mm');
+        return toDate(dateTimeAsString, { timeZone: timeZoneId });
+    }
+
+    public static toZoneDate(date: Date, timeZoneId: string): Date {
         return toDate(new Date(date), { timeZone: timeZoneId });
     }
 

@@ -54,7 +54,7 @@
                             <p v-if="showEnableAuthenticator">
                                 To set up two-factor authentication first you must configure the app.
                             </p>
-                            <div class="v-card__actions">
+                            <div class="v-card-actions">
                                 <v-btn @click="dashboard">{{ t("button.cancel") }}</v-btn>
 
                                 <div>
