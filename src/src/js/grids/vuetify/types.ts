@@ -36,16 +36,19 @@ export enum FilterType {
     SimpleBoolean = 4,
     SimpleMultiSelectCheckbox = 5,
     SimpleDate = 6,
-    SimpleDateOnly = 7,
-    ComplexText = 8,
-    ComplexNumber = 9,
-    ComplexDropdown = 10,
-    ComplexBoolean = 11,
-    ComplexMultiSelectCheckbox = 12,
-    ComplexNumberRange = 13,
-    ComplexDate = 14,
-    ComplexDateOnly = 15,
-    ComplexDateRange = 16
+    SimpleDateTime = 7,
+    SimpleDateOnly = 8,
+    ComplexText = 9,
+    ComplexNumber = 10,
+    ComplexDropdown = 11,
+    ComplexBoolean = 12,
+    ComplexMultiSelectCheckbox = 13,
+    ComplexNumberRange = 14,
+    ComplexDate = 15,
+    ComplexDateTime = 16,
+    ComplexDateOnly = 17,
+    ComplexDateRange = 18,
+    ComplexDateTimeRange = 19
 }
 
 export enum StringOperators {

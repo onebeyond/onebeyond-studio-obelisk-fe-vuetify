@@ -47,7 +47,7 @@
                                                   @click:prepend-inner="addFilter(column.filterType, column.key, multiSearch[column.key])" />
                                 </template>
                                 <template v-if="column.filterType == filterType.SimpleNumber">
-                                    <v-text-field :key="column.key"
+                                   <v-text-field :key="column.key"
                                                   v-model="multiSearch[column.key]"
                                                   type="number"
                                                   :placeholder="column.title"
@@ -55,13 +55,21 @@
                                                   @input="addFilter(column.filterType, column.key, multiSearch[column.key])"
                                                   @click:clear="addFilter(column.filterType, column.key, multiSearch[column.key])"
                                                   @click:prepend-inner="addFilter(column.filterType, column.key, multiSearch[column.key])" />
-                                </template>
+                               </template>
                                 <template v-if="column.filterType == filterType.SimpleDate || column.filterType == filterType.SimpleDateOnly ">
-                                    <v-date-picker :key="column.key"
-                                                   v-model="multiSearch[column.key]"
-                                                   no-title
-                                                   @update:modelValue="addDateFilter(column.filterType, column.key, multiSearch[column.key], column.dataType)"/>
-                                </template>
+                                       <date-picker :label="column.title"
+                                                :clearable="true"
+                                                :name="column.title"
+                                                v-model="multiSearch[column.key]" 
+                                                @update:modelValue="addDateFilter(column.filterType, column.key, multiSearch[column.key], column.dataType)"/> 
+							    </template>
+                                <template v-if="column.filterType == filterType.SimpleDateTime">
+                                       <date-time-picker :label="column.title"
+                                                :clearable="true"
+                                                :name="column.title"
+                                                v-model="multiSearch[column.key]" 
+                                                @update:modelValue="addDateFilter(column.filterType, column.key, multiSearch[column.key], column.dataType)"/> 
+							    </template>
                                 <template v-if="column.filterType == filterType.SimpleDropdown">
                                     <v-select :key="column.key"
                                               v-model="multiSearch[column.key]"
@@ -99,27 +107,25 @@
                                     </div>
                                 </template>
                     </div>
-                
                     </td>
-                  
                 </template>
             </tr>
             <tr v-if="entityGrid.hasColumnComplexFilter">
                 <template v-for="column in columns" :key="column.key">
-                 <td>
+                <td>
                      <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{ column.title }}</span>
                             <template v-if="isSorted(column)">
                                 <v-icon :icon="getSortIcon(column)"></v-icon>
                             </template>
-                     <v-menu offset-y :close-on-content-click="false" v-if="column.allowFiltering" :key="getMenuKey(column.key)">
+                            <v-menu offset-y :close-on-content-click="false" v-if="column.allowFiltering" :key="getMenuKey(column.key)">
                                 <template v-slot:activator="{ props }">
 
-                                    <v-btn icon v-bind="props" v-if="column.filterType != FilterType.ComplexNumberRange">
+                                    <v-btn icon v-bind="props" v-if="column.filterType != FilterType.ComplexNumberRange && column.filterType != FilterType.ComplexDateRange  && column.filterType != FilterType.ComplexDateTimeRange">
                                         <v-icon small :color="multiSearch[column.key] ? 'primary' : ''">
                                             mdi-filter-variant
                                         </v-icon>
                                     </v-btn>
-                                    <v-btn icon v-bind="props" v-if="column.filterType == FilterType.ComplexNumberRange">
+                                    <v-btn icon v-bind="props" v-if="column.filterType == FilterType.ComplexNumberRange || column.filterType == FilterType.ComplexDateRange  || column.filterType == FilterType.ComplexDateTimeRange">
                                         <v-icon small :color="multiRangePrimary[column.key]  || multiRangeSecondary[column.key]? 'primary' : ''">
                                             mdi-filter-variant
                                         </v-icon>
@@ -149,7 +155,7 @@
                                                               :autofocus="true" />
                                             </div>
                                         </template>
-                                        <template v-if="column.filterType == filterType.ComplexDate || column.filterType == filterType.ComplexDateOnly ">
+                                        <template v-if="column.filterType == filterType.ComplexDate || column.filterType == filterType.ComplexDateOnly">
                                           <div :key="getColumnKey(column.key)">
                                                 <v-row no-gutters>
                                                     <v-col cols="6">
@@ -159,10 +165,66 @@
                                                         <v-btn text block @click="clearComplexFilter(column.key, column.filterType)" color="warning">Clear</v-btn>
                                                     </v-col>
                                                 </v-row>
-                                              
-                                                <v-date-picker :key="column.key"
-                                                   v-model="multiSearch[column.key]"
-                                                   no-title/>
+                                                <date-picker :label="column.title"
+                                                             :clearable="true"
+                                                             :name="column.title"
+                                                             v-model="multiSearch[column.key]" /> 
+                                            </div>
+                                        </template>
+                                        <template v-if="column.filterType == filterType.ComplexDateTime">
+                                          <div :key="getColumnKey(column.key)">
+                                                <v-row no-gutters>
+                                                    <v-col cols="6">
+                                                        <v-btn text block @click="addDateFilter(column.filterType, column.key, multiSearch[column.key], column.dataType)" color="success">Filter</v-btn>
+                                                    </v-col>
+                                                    <v-col cols="6">
+                                                        <v-btn text block @click="clearComplexFilter(column.key, column.filterType)" color="warning">Clear</v-btn>
+                                                    </v-col>
+                                                </v-row>
+                                               <date-time-picker :label="column.title"
+                                                                 :clearable="true"
+                                                                 :name="column.title"
+                                                                 v-model="multiSearch[column.key]" /> 
+                                            </div>
+                                        </template>
+                                        <template v-if="column.filterType == filterType.ComplexDateRange">
+                                          <div :key="getColumnKey(column.key)">
+                                                <v-row no-gutters>
+                                                    <v-col cols="6">
+                                                        <v-btn text block @click="addDateRangeFilter(column.filterType, column.key, multiRangePrimary[column.key] , multiRangeSecondary[column.key], column.dataType)" color="success">Filter</v-btn>
+                                                    </v-col>
+                                                    <v-col cols="6">
+                                                        <v-btn text block @click="clearRangeFilter(column.key, column.filterType)" color="warning">Clear</v-btn>
+                                                    </v-col>
+                                                </v-row>
+                                                <date-picker  label="Greater than or equal to"
+                                                              :clearable="true"
+                                                              :name="column.title"
+                                                              v-model="multiRangePrimary[column.key]" /> 
+                                                <date-picker  label="less than or equal to"
+                                                              :clearable="true"
+                                                              :name="column.title"
+                                                              v-model="multiRangeSecondary[column.key]" /> 
+                                            </div>
+                                        </template>
+                                        <template v-if="column.filterType == filterType.ComplexDateTimeRange">
+                                          <div :key="getColumnKey(column.key)">
+                                                <v-row no-gutters>
+                                                    <v-col cols="6">
+                                                         <v-btn text block @click="addDateRangeFilter(column.filterType, column.key, multiRangePrimary[column.key] , multiRangeSecondary[column.key], column.dataType)" color="success">Filter</v-btn>
+                                                   </v-col>
+                                                    <v-col cols="6">
+                                                        <v-btn text block @click="clearRangeFilter(column.key, column.filterType)" color="warning">Clear</v-btn>
+                                                    </v-col>
+                                                </v-row>
+                                                <date-time-picker  label="Greater than or equal to"
+                                                              :clearable="true"
+                                                              :name="column.title"
+                                                              v-model="multiRangePrimary[column.key]" /> 
+                                                <date-time-picker  label="less than or equal to"
+                                                              :clearable="true"
+                                                              :name="column.title"
+                                                              v-model="multiRangeSecondary[column.key]" /> 
                                             </div>
                                         </template>
                                         <template v-if="column.filterType == filterType.ComplexNumber">
@@ -336,7 +398,7 @@
 
     async function addDateFilter(type: FilterType, key: string, value: any, dataType: null): Promise<void> {
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter(element => element.key != key);
-        if(value[0] != null)
+        if(value != null)
         {
             props.entityGrid.extraFilters.push({ type, key, value, dataType });
         }
@@ -347,6 +409,16 @@
     async function addRangeFilter(type: FilterType, key: string, primaryValue: any, secondaryValue: any): Promise<void> {
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter(element => element.key != key);
         props.entityGrid.extraFilters.push({ type, key, primaryValue, secondaryValue });
+        props.entityGrid.refresh();
+        menuNumber++;
+    }
+
+    async function addDateRangeFilter(type: FilterType, key: string, primaryValue: any, secondaryValue: any, dataType : null): Promise<void> {
+        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter(element => element.key != key);
+        if(primaryValue != null || secondaryValue != null)
+        {
+             props.entityGrid.extraFilters.push({ type, key, primaryValue, secondaryValue , dataType});
+        }
         props.entityGrid.refresh();
         menuNumber++;
     }
@@ -362,6 +434,10 @@
         if (filterType == FilterType.ComplexNumberRange) {
             multiRangePrimary.value[key] = '';
             multiRangeSecondary.value[key] = '';
+        }
+        if (filterType == FilterType.ComplexDateRange || filterType == FilterType.ComplexDateTimeRange) {
+            multiRangePrimary.value[key] = null;
+            multiRangeSecondary.value[key] = null;
         }
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter(element => element.key != key);
         props.entityGrid.refresh();

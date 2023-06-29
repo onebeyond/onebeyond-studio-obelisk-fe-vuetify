@@ -52,8 +52,6 @@
 
     const emit = defineEmits(["update:modelValue"]);
 
-    watch(date, (value) => emit("update:modelValue", value ? value[0] : null));
-
     watch(() => props.modelValue, updateFieldsFromModelValue);
 
     onMounted(() => {
@@ -68,11 +66,13 @@
     function clear(): void {
         date.value = null;
         dateFormatted.value = "";
+        emit("update:modelValue", null)
     }
 
     function save(): void {
         isMenuVisible.value = false;
         dateFormatted.value = formatDate(date.value ? date.value[0] : null);
+        emit("update:modelValue", date.value ? date.value[0] : null)
     }
 
     function cancel(): void {

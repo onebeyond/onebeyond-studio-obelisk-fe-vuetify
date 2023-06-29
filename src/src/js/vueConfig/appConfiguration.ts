@@ -6,6 +6,8 @@ import "@js/util/stringExtensions";
 import SessionTimeoutComponent from "@components/util/sessionTimeout.vue";
 import UserContextSetter from "@components/obComponents/userContextSetter.vue";
 import GlobalErrorHandler from "@components/util/globalErrorHandler.vue";
+import DatePicker from "@components/util/vuetify/datePicker.vue";
+import DateTimePicker from "@components/util/vuetify/dateTimePicker.vue";
 import ModalPopup from "@components/util/modalPopup.vue";
 
 //Language selector for VueI18n
@@ -164,6 +166,8 @@ export default class AppConfiguration {
         this.app.component("v-modalPopup", ModalPopup);
         this.app.component("language-selector", LanguageSelector);
         this.app.component("global-error-handler", GlobalErrorHandler);
+        this.app.component("date-picker", DatePicker);
+        this.app.component("date-time-picker", DateTimePicker);
     }
 
     private inspect(object: any): void {

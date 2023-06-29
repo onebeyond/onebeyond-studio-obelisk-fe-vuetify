@@ -35,16 +35,46 @@ export class DataAdaptor extends ObApiClient {
                     || filter.type == FilterType.ComplexDate) {
                     if (filter.value != null) {
                         const utcFlag = filter.dataType == null ? true : false;
-                        const startDate = DateTime.getConvertedDate(filter.value[0],utcFlag); 
-                        const endDate = DateTime.getConvertedDate(DateTime.getEndOfDay(filter.value[0]), utcFlag); 
+                        const startDate = DateTime.getConvertedDate(filter.value,utcFlag); 
+                        const endDate = DateTime.getConvertedDate(DateTime.getEndOfDay(filter.value), utcFlag); 
                         filters.push(`${filterKey}=${startDate}%26${endDate}`);
+                    }
+                }
+                else if (filter.type == FilterType.SimpleDateTime 
+                    || filter.type == FilterType.ComplexDateTime) {
+                    if (filter.value != null) {
+                        const utcFlag = filter.dataType == null ? true : false;
+                        const startDate = DateTime.getConvertedDate(filter.value,utcFlag); 
+                        filters.push(`${filterKey}=${startDate}`);
                     }
                 }
                 else if (filter.type == FilterType.SimpleDateOnly
                     || filter.type == FilterType.ComplexDateOnly) { 
                     if (filter.value != null) {
-                           filters.push(`${filterKey}=${DateTime.getDateOnly(filter.value[0])}`);
+                           filters.push(`${filterKey}=${DateTime.getDateOnly(filter.value)}`);
                     }
+                }
+                else if (filter.type == FilterType.ComplexDateRange 
+                    || filter.type == FilterType.ComplexDateTimeRange) {
+                        const utcFlag = filter.dataType == null ? true : false;
+                        const startDate = filter.primaryValue != undefined && filter.primaryValue != null
+                            ? DateTime.getConvertedDate(filter.primaryValue,utcFlag)
+                            : null;
+                        const endDate = filter.secondaryValue != null && filter.secondaryValue != undefined 
+                            ?  filter.type == FilterType.ComplexDateRange 
+                                ? DateTime.getConvertedDate(DateTime.getEndOfDay(filter.secondaryValue), utcFlag)
+                                : DateTime.getConvertedDate(filter.secondaryValue, utcFlag)
+                            : null;
+
+                        if (startDate != null && endDate != null) {
+                           filters.push(`${filterKey}=${startDate}%26${endDate}`);
+                        }
+                        else if (startDate != null && endDate == null) {
+                            filters.push(`${filterKey}=${startDate}%26`);
+                        }
+                        else if (startDate == null && endDate != null) {
+                            filters.push(`${filterKey}=%26${endDate}`);
+                        }
                 }
                 else if (filter.type == FilterType.ComplexText) {
                     if (filter.operator != ''
@@ -96,21 +126,20 @@ export class DataAdaptor extends ObApiClient {
                     }
                 }
                 else if (filter.type == FilterType.ComplexNumberRange) {
-                    if (filter.primaryValue != undefined
-                        && filter.primaryValue != ''
-                        && filter.secondaryValue != ''
-                        && filter.secondaryValue != undefined) {
-                        filters.push(`${filterKey}=${filter.primaryValue}%26${filter.secondaryValue}`);
+                    const start = filter.primaryValue != undefined && filter.primaryValue != ''
+                        ? filter.primaryValue
+                        : null;
+                    const end = filter.secondaryValue != undefined && filter.secondaryValue != ''
+                        ? filter.secondaryValue
+                        : null;
+                    if (start != null && end != null) {
+                        filters.push(`${filterKey}=${start}%26${end}`);
                     }
-                    else if (filter.primaryValue != undefined
-                        && filter.primaryValue != ''
-                        && (filter.secondaryValue == undefined || filter.secondaryValue == '')) {
-                        filters.push(`${filterKey}=${filter.primaryValue}%26`);
+                    else if (start != null && end == null) {
+                        filters.push(`${filterKey}=${start}%26`);
                     }
-                    else if (filter.secondaryValue != undefined
-                        && filter.secondaryValue != ''
-                        && (filter.primaryValue == undefined || filter.primaryValue == '')) {
-                        filters.push(`${filterKey}=%26${filter.secondaryValue}`);
+                    else if (start == null && end != null) {
+                        filters.push(`${filterKey}=%26${null}`);
                     }
                 }
             });
