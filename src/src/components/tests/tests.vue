@@ -90,16 +90,17 @@
 
         entityGrid
             .setInitialSorting("number", "asc")
-            // .enableComplexFilter()
+             .enableColumnComplexFilter()
+           // .enableColumnSimpleFilter()
             .setEditBehaviour(onEditButtonClicked)
-            /* .addColumn({ title: "Number", sortable: true, key: "number", allowFiltering: true, filterType: FilterType.ComplexNumberRange })
+            .addColumn({ title: "Number", sortable: true, key: "number", allowFiltering: true, filterType: FilterType.ComplexNumberRange })
              .addColumn({ title: "DateTime", sortable: true, key: "dateTime", allowFiltering: true, filterType: FilterType.ComplexDate })
              .addColumn({ title: "DateTimeOffset", sortable: true, key: "dateTimeOffset", allowFiltering: true, filterType: FilterType.ComplexDate, dataType: "dateTimeOffset" })
-             .addColumn({ title: "DateOnly", sortable: true, key: "dateOnly", allowFiltering: true, filterType: FilterType: FilterType.ComplexDateOnly })*/
-            .addColumn({ title: "Number", sortable: true, key: "number", allowFiltering: true, filterType: FilterType.SimpleNumber })
-            .addColumn({ title: "DateTime", sortable: true, key: "dateTime", allowFiltering: true, filterType: FilterType.SimpleDate })
-            .addColumn({ title: "DateTimeOffset", sortable: true, key: "dateTimeOffset", allowFiltering: true, filterType: FilterType.SimpleDate, dataType: "dateTimeOffset" })
-            .addColumn({ title: "DateOnly", sortable: true, key: "dateOnly", allowFiltering: true, filterType: FilterType.SimpleDateOnly })
+             .addColumn({ title: "DateOnly", sortable: true, key: "dateOnly", allowFiltering: true, filterType: FilterType.ComplexDateOnly });
+            /*  .addColumn({ title: "Number", sortable: true, key: "number", allowFiltering: true, filterType: FilterType.SimpleNumber })
+            .addColumn({ title: "DateTime", sortable: true, key: "dateTime", allowFiltering: false, filterType: FilterType.SimpleDate })
+            .addColumn({ title: "DateTimeOffset", sortable: true, key: "dateTimeOffset", allowFiltering: false, filterType: FilterType.SimpleDate, dataType: "dateTimeOffset" })
+            .addColumn({ title: "DateOnly", sortable: true, key: "dateOnly", allowFiltering: false, filterType: FilterType.SimpleDateOnly })*/
 
         return entityGrid;
     }
