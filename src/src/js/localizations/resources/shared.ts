@@ -96,9 +96,10 @@ export default {
             endDate: "End date"
         },
         password: {
-            unknownError: "An unknown error has occured",
+            unknownError: "An unknown error has occurred",
             backToLogin: "Back to login page",
             passwordChanged: "The password has been successfully changed",
+            resetPasswordInvalidToken: "The URL is either invalid or has expired",
             email: "Email",
             defaultError: "An error occured while trying to log you in."
         },
@@ -106,8 +107,8 @@ export default {
             email: "Invalid email format.",
             maxCharacters: "The input field must contain less than {max} characters.",
             maxNumber: "The input field must be less than {max}.",
-            minCharacters: "The input field must contain atleast {min} characters.",
-            minNumber: "The input field must be atleast {min}.",
+            minCharacters: "The input field must contain at least {min} characters.",
+            minNumber: "The input field must be at least {min}.",
             lengthCharacters: "The input field must be {length} characters long.",
             lengthNumber: "The input field must be {length} digits.",
             maxDateInvalid: "Date must be before {limit}.",

@@ -8,6 +8,7 @@ import { plainToInstance } from "class-transformer";
 import type { SignInWithRecoveryCode } from "@js/dataModels/auth/signInWithRecoveryCode";
 import type { ChangePasswordRequest } from "@js/dataModels/auth/changePasswordRequest";
 import type { PasswordRequirements } from "@js/dataModels/auth/passwordRequirements";
+import type { ResetPasswordStatus } from "@js/dataModels/auth/resetPasswordStatus";
 
 //We derive from WebApiClient, not from ObApiClient, because the Account controller does not have api folder
 export default class AuthApiClient extends ObResourceApiClient {
@@ -45,12 +46,13 @@ export default class AuthApiClient extends ObResourceApiClient {
         return this.post("ForgotPassword", { email: email });
     }
 
-    public async resetPassword(userId: string, password: string, token: string): Promise<Response> {
-        return this.post("ResetPassword", {
+    public async resetPassword(userId: string, password: string, token: string): Promise<ResetPasswordStatus> {
+        const response = await this.post("ResetPassword", {
             userId: userId,
             password: password,
             token: token
         });
+        return (await response.json()) as ResetPasswordStatus;
     }
 
     public async changePassword(details: ChangePasswordRequest): Promise<Response> {
