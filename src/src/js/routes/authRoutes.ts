@@ -24,6 +24,13 @@ const authRouter = createRouter({
             component: () => import("@components/auth/accessDenied.vue"),
             meta: { title: "Access Denied" }
         },
+        //-- set password -------------------------------------------------
+        {
+            path: "/setPassword",
+            name: "setPassword",
+            component: () => import("@components/auth/setPassword.vue"),
+            meta: { title: "Set Password" }
+        },
         //-- reset password -------------------------------------------------
         {
             path: "/resetPassword",
