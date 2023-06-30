@@ -5,7 +5,6 @@
             <div id="topNav">
                 <router-link to="/">Home</router-link>
                 <router-link to="/users">Users</router-link>
-                <router-link to="/tests">Tests</router-link>
             </div>
             <v-spacer></v-spacer>
             <v-app-bar-nav-icon class="white--text" right @click="drawer = true"></v-app-bar-nav-icon>
