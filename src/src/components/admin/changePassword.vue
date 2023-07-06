@@ -89,7 +89,7 @@
 <script setup lang="ts">
     import { ref } from "vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
-    import changePasswordDictionary from "@js/localizations/resources/components/changePassword";
+    import changePasswordDictionary from "@js/localizations/resources/components/admin/changePassword";
     import { ChangePasswordRequest } from "@js/dataModels/auth/changePasswordRequest";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
