@@ -139,7 +139,6 @@
 
         if (valid) {
             try {
-                await authApiClient.resetPassword(userId, password.value, token);
                 passwordChanged.value = true;
                 showForm.value = false;
 
