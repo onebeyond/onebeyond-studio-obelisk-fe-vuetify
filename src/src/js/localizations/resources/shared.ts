@@ -3,6 +3,7 @@ export default {
         application: {
             applicationName: "Obelisk Template",
             developedBy: "Developed by",
+            build: "Build",
             version: "Version",
             language: "English"
         },
