@@ -2,7 +2,7 @@
     <v-app>
         <v-main>
             <global-error-handler>
-                <main id="page-account">                    
+                <main id="page-account">
                     <Suspense>
                         <router-view :key="$route.fullPath"></router-view>
                     </Suspense>
@@ -13,22 +13,21 @@
         <v-footer padless>
             <v-card width="100%" class="text-center" flat tile>
                 <v-card-text class="pt-3">
-                    Obelisk Template Developed by
-                    <a href="https://www.one-beyond.com" target="_blank">One Beyond</a> Build: {{ $buildNumber }} ({{
-                        $buildDate
-                    }})
+                    {{ t("application.applicationName") }} - {{ t("application.developedBy") }}
+                    <a href="https://www.one-beyond.com" target="_blank">One Beyond -</a>
+                    {{ t("application.build") }}: {{ $buildNumber }} ({{ $buildDate }})
                 </v-card-text>
             </v-card>
 
             <v-card width="100%" class="text-center" flat tile>
                 <p>
-                    <a href="/authentication#/PrivacyPolicy"> Privacy Policy </a>
+                    <a href="/authentication#/PrivacyPolicy"> {{ t("privacyPolicy") }} </a>
                     -
-                    <a href="/authentication#/TermsAndConditions">Terms & Conditions</a>
+                    <a href="/authentication#/TermsAndConditions">{{ t("termsConditions") }}</a>
                     -
-                    <a href="/authentication#/CookiePolicy" class="">Cookie Policy</a>
+                    <a href="/authentication#/CookiePolicy" class="">{{ t("cookiePolicy") }}</a>
                     -
-                    <a href="/authentication#/OpenSource">Open Source List</a>
+                    <a href="/authentication#/OpenSource">{{ t("openSourceList") }}</a>
                 </p>
             </v-card>
         </v-footer>
@@ -38,7 +37,12 @@
 <script setup lang="ts">
     import { useRouter } from "vue-router";
     import { inject } from "vue";
+    import { useI18n } from "vue-i18n";
+    import authAppTranslation from "@js/localizations/resources/components/admin/authApp";
 
+    const { t } = useI18n({
+        messages: authAppTranslation,
+    });
     const $buildNumber = inject("$buildNumber");
     const $buildDate = inject("$buildDate");
     const $route = useRouter;

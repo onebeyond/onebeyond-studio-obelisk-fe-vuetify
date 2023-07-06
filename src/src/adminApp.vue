@@ -30,12 +30,12 @@
                         </v-list-item>
                         <v-list-item>
                             <v-icon>mdi-two-factor-authentication</v-icon>
-                            <router-link to="/twoFactorAuthentication">Authenticator Settings</router-link>
+                            <router-link to="/twoFactorAuthentication">{{ t("AuthenticatorSettings") }}</router-link>
                         </v-list-item>
                         <hr />
                         <v-list-item>
                             <v-icon>mdi-logout</v-icon>
-                            <a @click="performLogout">Logout</a>
+                            <a @click="performLogout">{{ t("logout") }}</a>
                         </v-list-item>
                     </v-list>
                 </v-menu>
@@ -48,13 +48,13 @@
                 <v-list-item>
                     <v-icon>mdi-home</v-icon>
                     <v-list-item-title>
-                        <router-link to="/">Home</router-link>
+                        <router-link to="/">{{ t("dashboard") }}</router-link>
                     </v-list-item-title>
                 </v-list-item>
                 <v-list-item>
                     <v-icon>mdi-account-multiple</v-icon>
                     <v-list-item-title>
-                        <router-link to="/users">Users</router-link>
+                        <router-link to="/users"> {{ t("users") }}</router-link>
                     </v-list-item-title>
                 </v-list-item>
 
@@ -68,13 +68,13 @@
                 <v-list-item>
                     <v-icon>mdi-two-factor-authentication</v-icon>
                     <v-list-item-title>
-                        <router-link to="/twoFactorAuthentication">Authenticator Settings</router-link>
+                        <router-link to="/twoFactorAuthentication">{{ t("AuthenticatorSettings") }}</router-link>
                     </v-list-item-title>
                 </v-list-item>
 
                 <v-list-item>
                     <v-icon>mdi-logout</v-icon>
-                    <v-list-item-title @click="performLogout">Logout</v-list-item-title>
+                    <v-list-item-title @click="performLogout">{{ t("logout") }}</v-list-item-title>
                 </v-list-item>
                 <!-- </v-list-group> -->
             </v-list>
@@ -95,9 +95,9 @@
         <v-footer padless>
             <v-card width="100%" class="text-center" flat tile>
                 <v-card-text class="pt-3">
-                    Obelisk Template Developed by
-                    <a href="https://www.one-beyond.com" target="_blank">One Beyond</a>
-                    Build: {{ $buildNumber }} ({{ $buildDate }})
+                    {{ t("application.applicationName") }} - {{ t("application.developedBy") }}
+                    <a href="https://www.one-beyond.com" target="_blank">One Beyond -</a>
+                    {{ t("application.build") }}: {{ $buildNumber }} ({{ $buildDate }})
                 </v-card-text>
             </v-card>
         </v-footer>
@@ -117,9 +117,13 @@
     import UserAvatar from "@components/util/userAvatar.vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
     import { useUserContextStore } from "@js/stores/appStore";
+    import { useI18n } from "vue-i18n";
+    import adminAppTranslation from "@js/localizations/resources/components/admin/adminApp";
 
     let drawer = ref(false);
-
+    const { t } = useI18n({
+        messages: adminAppTranslation,
+    });
     const $buildNumber = inject("$buildNumber");
     const $buildDate = inject("$buildDate");
     const store = useUserContextStore();
