@@ -5,11 +5,11 @@ module.exports = {
     moduleFileExtensions: ["js", "jsx", "json", "vue", "ts"],
     moduleNameMapper: {
         "@js/(.*)$": "<rootDir>/wwwroot/js/$1",
-        "@components/(.*)$": "<rootDir>/wwwroot/components/$1"
+        "@components/(.*)$": "<rootDir>/wwwroot/components/$1",
     },
     verbose: true,
     transform: {
-        "\\.[jt]sx?$": "babel-jest"
+        "\\.[jt]sx?$": "babel-jest",
     },
-    setupFiles: ["<rootDir>/wwwroot/js/vueConfig/jestVueConfig.ts"]
+    setupFiles: ["<rootDir>/wwwroot/js/vueConfig/jestVueConfig.ts"],
 };

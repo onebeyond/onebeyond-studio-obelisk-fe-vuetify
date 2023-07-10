@@ -11,7 +11,7 @@ const i18n = createI18n({
     fallbackWarn: false,
     missingWarn: false,
     allowComposition: true,
-    legacy: false
+    legacy: false,
 });
 
 export { i18n };

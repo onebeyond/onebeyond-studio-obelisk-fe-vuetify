@@ -5,7 +5,7 @@ export default {
             developedBy: "Developed by",
             build: "Build",
             version: "Version",
-            language: "English"
+            language: "English",
         },
         button: {
             authSettings: "Authentication settings",
@@ -36,11 +36,11 @@ export default {
             select: "Select",
             back: "Back",
             backToSignIn: "Back to sign in page",
-            goToHome: "Back to Home"
+            goToHome: "Back to Home",
         },
         imageAltText: {
             entityImage: "Entity image",
-            logoImage: "Obelisk Template Homepage"
+            logoImage: "Obelisk Template Homepage",
         },
         layout: {
             dashboard: "Dashboard",
@@ -59,7 +59,7 @@ export default {
             changePassword: "Change Password",
             logout: "Logout",
             authenticationSettings: "Authentication Settings",
-            navigation: "Navigation"
+            navigation: "Navigation",
         },
         message: {
             addEntityTitle: "Add",
@@ -70,14 +70,14 @@ export default {
             yes: "Yes",
             no: "No",
             itemsInCollection: "items in collection",
-            noElementsFound: "No elements found"
+            noElementsFound: "No elements found",
         },
         notifications: {
             successTitle: "Upload Successful",
             successMessage: "File was uploaded successfully",
             failTitle: "Upload Failed",
             failMessage: "File was not uploaded successfully, please try again",
-            pageNotFound: "Oops! Page not found"
+            pageNotFound: "Oops! Page not found",
         },
         placeholder: {
             multiSelectSearch: "Type to search",
@@ -94,7 +94,7 @@ export default {
             pickADate: "Pick a date",
             rangeSeparator: "To",
             startDate: "Start date",
-            endDate: "End date"
+            endDate: "End date",
         },
         password: {
             unknownError: "An unknown error has occurred",
@@ -102,7 +102,7 @@ export default {
             passwordChanged: "The password has been successfully changed",
             resetPasswordInvalidToken: "The URL is either invalid or has expired",
             email: "Email",
-            defaultError: "An error occured while trying to log you in."
+            defaultError: "An error occured while trying to log you in.",
         },
         validation: {
             email: "Invalid email format.",
@@ -124,7 +124,7 @@ export default {
             requiresCapital: "The input field must contain at least one capital letter.",
             requiresNonCapital: "The input field must contain at least one non-capital character.",
             requiresUniqueCharacters: "The input field must contain at least {count} unique characters.",
-            requiresPasswordMatch: "The passwords must match."
-        }
-    }
+            requiresPasswordMatch: "The passwords must match.",
+        },
+    },
 };

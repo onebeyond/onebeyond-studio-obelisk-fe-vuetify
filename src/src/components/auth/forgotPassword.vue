@@ -33,11 +33,7 @@
                                 </v-card-text>
                                 <div class="v-card-actions">
                                     <v-btn id="submit-btn" @click="cancel">{{ t("button.cancel") }}</v-btn>
-                                    <v-btn 
-                                        id="submit-btn"
-                                         color="primary" 
-                                         @click="sendResetPassword"                             
-                                    >
+                                    <v-btn id="submit-btn" color="primary" @click="sendResetPassword">
                                         {{ t("resetButton") }}
                                     </v-btn>
                                 </div>
@@ -72,12 +68,12 @@
 </template>
 
 <script setup lang="ts">
-    import { ref } from "vue"; 
+    import { ref } from "vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
     import forgotPassword from "@js/localizations/resources/components/forgotPassword";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
-    import useRules from "@js/composables/useRules"
+    import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
 
     const $router = useRouter();
@@ -94,7 +90,7 @@
     const showPasswordConfirmation = ref(false);
     const authApiClient: AuthApiClient = new AuthApiClient();
 
-    async function  sendResetPassword() {
+    async function sendResetPassword() {
         const { valid } = await formRef.value!.validate();
 
         if (valid) {

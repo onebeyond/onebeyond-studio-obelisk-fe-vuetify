@@ -31,7 +31,7 @@
         </v-card>
 
         <!--add/edit modal-->
-        <v-modalPopup v-model:visible="showEntity" :title="t('message.addEditUserTitle')" >
+        <v-modalPopup v-model:visible="showEntity" :title="t('message.addEditUserTitle')">
             <template #content>
                 <v-card-text>
                     <v-form ref="formRef">
@@ -76,24 +76,15 @@
             </template>
             <template #footer>
                 <v-btn id="closePopupBtn" @click="closeEntityModal">{{ t("button.close") }}</v-btn>
-                <v-btn
-                    id="unlockBtn"
-                    color="success"
-                    v-if="!entity.isNew && entity.isLockedOut"
-                    @click="unlock"
-                >{{ t("button.unlock") }}</v-btn>
-                <v-btn
-                    v-if="!entity.isNew"
-                    color="blue"
-                    id="resetPasswordBtn"
-                    @click="resetPassword"
-                >{{ t("button.resetPassword") }}</v-btn>
-                <v-btn
-                    id="confirmSaveBtn"
-                    color="primary"
-                    :loading="isSaving"
-                    @click="onSubmit"
-                >{{ t("button.save") }}</v-btn>
+                <v-btn id="unlockBtn" color="success" v-if="!entity.isNew && entity.isLockedOut" @click="unlock">{{
+                    t("button.unlock")
+                }}</v-btn>
+                <v-btn v-if="!entity.isNew" color="blue" id="resetPasswordBtn" @click="resetPassword">{{
+                    t("button.resetPassword")
+                }}</v-btn>
+                <v-btn id="confirmSaveBtn" color="primary" :loading="isSaving" @click="onSubmit">{{
+                    t("button.save")
+                }}</v-btn>
             </template>
         </v-modalPopup>
 
@@ -127,7 +118,7 @@
     const formRef = ref<VForm | null>(null);
 
     const { t } = useI18n({
-        messages: userDictionary
+        messages: userDictionary,
     });
 
     const {
@@ -140,13 +131,13 @@
         saveEntity,
         closeEntityModal,
         onEditEntityButtonClicked,
-        onAddEntityButtonClicked
+        onAddEntityButtonClicked,
     } = useEntityGridCrud<User, string, VuetifyEntityGrid>(
         User,
         entityApiClient,
         provideGrid(),
         entityGridRef,
-        provideEntityUpdateStrategy()
+        provideEntityUpdateStrategy(),
     );
 
     const entityGrid = reactive(tGrid) as VuetifyEntityGrid;
@@ -161,7 +152,7 @@
     const roles = UserRole.AllRoles;
 
     function provideEntityUpdateStrategy() {
-        return (params: ConstructorParams<User, string>, entityGrid: VuetifyEntityGrid) => 
+        return (params: ConstructorParams<User, string>, entityGrid: VuetifyEntityGrid) =>
             new EntityUpdateUsingModalAndGrid(params, entityGrid);
     }
 
@@ -189,10 +180,10 @@
     async function onSubmit() {
         const { valid } = await formRef.value!.validate();
 
-        if (valid){
+        if (valid) {
             await saveEntity();
         }
-    };
+    }
 
     async function resetPassword(): Promise<void> {
         try {

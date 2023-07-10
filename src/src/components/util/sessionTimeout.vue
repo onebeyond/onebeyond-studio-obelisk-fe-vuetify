@@ -30,7 +30,7 @@
     import { onMounted } from "vue";
 
     const { t } = useI18n({
-        messages: sessionTimeoutDictionary
+        messages: sessionTimeoutDictionary,
     });
 
     let sessionDurationInMinutes = 60;
@@ -46,7 +46,7 @@
 
         jsIntervalReference = setInterval(function () {
             let expiryDate: Date = new Date(
-                LocalSessionStorage.getLastServerRequestDate() + sessionDurationInMinutes * 60 * 1000
+                LocalSessionStorage.getLastServerRequestDate() + sessionDurationInMinutes * 60 * 1000,
             );
             secondsLeft = Math.round(differenceInSeconds(expiryDate, new Date()));
             showLogoutDialog = secondsLeft < secondsBeforeDisplayingDialog;

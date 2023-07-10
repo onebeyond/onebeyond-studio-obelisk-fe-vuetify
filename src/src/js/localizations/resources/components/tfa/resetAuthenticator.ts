@@ -5,7 +5,7 @@ export default {
         disableTfaInfo:
             "This process disables TFA until you verify your authenticator app. If you do not complete your authenticator app configuration you may lose access to your account.",
         button: {
-            resetBtn: "Reset authenticator key"
-        }
-    }
+            resetBtn: "Reset authenticator key",
+        },
+    },
 };

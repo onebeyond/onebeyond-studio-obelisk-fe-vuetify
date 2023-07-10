@@ -11,7 +11,7 @@
 
     @Component({
         name: "UserContextSetter",
-        components: {}
+        components: {},
     })
     export default class UserContextSetter extends Vue {
         private authApiClient: AuthApiClient;

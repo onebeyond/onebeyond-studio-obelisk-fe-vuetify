@@ -1,6 +1,6 @@
 export default {
     en: {
         admin: "Administration",
-        wiki: "Wiki"
-    }
+        wiki: "Wiki",
+    },
 };

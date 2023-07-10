@@ -1,8 +1,5 @@
 import ObApiClient from "@js/api/obApiClient";
-import type {
-    Query,
-    OrderBy
-} from "@js/grids/vuetify/types";
+import type { Query, OrderBy } from "@js/grids/vuetify/types";
 
 export class DataAdaptor extends ObApiClient {
     private readonly errorCallback: Function;
@@ -38,9 +35,7 @@ export class DataAdaptor extends ObApiClient {
     public constructSortQuery(columns: OrderBy[]): string {
         let sortQuery = "orderBy=";
 
-        sortQuery += columns
-            .map((x) => `${x.key}:${x.order}`)
-            .join(",");
+        sortQuery += columns.map((x) => `${x.key}:${x.order}`).join(",");
 
         return sortQuery;
     }

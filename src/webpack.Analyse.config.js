@@ -5,7 +5,7 @@ const productionConfig = require("./webpack.Release.config");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 const analyzeConfig = {
-    plugins: [new BundleAnalyzerPlugin()]
+    plugins: [new BundleAnalyzerPlugin()],
 };
 
 module.exports = (env, options) => {

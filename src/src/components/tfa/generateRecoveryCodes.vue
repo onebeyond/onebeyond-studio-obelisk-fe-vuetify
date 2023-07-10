@@ -42,25 +42,25 @@
 </template>
 
 <script setup lang="ts">
-import dictionary from "@js/localizations/resources/components/tfa/generateRecoveryCodes";
-import { useI18n } from "vue-i18n";
+    import dictionary from "@js/localizations/resources/components/tfa/generateRecoveryCodes";
+    import { useI18n } from "vue-i18n";
 
-const { t } = useI18n({
-    messages: dictionary,
-});
-const props = defineProps(["showGenerateRecoveryCodes", "showRecoveryCodes"]);
-const emit = defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticatorCard", "showRecoveryCodesCard"]);
-let showGenerateRecoveryCodes = props.showGenerateRecoveryCodes;
+    const { t } = useI18n({
+        messages: dictionary,
+    });
+    const props = defineProps(["showGenerateRecoveryCodes", "showRecoveryCodes"]);
+    const emit = defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticatorCard", "showRecoveryCodesCard"]);
+    let showGenerateRecoveryCodes = props.showGenerateRecoveryCodes;
 
-function showEnableAuthenticatorCard(): void {
-    emit('showEnableAuthenticatorCard');
-}
+    function showEnableAuthenticatorCard(): void {
+        emit("showEnableAuthenticatorCard");
+    }
 
-function showRecoveryCodesCard(): void {
-    emit('showRecoveryCodesCard')
-}
+    function showRecoveryCodesCard(): void {
+        emit("showRecoveryCodesCard");
+    }
 
-function showTwoFactorAuthentication(): void {
-    emit('showTwoFactorAuthentication')
-}
+    function showTwoFactorAuthentication(): void {
+        emit("showTwoFactorAuthentication");
+    }
 </script>

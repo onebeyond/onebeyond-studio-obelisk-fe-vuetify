@@ -7,7 +7,7 @@ export default {
             "Generating new recovery codes does not change the keys used in authenticator apps. If you wish to change the key used in an authenticator app you should",
         resetLink: "reset your authenticator keys.",
         button: {
-            generate: "Generate Recovery Codes"
-        }
-    }
+            generate: "Generate Recovery Codes",
+        },
+    },
 };

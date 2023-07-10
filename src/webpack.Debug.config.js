@@ -14,9 +14,9 @@ module.exports = (env, options) => {
         plugins: [
             new webpack.EnvironmentPlugin({
                 NODE_ENV: "development",
-                DEBUG: true
+                DEBUG: true,
             }),
-            new CleanWebpackPlugin()
+            new CleanWebpackPlugin(),
         ],
         devServer: {
             server: {
@@ -24,9 +24,9 @@ module.exports = (env, options) => {
                 options: {
                     key: "cert.key",
                     cert: "cert.crt",
-                    ca: "ca.crt"
-                }
-            }
-        }
+                    ca: "ca.crt",
+                },
+            },
+        },
     });
 };

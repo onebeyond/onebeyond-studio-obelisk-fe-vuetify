@@ -9,5 +9,5 @@ export abstract class EntityGrid {
 export enum EntityGridAction {
     EntityAdd = 1,
     EntityEdit = 2,
-    EntityDelete = 3
+    EntityDelete = 3,
 }
