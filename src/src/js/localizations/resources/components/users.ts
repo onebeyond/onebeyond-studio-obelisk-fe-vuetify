@@ -2,7 +2,7 @@ export default {
     en: {
         entityName: {
             singular: "User",
-            plural: "Users"
+            plural: "Users",
         },
         entityColumn: {
             name: "Name",
@@ -10,11 +10,11 @@ export default {
             userName: "User Name",
             roleId: "Role",
             isActive: "Active",
-            isLockedOut: "Locked Out"
+            isLockedOut: "Locked Out",
         },
         message: {
             lockedOut: "Locked out",
-            addEditUserTitle: "User Add/Edit"
-        }
-    }
+            addEditUserTitle: "User Add/Edit",
+        },
+    },
 };

@@ -4,10 +4,10 @@ module.exports = {
         "plugin:vue/vue3-essential",
         "eslint:recommended",
         "@vue/eslint-config-typescript",
-        "@vue/eslint-config-prettier"
+        "@vue/eslint-config-prettier",
     ],
     parserOptions: {
-        ecmaVersion: "latest"
+        ecmaVersion: "latest",
     },
     rules: {
         "no-unused-vars": ["off"], // JS disabled - TS takes over
@@ -15,15 +15,15 @@ module.exports = {
             "warn",
             {
                 varsIgnorePattern: "_",
-                argsIgnorePattern: "_"
-            }
+                argsIgnorePattern: "_",
+            },
         ],
         "vue/multi-word-component-names": [
             "error",
             {
-                ignores: ["dashboard", "users", "home"]
-            }
+                ignores: ["dashboard", "users", "home"],
+            },
         ],
-        "@typescript-eslint/no-explicit-any": ["warn"]
-    }
+        "@typescript-eslint/no-explicit-any": ["warn"],
+    },
 };

@@ -4,8 +4,9 @@ export default {
         title: "Forgot Password",
         resetButton: "Send password reset email",
         confirmationMessage: {
-            instructions: "Thank you, Your reset password request has been submitted. If your email is in our database, You'll receive a reset password email.",
-            title: "Please check your email"
+            instructions:
+                "Thank you, Your reset password request has been submitted. If your email is in our database, You'll receive a reset password email.",
+            title: "Please check your email",
         },
     },
 };

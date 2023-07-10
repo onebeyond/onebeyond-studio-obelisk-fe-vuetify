@@ -39,6 +39,6 @@ export default function useErrorPopup() {
         onServerError,
         onServerErrorWithState,
         alertVisible,
-        isInError
+        isInError,
     };
 }

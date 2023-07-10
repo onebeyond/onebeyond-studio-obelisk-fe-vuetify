@@ -15,12 +15,12 @@ module.exports = (env, options) => {
             new CssMinimizerWebpackPlugin({}),
             new webpack.EnvironmentPlugin({
                 NODE_ENV: "production",
-                DEBUG: false
-            })
+                DEBUG: false,
+            }),
         ],
         optimization: {
             minimize: true,
-            minimizer: [new TerserPlugin({ parallel: true })]
-        }
+            minimizer: [new TerserPlugin({ parallel: true })],
+        },
     });
 };

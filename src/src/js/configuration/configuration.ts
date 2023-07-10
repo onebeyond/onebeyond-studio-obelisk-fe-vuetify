@@ -51,7 +51,7 @@ export default abstract class Configuration {
         } catch (e: any) {
             this.logError(
                 jsonFile,
-                `An error occurred while setting configuration variables for ${jsonSettings} ${e.message}`
+                `An error occurred while setting configuration variables for ${jsonSettings} ${e.message}`,
             );
         }
     }

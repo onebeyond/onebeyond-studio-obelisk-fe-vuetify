@@ -11,7 +11,7 @@ const PhoneValidator = {
     validate(value, args) {
         // eslint-disable-line no-unused-vars
         return PHONEREG.test(value);
-    }
+    },
 };
 
 const COMPLEXPASS = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/; // eslint-disable-line no-useless-escape
@@ -24,7 +24,7 @@ const ComplexPasswordValidator = {
     validate(value, args) {
         // eslint-disable-line no-unused-vars
         return COMPLEXPASS.test(value);
-    }
+    },
 };
 
 const DateRangeValidator = {
@@ -63,7 +63,7 @@ const DateRangeValidator = {
                 return dateVal <= dateCheck;
             }
         }
-    }
+    },
 };
 
 export { PhoneValidator, ComplexPasswordValidator, DateRangeValidator };

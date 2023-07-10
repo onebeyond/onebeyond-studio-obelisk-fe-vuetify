@@ -1,6 +1,6 @@
 <template>
     <div v-if="entityGrid.hasGlobalSearchEnabled">
-        <v-text-field 
+        <v-text-field
             v-model="searchText"
             prepend-inner-icon="mdi-magnify"
             :label="'Search'"
@@ -23,17 +23,17 @@
         :loading="entityGrid.isLoading"
         :search="entityGrid.search"
         item-value="id"
-        @update:options="async() => await entityGrid.refresh()"
+        @update:options="async () => await entityGrid.refresh()"
     >
         <template v-for="(_, slot) of $slots" v-slot:[slot]="scope">
-            <slot :name="slot" v-bind="scope"/>
+            <slot :name="slot" v-bind="scope" />
         </template>
 
         <template #item.actions="{ item }">
             <v-row justify="end">
-                <v-btn 
-                    v-for="command in entityGrid.commands" 
-                    :prepend-icon="command.buttonIcon" 
+                <v-btn
+                    v-for="command in entityGrid.commands"
+                    :prepend-icon="command.buttonIcon"
                     variant="text"
                     @click="command.action(item.raw.id)"
                 >
@@ -56,12 +56,12 @@
     const key = ref(0);
 
     const props = defineProps({
-        entityGrid: { type: VuetifyEntityGrid, required: true }
+        entityGrid: { type: VuetifyEntityGrid, required: true },
     });
 
     onMounted(() => {
         props.entityGrid.setRefreshMethod(refresh);
-    })
+    });
 
     // Refreshes grid by updating key value to force update
     function refresh(): void {

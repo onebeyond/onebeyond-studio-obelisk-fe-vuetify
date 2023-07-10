@@ -10,7 +10,7 @@
     import { Vue, Component } from "vue-property-decorator";
 
     @Component({
-        name: "custom-inline-grid-td"
+        name: "custom-inline-grid-td",
     })
     export default class CustomInlineGridTd extends Vue {
         constructor() {

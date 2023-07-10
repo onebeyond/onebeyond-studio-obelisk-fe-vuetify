@@ -14,10 +14,10 @@ export default {
         verificationCode: "Verification Code",
         verify: "verify",
         button: {
-            disableTfa: "Disable TFA"
+            disableTfa: "Disable TFA",
         },
         message: {
-            authenticatorRequired: "The Verification code field is required."
-        }
-    }
+            authenticatorRequired: "The Verification code field is required.",
+        },
+    },
 };

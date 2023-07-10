@@ -5,7 +5,7 @@ const i18nConfig = {
         if (currentLocale !== LocalAppStorage.getValueForKey("currentLocale")) {
             LocalAppStorage.setValueForKey("currentLocale", currentLocale);
         }
-    }
+    },
 };
 
 export { i18nConfig };
