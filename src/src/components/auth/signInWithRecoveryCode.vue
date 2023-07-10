@@ -20,7 +20,7 @@
                                     dense 
                                     outlined 
                                     v-model="code" 
-                                    :rules="[rules.required, rules.length(code, 11), rules.alphaDash]"
+                                    :rules="[rules.required, rules.length(11), rules.alphaDash]"
                                 >
                                 </v-text-field>
                             </div>

@@ -111,7 +111,6 @@ export default {
             minCharacters: "The input field must contain at least {min} characters.",
             minNumber: "The input field must be at least {min}.",
             lengthCharacters: "The input field must be {length} characters long.",
-            lengthNumber: "The input field must be {length} digits.",
             maxDateInvalid: "Date must be before {limit}.",
             minDateInvalid: "Date must be after {limit}.",
             phone: "Phone number must start with '0' and be 10 or 11 digits long.",
