@@ -8,7 +8,7 @@ const indexRouter = createRouter({
             path: "/",
             name: "Home",
             component: () => import("@components/home/home.vue"),
-            meta: { title: "Home" }
+            meta: { title: "Home" },
             // beforeEnter(_to, _from, _next) {
             //     window.location.href = `${(window as any).location.origin}/admin/`;
             // }
@@ -18,10 +18,10 @@ const indexRouter = createRouter({
             path: "/:catchAll(.*)",
             name: "PageNotFound",
             component: () => import("@components/pagenotfound/pagenotfound.vue"),
-            meta: { title: "Page not found" }
-        }
+            meta: { title: "Page not found" },
+        },
     ],
-    linkActiveClass: "active"
+    linkActiveClass: "active",
 });
 
 const applicationName = document.getElementsByTagName("title")[0].innerHTML;

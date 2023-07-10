@@ -14,8 +14,8 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
     gridComponent: Ref<InstanceType<typeof ObVuetifyGrid> | null>,
     entityUpdateStrategyBuilder: (
         params: ConstructorParams<TEntity, T>,
-        entityGrid: TGrid
-    ) => EntityUpdateStrategyWithGrid<TEntity, T, TGrid>
+        entityGrid: TGrid,
+    ) => EntityUpdateStrategyWithGrid<TEntity, T, TGrid>,
 ) {
     const {
         entity,
@@ -41,12 +41,12 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         deleteEntity,
         onError,
         alertVisible,
-        isMobile
+        isMobile,
     } = useEntityCrud(
         provideEntityBuilder,
         entityApiClient,
         getEntityUpdateStrategyBuilder(),
-        provideOverridenFunctions()
+        provideOverridenFunctions(),
     );
 
     const gridInstance = ref<any>();
@@ -59,7 +59,7 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         return {
             onDeleteEntityButtonClickedOverride,
             onEntityUpdatedOverride,
-            onEntityDeletedOverride
+            onEntityDeletedOverride,
         };
     }
 
@@ -124,6 +124,6 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         deleteEntity,
         onError,
         alertVisible,
-        isMobile
+        isMobile,
     };
 }

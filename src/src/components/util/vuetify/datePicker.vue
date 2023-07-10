@@ -24,11 +24,7 @@
                 >
                 </v-text-field>
             </template>
-            <v-date-picker 
-                v-model="date"
-                @update:modelValue="save"
-                @click:cancel="cancel"
-            />
+            <v-date-picker v-model="date" @update:modelValue="save" @click:cancel="cancel" />
         </v-menu>
     </div>
 </template>
@@ -39,11 +35,11 @@
     import { DateTime } from "@js/util/dateTime";
 
     const props = defineProps<{
-        clearable: boolean
-        label: string
-        name?: string
-        modelValue: Date | null
-        rules?: ((value) => string | true)[]
+        clearable: boolean;
+        label: string;
+        name?: string;
+        modelValue: Date | null;
+        rules?: ((value) => string | true)[];
     }>();
 
     const isMenuVisible = ref(false);
@@ -66,13 +62,13 @@
     function clear(): void {
         date.value = null;
         dateFormatted.value = "";
-        emit("update:modelValue", null)
+        emit("update:modelValue", null);
     }
 
     function save(): void {
         isMenuVisible.value = false;
         dateFormatted.value = formatDate(date.value ? date.value[0] : null);
-        emit("update:modelValue", date.value ? date.value[0] : null)
+        emit("update:modelValue", date.value ? date.value[0] : null);
     }
 
     function cancel(): void {

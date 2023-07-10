@@ -1,13 +1,8 @@
 import { EntityGrid, EntityGridAction } from "../entityGrid";
 import { DataAdaptor } from "./dataAdaptor";
-import type {
-    CrudAction,
-    Command,
-    Column,
-    Query
-} from "@js/grids/vuetify/types";
+import type { CrudAction, Command, Column, Query } from "@js/grids/vuetify/types";
 
-//encapsulates all the logic related to the grid vue component we're currently using in the template 
+//encapsulates all the logic related to the grid vue component we're currently using in the template
 export class VuetifyEntityGrid extends EntityGrid {
     protected _instance: any | null; //This is an instance of the backing grid, e.g. vue server grid
     public data: any[] = [];
@@ -25,7 +20,7 @@ export class VuetifyEntityGrid extends EntityGrid {
 
     public search: string = "";
 
-    private readonly _columns: Column[] = []; 
+    private readonly _columns: Column[] = [];
     private _dataAdaptor: DataAdaptor | null;
     private _previousPage: number = 1; // used to return to the correct grid page after an entity was added/edited/deleted
     private _hasActionColumn = false;
@@ -46,7 +41,7 @@ export class VuetifyEntityGrid extends EntityGrid {
         const columns = [...this._columns];
 
         if (this._hasActionColumn) {
-            columns.push({ title: "", key:"actions", sortable: false });
+            columns.push({ title: "", key: "actions", sortable: false });
         }
 
         return columns;
@@ -146,8 +141,8 @@ export class VuetifyEntityGrid extends EntityGrid {
     public setInitialSorting(key: string, direction: "asc" | "desc"): VuetifyEntityGrid {
         this.query.orderBy.push({
             key: key,
-            order: direction
-        })
+            order: direction,
+        });
 
         return this;
     }
@@ -155,7 +150,7 @@ export class VuetifyEntityGrid extends EntityGrid {
     public addCustomCommand(command: Command) {
         this._hasActionColumn = true;
 
-        this.commands
+        this.commands;
     }
 
     public setRefreshMethod(refresh: Function) {

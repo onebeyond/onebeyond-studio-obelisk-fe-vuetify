@@ -8,59 +8,59 @@ const authRouter = createRouter({
             path: "/",
             name: "SignIn",
             component: () => import("@components/auth/signIn.vue"),
-            meta: { title: "Sign in" }
+            meta: { title: "Sign in" },
         },
         //-- Forgot password -------------------------------------------------
         {
             path: "/forgotPassword",
             name: "forgotPassword",
             component: () => import("@components/auth/forgotPassword.vue"),
-            meta: { title: "Change Password" }
+            meta: { title: "Change Password" },
         },
         //-- Access Denied Page -------------------------------------------------
         {
             path: "/AccessDenied",
             name: "AccessDenied",
             component: () => import("@components/auth/accessDenied.vue"),
-            meta: { title: "Access Denied" }
+            meta: { title: "Access Denied" },
         },
         //-- set password -------------------------------------------------
         {
             path: "/setPassword",
             name: "setPassword",
             component: () => import("@components/auth/setPassword.vue"),
-            meta: { title: "Set Password" }
+            meta: { title: "Set Password" },
         },
         //-- reset password -------------------------------------------------
         {
             path: "/resetPassword",
             name: "resetPassword",
             component: () => import("@components/auth/resetPassword.vue"),
-            meta: { title: "Change Password" }
+            meta: { title: "Change Password" },
         },
         //-- login with 2 fa ---------------------------------------------------
         {
             path: "/signInWithTfa",
             name: "signInWithTfa",
             component: () => import("@components/auth/signInWithTfa.vue"),
-            meta: { title: "Sign In with Two Factor Authentication" }
+            meta: { title: "Sign In with Two Factor Authentication" },
         },
         //-- login with recovery code ---------------------------------------------------
         {
             path: "/signInWithRecoveryCode",
             name: "signInWithRecoveryCode",
             component: () => import("@components/auth/signInWithRecoveryCode.vue"),
-            meta: { title: "Sign In with Recovery Code" }
+            meta: { title: "Sign In with Recovery Code" },
         },
         //-- 404 Error page ---------------------------------------------------
         {
             path: "/:catchAll(.*)",
             name: "PageNotFound",
             component: () => import("@components/pagenotfound/pagenotfound.vue"),
-            meta: { title: "Page not found" }
-        }
+            meta: { title: "Page not found" },
+        },
     ],
-    linkActiveClass: "active"
+    linkActiveClass: "active",
 });
 
 const applicationName = document.getElementsByTagName("title")[0].innerHTML;

@@ -31,29 +31,29 @@
 </template>
 
 <script setup lang="ts">
-import TFAApiClient from "@js/api/tfa/tfaApiClient";
-import dictionary from "@js/localizations/resources/components/tfa/disabletfa";
-import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
+    import TFAApiClient from "@js/api/tfa/tfaApiClient";
+    import dictionary from "@js/localizations/resources/components/tfa/disabletfa";
+    import { useI18n } from "vue-i18n";
+    import { useRouter } from "vue-router";
 
-const router = useRouter();
-const { t } = useI18n({
-    messages: dictionary,
-});
-const tfaApiClient = new TFAApiClient();
-const props = defineProps(["showDisableTFA"]);
-const emit = defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticatorCard"]);
+    const router = useRouter();
+    const { t } = useI18n({
+        messages: dictionary,
+    });
+    const tfaApiClient = new TFAApiClient();
+    const props = defineProps(["showDisableTFA"]);
+    const emit = defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticatorCard"]);
 
-function showEnableAuthenticatorCard(): void {
-    emit('showEnableAuthenticatorCard');
-}
+    function showEnableAuthenticatorCard(): void {
+        emit("showEnableAuthenticatorCard");
+    }
 
-function showTwoFactorAuthentication(): void {
-    emit('showTwoFactorAuthentication');
-}
+    function showTwoFactorAuthentication(): void {
+        emit("showTwoFactorAuthentication");
+    }
 
-async function disableTFA(): Promise<void> {
-    await tfaApiClient.disableTfa();
-    router.push({ name: "Dashboard" });
-}
+    async function disableTFA(): Promise<void> {
+        await tfaApiClient.disableTfa();
+        router.push({ name: "Dashboard" });
+    }
 </script>

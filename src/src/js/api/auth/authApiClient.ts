@@ -31,7 +31,7 @@ export default class AuthApiClient extends ObResourceApiClient {
     }
 
     public async basicSignInWithRecoveryCode(
-        userCredentials: SignInWithRecoveryCode
+        userCredentials: SignInWithRecoveryCode,
     ): Promise<SignInWithRecoveryCodeResult> {
         const response = await this.post("basic/signinWithRecoveryCode", userCredentials);
         return (await response.json()) as SignInWithRecoveryCodeResult;
@@ -50,7 +50,7 @@ export default class AuthApiClient extends ObResourceApiClient {
         const response = await this.post("ResetPassword", {
             userId: userId,
             password: password,
-            token: token
+            token: token,
         });
         return (await response.json()) as ResetPasswordStatus;
     }

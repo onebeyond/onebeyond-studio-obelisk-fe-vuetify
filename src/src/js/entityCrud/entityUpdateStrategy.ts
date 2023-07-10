@@ -52,7 +52,7 @@ export abstract class EntityUpdateStrategy<TEntity extends Entity<T>, T> {
 export abstract class EntityUpdateStrategyWithGrid<
     TEntity extends Entity<T>,
     T,
-    TGrid extends EntityGrid
+    TGrid extends EntityGrid,
 > extends EntityUpdateStrategy<TEntity, T> {
     entityGrid: TGrid;
 
@@ -98,7 +98,7 @@ export class EntityUpdateUsingModal<TEntity extends Entity<T>, T> extends Entity
 export class EntityUpdateUsingModalAndGrid<
     TEntity extends Entity<T>,
     T,
-    TGrid extends EntityGrid
+    TGrid extends EntityGrid,
 > extends EntityUpdateUsingModal<TEntity, T> {
     entityGrid: TGrid;
 
@@ -132,7 +132,7 @@ export class EntityUpdateUsingSeparatePage<TEntity extends Entity<T>, T> extends
             addView?: string;
             editView?: string;
             detailsView?: string;
-        }
+        },
     ) {
         super(superParams);
 
@@ -146,7 +146,7 @@ export class EntityUpdateUsingSeparatePage<TEntity extends Entity<T>, T> extends
         if (this.addView) {
             this.$router.push({
                 name: this.addView,
-                params: { id: this.provideEntityBuilder.idDefault() as any }
+                params: { id: this.provideEntityBuilder.idDefault() as any },
             });
         } else {
             super.doAdd();
@@ -184,7 +184,7 @@ export class EntityUpdateUsingSeparatePage<TEntity extends Entity<T>, T> extends
 export class EntityUpdateUsingSeparatePageAndGrid<
     TEntity extends Entity<T>,
     T,
-    TGrid extends EntityGrid
+    TGrid extends EntityGrid,
 > extends EntityUpdateUsingSeparatePage<TEntity, T> {
     entityGrid: TGrid;
 
@@ -196,7 +196,7 @@ export class EntityUpdateUsingSeparatePageAndGrid<
             addView?: string;
             editView?: string;
             detailsView?: string;
-        }
+        },
     ) {
         super(params, paths);
         this.entityGrid = entityGrid;
@@ -217,7 +217,7 @@ export class EntityUpdateUsingSeparatePageAndGrid<
 export class EntityUpdateUsingInlineGrid<
     TEntity extends Entity<T>,
     T,
-    TGrid extends EntityGrid
+    TGrid extends EntityGrid,
 > extends EntityUpdateUsingModalAndGrid<TEntity, T, TGrid> {
     public doAdd(): void {
         super.doAdd();

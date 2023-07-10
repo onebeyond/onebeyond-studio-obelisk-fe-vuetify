@@ -16,25 +16,24 @@
 
                             <div>
                                 <label>{{ t("field.recoveryCode") }}</label>
-                                <v-text-field 
-                                    dense 
-                                    outlined 
-                                    v-model="code" 
+                                <v-text-field
+                                    dense
+                                    outlined
+                                    v-model="code"
                                     :rules="[rules.required, rules.length(11), rules.alphaDash]"
                                 >
                                 </v-text-field>
                             </div>
 
                             <div class="v-card-actions">
-                                <v-btn 
-                                    id="submit-btn" 
-                                    color="primary" 
-                                    type="submit" 
+                                <v-btn
+                                    id="submit-btn"
+                                    color="primary"
+                                    type="submit"
                                     :disabled="signingIn"
                                     @click="signIn"
-                                >{{
-                                    t("button.signIn")
-                                }}</v-btn>
+                                    >{{ t("button.signIn") }}</v-btn
+                                >
                             </div>
 
                             <div v-if="errorMsg">
@@ -59,11 +58,11 @@
     import { SignInWithRecoveryCode } from "@js/dataModels/auth/signInWithRecoveryCode";
     import LocalSessionStorage from "@js/stores/localSessionStorage";
     import { useI18n } from "vue-i18n";
-    import useRules from "@js/composables/useRules";    
+    import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
 
     const { t } = useI18n({
-        messages: dictionary
+        messages: dictionary,
     });
 
     const rules = useRules();
@@ -82,14 +81,16 @@
 
         if (valid) {
             signingIn.value = true;
-    
+
             errorMsg.value = "";
-    
+
             const userCredentials = new SignInWithRecoveryCode(code.value);
-    
+
             try {
-                const data: SignInWithRecoveryCodeResult = await authApiClient.basicSignInWithRecoveryCode(userCredentials);
-    
+                const data: SignInWithRecoveryCodeResult = await authApiClient.basicSignInWithRecoveryCode(
+                    userCredentials,
+                );
+
                 if (data.status === SignInStatus.Success) {
                     LocalSessionStorage.setUserAuthenticated(true);
                     window.location.href = `${(window as any).location.origin}/admin/`;
@@ -102,5 +103,5 @@
                 signingIn.value = false;
             }
         }
-    };
+    }
 </script>
