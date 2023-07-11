@@ -69,10 +69,10 @@
     import { useI18n } from "vue-i18n";
 
     const { t } = useI18n({
-        messages: dictionary
+        messages: dictionary,
     });
 
     const adminUrl: ComputedRef<string> = computed(() =>
-        LocalSessionStorage.isUserAuthenticated() ? "/admin/" : "/auth/"
+        LocalSessionStorage.isUserAuthenticated() ? "/admin/" : "/auth/",
     );
 </script>

@@ -21,7 +21,7 @@
                                     dense
                                     outlined
                                     v-model="code"
-                                    :rules="[rules.required, rules.numeric, rules.length(code, 6)]"
+                                    :rules="[rules.required, rules.numeric, rules.length(6)]"
                                 ></v-text-field>
                             </div>
 
@@ -42,9 +42,13 @@
                             </div>
 
                             <div class="v-card-actions">
-                                <v-btn id="submit2-btn" color="primary" type="submit" :disabled="signingIn || !isFormValid">{{
-                                    t("button.signIn")
-                                }}</v-btn>
+                                <v-btn
+                                    id="submit2-btn"
+                                    color="primary"
+                                    type="submit"
+                                    :disabled="signingIn || !isFormValid"
+                                    >{{ t("button.signIn") }}</v-btn
+                                >
                             </div>
 
                             <p class="text-center mb-4">
@@ -75,14 +79,14 @@
     import LocalSessionStorage from "@js/stores/localSessionStorage";
     import { useI18n } from "vue-i18n";
     import { useRoute } from "vue-router";
-    import useRules from "@js/composables/useRules"
+    import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
 
     const $route = useRoute();
     const rules = useRules();
 
     const { t } = useI18n({
-        messages: dictionary
+        messages: dictionary,
     });
 
     const formRef = ref<VForm | null>(null);
@@ -91,7 +95,7 @@
     const dialog = true;
     const code = ref("");
     const rememberThisMachine = ref(false);
-    const errorMsg= ref("");
+    const errorMsg = ref("");
     let rememberMe: any;
 
     const authApiClient: AuthApiClient = new AuthApiClient();
@@ -104,14 +108,14 @@
         if (valid) {
             signingIn.value = true;
             rememberMe = rememberMeFromUrl;
-    
+
             errorMsg.value = "";
-            
+
             const userCredentials = new SignInTfa(code.value, rememberThisMachine.value, rememberMe);
-    
+
             try {
                 const data: SignInResult = await authApiClient.basicSignInTfa(userCredentials);
-    
+
                 if (data.status === SignInStatus.Success) {
                     LocalSessionStorage.setUserAuthenticated(true);
                     window.location.href = `${(window as any).location.origin}/admin/`;
@@ -124,5 +128,5 @@
                 signingIn.value = false;
             }
         }
-    };
+    }
 </script>

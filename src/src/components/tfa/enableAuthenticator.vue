@@ -16,11 +16,14 @@
                                         {{ t("or") }}
                                         {{ t("downloadLinkGoogleAuthenticator") }}
                                         <a
-                                            href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">{{
-                                                t("android") }}</a>
+                                            href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en"
+                                            >{{ t("android") }}</a
+                                        >
                                         {{ t("and") }}
-                                        <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">{{
-                                            t("ios") }}</a>.
+                                        <a
+                                            href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8"
+                                            >{{ t("ios") }}</a
+                                        >.
                                     </li>
                                     <li>
                                         {{ t("scanQrCode") }}
@@ -35,8 +38,12 @@
                                             <div class="col-12 mt-3">
                                                 <div class="form-group">
                                                     <label class="control-label">{{ t("verificationCode") }}</label>
-                                                    <v-text-field dense outlined v-model="code"
-                                                        :rules="[rules.code]"></v-text-field>
+                                                    <v-text-field
+                                                        dense
+                                                        outlined
+                                                        v-model="code"
+                                                        :rules="[rules.code]"
+                                                    ></v-text-field>
                                                 </div>
                                             </div>
                                         </div>
@@ -56,55 +63,55 @@
 </template>
 
 <script setup lang="ts">
-import TFAApiClient from "@js/api/tfa/tfaApiClient";
-import dictionary from "@js/localizations/resources/components/tfa/enableAuthenticator";
-import enableAuthenticatorSettings from "@js/dataModels/tfa/enableAuthenticatorSettings";
-import EnableTfaRequest from "@js/dataModels/tfa/enableTfaRequest";
-import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
-import { onMounted, ref } from "vue";
+    import TFAApiClient from "@js/api/tfa/tfaApiClient";
+    import dictionary from "@js/localizations/resources/components/tfa/enableAuthenticator";
+    import enableAuthenticatorSettings from "@js/dataModels/tfa/enableAuthenticatorSettings";
+    import EnableTfaRequest from "@js/dataModels/tfa/enableTfaRequest";
+    import { useI18n } from "vue-i18n";
+    import { useRouter } from "vue-router";
+    import { onMounted, ref } from "vue";
 
-const router = useRouter();
+    const router = useRouter();
 
-const { t } = useI18n({
-    messages: dictionary,
-});
-let tfaSettings: enableAuthenticatorSettings = new enableAuthenticatorSettings();
-const tfaApiClient = new TFAApiClient();
-let code = ref("");
-let errorMsg = ref("");
-const props = defineProps(["showEnableAuthenticator"]);
-const qrCode = ref(null);
-const rules: object = {
-    code: (value) => !!value || t("message.authenticatorRequired")
-};
-const emit = defineEmits(["showTwoFactorAuthentication"]);
-
-const data = await tfaApiClient.getTfaAuthenticationKey();
-tfaSettings = data;
-onMounted(() => {
-    new QRCode(qrCode.value, {
-        text: tfaSettings.authenticationUri,
-        width: 200,
-        height: 200
+    const { t } = useI18n({
+        messages: dictionary,
     });
-});
+    let tfaSettings: enableAuthenticatorSettings = new enableAuthenticatorSettings();
+    const tfaApiClient = new TFAApiClient();
+    let code = ref("");
+    let errorMsg = ref("");
+    const props = defineProps(["showEnableAuthenticator"]);
+    const qrCode = ref(null);
+    const rules: object = {
+        code: (value) => !!value || t("message.authenticatorRequired"),
+    };
+    const emit = defineEmits(["showTwoFactorAuthentication"]);
 
-async function enableTfa() {
-    const defaultError = "An error occured while trying to add authenticator.";
+    const data = await tfaApiClient.getTfaAuthenticationKey();
+    tfaSettings = data;
+    onMounted(() => {
+        new QRCode(qrCode.value, {
+            text: tfaSettings.authenticationUri,
+            width: 200,
+            height: 200,
+        });
+    });
 
-    try {
-        var inputModel = new EnableTfaRequest(code.value);
-        const response = await tfaApiClient.enableTfa(inputModel);
-        if (response.length == 0) {
-            router.push({ name: "Dashboard" });
+    async function enableTfa() {
+        const defaultError = "An error occured while trying to add authenticator.";
+
+        try {
+            var inputModel = new EnableTfaRequest(code.value);
+            const response = await tfaApiClient.enableTfa(inputModel);
+            if (response.length == 0) {
+                router.push({ name: "Dashboard" });
+            }
+        } catch {
+            errorMsg.value = defaultError;
         }
-    } catch {
-        errorMsg.value = defaultError;
     }
-}
 
-function showTwoFactorAuthentication(): void {
-    emit('showTwoFactorAuthentication');
-}
+    function showTwoFactorAuthentication(): void {
+        emit("showTwoFactorAuthentication");
+    }
 </script>

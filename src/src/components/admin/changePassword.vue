@@ -89,11 +89,11 @@
 <script setup lang="ts">
     import { ref } from "vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
-    import changePasswordDictionary from "@js/localizations/resources/components/changePassword";
+    import changePasswordDictionary from "@js/localizations/resources/components/admin/changePassword";
     import { ChangePasswordRequest } from "@js/dataModels/auth/changePasswordRequest";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
-    import useRules from "@js/composables/useRules"
+    import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
 
     const { t } = useI18n({
@@ -103,19 +103,19 @@
     const formRef = ref<VForm | null>(null);
 
     const router = useRouter();
-    
+
     const showForm: boolean = true;
-    
+
     const oldPassword = ref("");
     const newPassword = ref("");
     const confirmPassword = ref("");
     const passwordChanged = ref(false);
     const passwordError = ref(false);
-    
+
     const authApiClient: AuthApiClient = new AuthApiClient();
-    const rules = useRules({ fieldToMatch: newPassword});
+    const rules = useRules({ fieldToMatch: newPassword });
     const passwordRules = await rules.getPasswordValidationRules(authApiClient);
-    
+
     function cancel(): void {
         router.go(-1);
     }
@@ -125,7 +125,7 @@
 
         if (valid) {
             var response = await authApiClient.changePassword(
-                new ChangePasswordRequest(oldPassword.value, newPassword.value)
+                new ChangePasswordRequest(oldPassword.value, newPassword.value),
             );
 
             var changePasswordResult = await response.json();

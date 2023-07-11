@@ -15,7 +15,7 @@
 
     @Component({
         name: "LanguageSelector",
-        components: {}
+        components: {},
     })
     export default class LanguageSelector extends Vue {
         constructor() {

@@ -163,9 +163,7 @@ export class DataAdaptor extends ObApiClient {
     public constructSortQuery(columns: OrderBy[]): string {
         let sortQuery = "orderBy=";
 
-        sortQuery += columns
-            .map((x) => `${x.key}:${x.order}`)
-            .join(",");
+        sortQuery += columns.map((x) => `${x.key}:${x.order}`).join(",");
 
         return sortQuery;
     }

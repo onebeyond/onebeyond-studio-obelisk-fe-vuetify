@@ -1,5 +1,5 @@
 <template>
-    <ChangePassword :title="t('resetTitle')" />
+    <ChangePassword :title="t('setTitle')" />
 </template>
 
 <script setup lang="ts">

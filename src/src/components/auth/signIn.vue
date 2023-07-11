@@ -117,12 +117,12 @@
         if (valid) {
             signingIn.value = true;
             errorMsg.value = "";
-    
+
             const userCredentials = new SignInRequest(username.value, password.value, rememberMe);
-    
+
             try {
                 const data: SignInResult = await authApiClient.basicSignIn(userCredentials);
-    
+
                 if (data.status === SignInStatus.Success) {
                     LocalSessionStorage.setUserAuthenticated(true);
                     window.location.href = `${(window as any).location.origin}/admin/`;
@@ -132,10 +132,10 @@
                         query: { rememberMe: rememberMe.toString() },
                     });
                 } else {
-                    errorMsg.value = t("password.defaultError");;
+                    errorMsg.value = t("password.defaultError");
                 }
             } catch {
-                errorMsg.value = t("password.defaultError");;
+                errorMsg.value = t("password.defaultError");
             } finally {
                 signingIn.value = false;
             }

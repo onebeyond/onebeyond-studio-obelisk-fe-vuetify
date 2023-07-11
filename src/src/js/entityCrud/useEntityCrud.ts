@@ -15,7 +15,7 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
     provideEntityBuilder: EntityBuilder<TEntity, T>,
     entityApiClient: EntityApiClient<TEntity, T>,
     entityUpdateStrategyBuilder: (params: ConstructorParams<TEntity, T>) => EntityUpdateStrategy<TEntity, T>,
-    overridableFunctions?: OverridableFunctions<T>
+    overridableFunctions?: OverridableFunctions<T>,
 ) {
     const { showAlert, alertVisible } = useErrorPopup();
 
@@ -38,7 +38,7 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         onError,
         onEntityUpdated,
         isEditingEntityInline,
-        isMobile
+        isMobile,
     });
 
     // Can override in case of a custom url needed
@@ -190,6 +190,6 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         deleteEntity,
         onError,
         alertVisible,
-        isMobile
+        isMobile,
     };
 }

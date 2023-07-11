@@ -13,7 +13,7 @@ module.exports = (env, options) => {
             indexApp: "./src/indexApp.ts",
             adminApp: "./src/adminApp.ts",
             authApp: "./src/authApp.ts",
-            mainCss: "./css/site.scss"
+            mainCss: "./css/site.scss",
         },
 
         output: {
@@ -28,48 +28,48 @@ module.exports = (env, options) => {
                 }
                 return $filename;
             },
-            devtoolFallbackModuleFilenameTemplate: "webpack:///[resource-path]?[hash]"
+            devtoolFallbackModuleFilenameTemplate: "webpack:///[resource-path]?[hash]",
         },
 
         plugins: [
             new CopyPlugin({
-                patterns: [{ from: "assets", to: "assets" }]
+                patterns: [{ from: "assets", to: "assets" }],
             }),
             new CopyPlugin({
-                patterns: [{ from: "public/configuration", to: "configuration" }]
+                patterns: [{ from: "public/configuration", to: "configuration" }],
             }),
             new CopyPlugin({
-                patterns: [{ from: "staticwebapp.config.json", to: "staticwebapp.config.json" }]
+                patterns: [{ from: "staticwebapp.config.json", to: "staticwebapp.config.json" }],
             }),
             new HtmlWebpackPlugin({
                 filename: "index.html",
                 template: "./public/index.html",
-                excludeChunks: ["adminApp", "authApp"]
+                excludeChunks: ["adminApp", "authApp"],
             }),
             new HtmlWebpackPlugin({
                 filename: "auth.html",
                 template: "./public/auth.html",
-                excludeChunks: ["indexApp", "adminApp"]
+                excludeChunks: ["indexApp", "adminApp"],
             }),
             new HtmlWebpackPlugin({
                 filename: "admin.html",
                 template: "./public/admin.html",
-                excludeChunks: ["indexApp", "authApp"]
+                excludeChunks: ["indexApp", "authApp"],
             }),
             new VueLoaderPlugin(),
             new webpack.ProvidePlugin({
                 process: "process/browser",
                 Popper: ["popper.js", "default"],
-                vueRouter: "vue-router"
+                vueRouter: "vue-router",
             }),
             new MiniCssExtractPlugin({
                 filename: isDevelopment ? "[name].bundle.css" : "[name].[contenthash].bundle.css",
-                ignoreOrder: true
+                ignoreOrder: true,
             }),
             new webpack.EnvironmentPlugin({
                 BUILD_NUMBER: env.BUILD_NUMBER || "N/A",
-                BUILD_DATE: env.BUILD_DATE || new Date().toUTCString()
-            })
+                BUILD_DATE: env.BUILD_DATE || new Date().toUTCString(),
+            }),
         ],
 
         optimization: {
@@ -84,15 +84,15 @@ module.exports = (env, options) => {
                         test: "/[\\/]node_modules[\\/]|vendor[\\/]analytics_provider|vendor[\\/]other_lib/",
                         priority: -10,
                         reuseExistingChunk: true,
-                        filename: isDevelopment ? "[name].bundle.js" : "[name].[contenthash].bundle.js"
+                        filename: isDevelopment ? "[name].bundle.js" : "[name].[contenthash].bundle.js",
                     },
                     default: {
                         minChunks: 2,
                         priority: -20,
-                        reuseExistingChunk: true
-                    }
-                }
-            }
+                        reuseExistingChunk: true,
+                    },
+                },
+            },
         },
 
         resolve: {
@@ -101,12 +101,12 @@ module.exports = (env, options) => {
                 "@assets": path.resolve(__dirname, "assets/"),
                 "@js": path.resolve(__dirname, "src/js/"),
                 "@components": path.resolve(__dirname, "src/components/"),
-                "@styles": path.resolve(__dirname, "css/")
+                "@styles": path.resolve(__dirname, "css/"),
             },
             extensions: [".ts", ".tsx", ".js", ".jsx", ".vue", ".json", ".mjs"],
             fallback: {
-                path: require.resolve("path-browserify")
-            }
+                path: require.resolve("path-browserify"),
+            },
         },
 
         module: {
@@ -114,7 +114,7 @@ module.exports = (env, options) => {
                 //vue
                 {
                     test: /\.vue$/,
-                    use: "vue-loader"
+                    use: "vue-loader",
                 },
 
                 // ts
@@ -127,10 +127,10 @@ module.exports = (env, options) => {
                             options: {
                                 transpileOnly: true,
                                 appendTsSuffixTo: [/\.vue$/],
-                                happyPackMode: true
-                            }
-                        }
-                    ]
+                                happyPackMode: true,
+                            },
+                        },
+                    ],
                 },
 
                 //babel
@@ -144,7 +144,7 @@ module.exports = (env, options) => {
                         // Don't transpile node_modules
                         return /node_modules/.test(file);
                     },
-                    use: ["babel-loader"]
+                    use: ["babel-loader"],
                 },
 
                 //css
@@ -153,8 +153,8 @@ module.exports = (env, options) => {
                     use: [
                         MiniCssExtractPlugin.loader,
                         { loader: "css-loader", options: { sourceMap: false } },
-                        { loader: "sass-loader", options: { sourceMap: false } }
-                    ]
+                        { loader: "sass-loader", options: { sourceMap: false } },
+                    ],
                 },
 
                 //NOTE: see https://webpack.js.org/guides/asset-modules/ and https://survivejs.com/webpack/loading/images/
@@ -163,50 +163,50 @@ module.exports = (env, options) => {
                 {
                     test: /\.(svg|png|jpg|gif)$/, // If you add image with different extension add the extension here
                     type: "asset",
-                    generator: { filename: "./images/[name].[ext]" }
+                    generator: { filename: "./images/[name].[ext]" },
                 },
 
                 // media
                 {
                     test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
                     type: "asset",
-                    generator: { filename: "media/[contenthash:8][ext][query]" }
+                    generator: { filename: "media/[contenthash:8][ext][query]" },
                 },
 
                 //fonts
                 {
                     test: /\.(eot|ttf|woff|woff2)$/,
                     type: "asset",
-                    generator: { filename: "./fonts/[name][ext]" }
-                }
-            ]
+                    generator: { filename: "./fonts/[name][ext]" },
+                },
+            ],
         },
 
         devServer: {
             static: {
-                directory: "./dist"
+                directory: "./dist",
             },
             server: "https",
             port: 8080,
             devMiddleware: {
                 publicPath: "/dist/",
-                writeToDisk: true
+                writeToDisk: true,
             },
 
             historyApiFallback: {
                 rewrites: [
                     { from: /\/auth/, to: "/auth.html" },
                     { from: /\/admin/, to: "/admin.html" },
-                    { from: /\//, to: "/index.html" }
-                ]
+                    { from: /\//, to: "/index.html" },
+                ],
             },
 
-            open: ["/"]
+            open: ["/"],
         },
 
         experiments: {
-            topLevelAwait: true
-        }
+            topLevelAwait: true,
+        },
     };
 
     return webpackConfig;
