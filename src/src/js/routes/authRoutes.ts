@@ -31,7 +31,7 @@ const authRouter = createRouter({
             component: () => import("@components/auth/setPassword.vue"),
             meta: { title: "Set Password" },
             props: () => ({
-                isResetPassword: false,
+                isFirstTimeSetup: true,
             }),
         },
         //-- reset password -------------------------------------------------
@@ -41,7 +41,7 @@ const authRouter = createRouter({
             component: () => import("@components/auth/setPassword.vue"),
             meta: { title: "Reset Password" },
             props: () => ({
-                isResetPassword: true,
+                isFirstTimeSetup: false,
             }),
         },
         //-- login with 2 fa ---------------------------------------------------

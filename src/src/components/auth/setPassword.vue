@@ -6,7 +6,7 @@
                     <v-container>
                         <v-row>
                             <v-col text cols="12">
-                                <h1>{{ props.isResetPassword ? t("resetTitle") : t("setTitle") }}</h1>
+                                <h1>{{ props.isFirstTimeSetup ? t("setTitle") : t("resetTitle") }}</h1>
 
                                 <div v-if="errorMessage">
                                     <div class="alert alert-danger">
@@ -94,7 +94,7 @@
     import { ResetPasswordStatus } from "@js/dataModels/auth/resetPasswordStatus";
 
     const props = defineProps<{
-        isResetPassword: boolean;
+        isFirstTimeSetup: boolean;
     }>();
 
     const $route = useRoute();
