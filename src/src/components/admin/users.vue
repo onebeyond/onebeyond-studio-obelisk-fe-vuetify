@@ -53,7 +53,7 @@
                             outlined
                             :label="t('entityColumn.userName')"
                             name="userName"
-                            :rules="[rules.required, rules.max(entity.userName, 150)]"
+                            :rules="[rules.required, rules.maxCharacters(150)]"
                         ></v-text-field>
                         <v-select
                             v-show="!isMe"
