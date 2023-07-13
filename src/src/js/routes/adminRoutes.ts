@@ -20,9 +20,9 @@ const adminRouter = createRouter({
         },
         //-- password option ---------------------------------------------------
         {
-            path: "/changeUserPassword",
-            name: "changeUserPassword",
-            component: () => import("@components/admin/changeUserPassword.vue"),
+            path: "/changePassword",
+            name: "changePassword",
+            component: () => import("@components/admin/changePassword.vue"),
             meta: { title: "Change Password" },
         },
         //-- two factor authentication ---------------------------------------------------

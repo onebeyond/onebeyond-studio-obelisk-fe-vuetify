@@ -30,13 +30,19 @@ const authRouter = createRouter({
             name: "setPassword",
             component: () => import("@components/auth/setPassword.vue"),
             meta: { title: "Set Password" },
+            props: () => ({
+                isResetPassword: false,
+            }),
         },
         //-- reset password -------------------------------------------------
         {
             path: "/resetPassword",
             name: "resetPassword",
-            component: () => import("@components/auth/resetPassword.vue"),
-            meta: { title: "Change Password" },
+            component: () => import("@components/auth/setPassword.vue"),
+            meta: { title: "Reset Password" },
+            props: () => ({
+                isResetPassword: true,
+            }),
         },
         //-- login with 2 fa ---------------------------------------------------
         {

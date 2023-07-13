@@ -26,7 +26,7 @@
                         <hr />
                         <v-list-item>
                             <v-icon>mdi-form-textbox-password</v-icon>
-                            <router-link to="/changeUserPassword">{{ $t("layout.changePassword") }}</router-link>
+                            <router-link to="/changePassword">{{ $t("layout.changePassword") }}</router-link>
                         </v-list-item>
                         <v-list-item>
                             <v-icon>mdi-two-factor-authentication</v-icon>
