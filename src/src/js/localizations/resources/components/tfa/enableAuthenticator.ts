@@ -10,7 +10,7 @@ export default {
         scanQrCode: "Scan the QR Code or enter this key",
         scanQrCodeInfo: "into two factor authenticator app. Spaces and casing do not matter.",
         scanQrCodeInfoTwo:
-            "Once you have scanned the QR code or input the key above, your two factor authentication app will provide you with a unique code.Enter the code in the confirmation box below.",
+            "Once you have scanned the QR code or input the key above, your two factor authentication app will provide you with a unique code. Enter the code in the confirmation box below.",
         verificationCode: "Verification Code",
         verify: "verify",
         button: {
