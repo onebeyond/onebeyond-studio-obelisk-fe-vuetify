@@ -67,7 +67,7 @@
                             <v-col text cols="12">
                                 <h1>{{ t("confirmationMessage.title") }}</h1>
 
-                                <p>{{ t("confirmationMessage.instructions") }}.</p>
+                                <p>{{ t("confirmationMessage.instructions") }}</p>
 
                                 <div class="v-card__actions">
                                     <v-btn id="submit-btn" color="primary" @click="cancel">
@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref } from "vue";
+    import { ref, toRef } from "vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
     import changePassword from "@js/localizations/resources/components/changePassword";
     import { useI18n } from "vue-i18n";
@@ -92,7 +92,6 @@
     import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
     import { ResetPasswordStatus } from "@js/dataModels/auth/resetPasswordStatus";
-    import { toRef } from "vue";
 
     const props = defineProps<{
         title: string;
@@ -139,9 +138,6 @@
 
         if (valid) {
             try {
-                passwordChanged.value = true;
-                showForm.value = false;
-
                 const response = await authApiClient.resetPassword(userId, password.value, token);
                 switch (response) {
                     case ResetPasswordStatus.Success:
