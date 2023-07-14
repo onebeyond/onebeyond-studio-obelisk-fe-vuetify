@@ -19,11 +19,11 @@ export default function useRules(params?: { fieldToMatch?: Ref<string> }) {
     const { t } = useI18n();
 
     const required = (value: unknown) => {
-        if (isEmpty(value)) {
-            return false;
+        if (isEmpty(value) || !String(value).trim().length) {
+            return t("validation.required");
+        } else {
+            return true;
         }
-
-        return !!String(value).trim().length || t("validation.required");
     };
 
     const emailRegex =
