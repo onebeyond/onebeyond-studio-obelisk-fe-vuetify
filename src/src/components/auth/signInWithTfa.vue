@@ -42,13 +42,9 @@
                             </div>
 
                             <div class="v-card-actions">
-                                <v-btn
-                                    id="submit2-btn"
-                                    color="primary"
-                                    type="submit"
-                                    :disabled="signingIn || !isFormValid"
-                                    >{{ t("button.signIn") }}</v-btn
-                                >
+                                <v-btn id="submit2-btn" color="primary" type="submit" :disabled="signingIn">{{
+                                    t("button.signIn")
+                                }}</v-btn>
                             </div>
 
                             <p class="text-center mb-4">
