@@ -93,7 +93,7 @@
 
     const router = useRouter();
     const { onError, onSuccess } = useGlobalNotification();
-    const showForm: boolean = true;
+    const showForm = ref(true);
 
     const oldPassword = ref("");
     const newPassword = ref("");
@@ -105,6 +105,7 @@
     const passwordRules = await rules.getPasswordValidationRules(authApiClient);
 
     function cancel(): void {
+        showForm.value = false;
         router.go(-1);
     }
 

@@ -9,6 +9,7 @@
         :color="snackbar.color"
         :style="{ bottom: `${snackbar.position}px` }"
         :close-on-content-click="snackbar.closeOnContentClick"
+        z-index="5000"
         @update:model-value="onChanged(snackbar.id, $event)"
     >
         {{ snackbar.message }}
@@ -54,7 +55,7 @@
                 isShow: true,
                 position: theSizeOfSnackbar * snackbars.value.length,
                 timeOut: toastOptions?.timeout ?? 5000,
-                closeOnContentClick: toastOptions?.closeOnContentClick ?? false,
+                closeOnContentClick: toastOptions?.closeOnContentClick ?? true,
                 location: toastOptions?.location ?? "top end",
             });
         }
