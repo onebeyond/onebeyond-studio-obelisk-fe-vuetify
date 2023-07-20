@@ -16,8 +16,6 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
     entityUpdateStrategyBuilder: (params: ConstructorParams<TEntity, T>) => EntityUpdateStrategy<TEntity, T>,
     overridableFunctions?: OverridableFunctions<T>,
 ) {
-    const { onError, showAlert } = useGlobalNotification();
-
     const entity = ref(new provideEntityBuilder()); //An entity being added/edited
 
     const isSaving = ref(false);
@@ -25,7 +23,7 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
     const isEditingEntityInline = ref(false);
     const showEntity = ref(false);
     const showDeleteEntity = ref(false);
-
+    const { onError } = useGlobalNotification();
     //You can define how your page is going to react on add/edit
     //(create an entity in a modal or on a sep page) using EntityUpdateStrategy class
     const entityUpdateStrategy = entityUpdateStrategyBuilder({
@@ -37,6 +35,7 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         onEntityUpdated,
         isEditingEntityInline,
         isMobile,
+        onError,
     });
 
     // Can override in case of a custom url needed
@@ -178,7 +177,6 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         fetchData,
         saveEntity,
         deleteEntity,
-        showAlert,
         isMobile,
     };
 }

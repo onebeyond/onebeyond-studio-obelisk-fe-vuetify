@@ -4,14 +4,14 @@ import type { EntityUpdateStrategyWithGrid, ConstructorParams } from "@js/entity
 import type { Entity, EntityBuilder } from "@js/dataModels/entity";
 import type EntityApiClient from "@js/api/entityApiClient";
 import { onMounted, ref, type Ref } from "vue";
-import type ObVuetifyGrid from "@components/obComponents/grids/obVuetifyGrid.vue";
+import type ObSyncfusionGrid from "@components/obComponents/syncfusion/obSyncfusionGrid.vue";
 import useEntityCrud from "./useEntityCrud";
 
 export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid extends EntityGrid>(
     provideEntityBuilder: EntityBuilder<TEntity, T>,
     entityApiClient: EntityApiClient<TEntity, T>,
     tGrid: TGrid,
-    gridComponent: Ref<InstanceType<typeof ObVuetifyGrid> | null>,
+    gridComponent: Ref<InstanceType<typeof ObSyncfusionGrid> | null>,
     entityUpdateStrategyBuilder: (
         params: ConstructorParams<TEntity, T>,
         entityGrid: TGrid,
@@ -87,6 +87,7 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
     function onEntityUpdatedOverride(): void {
         //This event handler will be called after an entity (a new or an existing one) is sucessfully saved on server.
         tGrid.restoreCurrentPage();
+        entity.value = new provideEntityBuilder();
         showEntity.value = false;
         isEditingEntityInline.value = false;
     }
