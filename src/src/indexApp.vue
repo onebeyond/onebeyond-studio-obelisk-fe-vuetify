@@ -8,6 +8,8 @@
             <v-container fluid>
                 <router-view></router-view>
             </v-container>
+            <!-- Global Toast component for notifications/alerts -->
+            <Toast ref="globalToastRef" />
         </v-main>
         <v-footer padless>
             <v-card width="100%" class="text-center" flat tile>
@@ -22,13 +24,22 @@
 </template>
 
 <script setup lang="ts">
-    import { inject } from "vue";
     import { useI18n } from "vue-i18n";
     import indexAppTranslation from "@js/localizations/resources/components/admin/indexApp";
+    import { inject, provide, ref, type Ref } from "vue";
+    import { ShowAlertKey } from "@js/util/symbols";
+    import Toast from "@components/obComponents/toast.vue";
+    import useGetToastShowMethod from "@js/composables/useGetToastShowMethod";
 
     const { t } = useI18n({
         messages: indexAppTranslation,
     });
+
+    const globalToastRef: Ref<InstanceType<typeof Toast> | undefined> = ref();
+
+    const { showMethod } = useGetToastShowMethod(globalToastRef);
+    provide(ShowAlertKey, showMethod);
+
     const $buildNumber = inject("$buildNumber");
     const $buildDate = inject("$buildDate");
 </script>

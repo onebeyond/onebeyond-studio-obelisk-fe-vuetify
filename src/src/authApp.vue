@@ -9,7 +9,7 @@
                 </main>
             </global-error-handler>
         </v-main>
-
+        <Toast ref="globalToastRef" />
         <v-footer padless>
             <v-card width="100%" class="text-center" flat tile>
                 <v-card-text class="pt-3">
@@ -36,7 +36,10 @@
 
 <script setup lang="ts">
     import { useRouter } from "vue-router";
-    import { inject } from "vue";
+    import { inject, provide, ref, type Ref } from "vue";
+    import { ShowAlertKey } from "@js/util/symbols";
+    import Toast from "@components/obComponents/toast.vue";
+    import useGetToastShowMethod from "@js/composables/useGetToastShowMethod";
     import { useI18n } from "vue-i18n";
     import authAppTranslation from "@js/localizations/resources/components/admin/authApp";
 
@@ -46,4 +49,8 @@
     const $buildNumber = inject("$buildNumber");
     const $buildDate = inject("$buildDate");
     const $route = useRouter;
+
+    const globalToastRef: Ref<InstanceType<typeof Toast> | undefined> = ref();
+    const { showMethod } = useGetToastShowMethod(globalToastRef);
+    provide(ShowAlertKey, showMethod);
 </script>

@@ -66,12 +66,6 @@
                                 <p class="v-card-actions border-0">
                                     <router-link to="forgotPassword">{{ t("button.forgottenPassword") }}</router-link>
                                 </p>
-
-                                <div v-if="errorMsg">
-                                    <v-alert border="top" color="red lighten-2" dark>
-                                        {{ errorMsg }}
-                                    </v-alert>
-                                </div>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -93,12 +87,13 @@
     import { useRouter } from "vue-router";
     import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
+    import useGlobalNotification from "@js/composables/useGlobalNotification";
 
     const router = useRouter();
-
     const { t } = useI18n({
         messages: signInDictionary,
     });
+    const { onError } = useGlobalNotification();
 
     const rules = useRules();
 
@@ -107,7 +102,6 @@
     const username = ref("");
     const password = ref("");
     const rememberMe = false;
-    const errorMsg = ref("");
     const authApiClient = new AuthApiClient();
     const formRef = ref<VForm | null>(null);
 
@@ -116,8 +110,6 @@
 
         if (valid) {
             signingIn.value = true;
-            errorMsg.value = "";
-
             const userCredentials = new SignInRequest(username.value, password.value, rememberMe);
 
             try {
@@ -132,10 +124,10 @@
                         query: { rememberMe: rememberMe.toString() },
                     });
                 } else {
-                    errorMsg.value = t("password.defaultError");
+                    onError(t("password.defaultError"));
                 }
             } catch {
-                errorMsg.value = t("password.defaultError");
+                onError(t("password.defaultError"));
             } finally {
                 signingIn.value = false;
             }

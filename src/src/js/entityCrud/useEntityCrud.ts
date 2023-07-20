@@ -1,9 +1,8 @@
 import type { EntityUpdateStrategy, ConstructorParams } from "@js/entityCrud/entityUpdateStrategy";
-
 import type { Entity, EntityBuilder } from "@js/dataModels/entity";
 import type EntityApiClient from "@js/api/entityApiClient";
 import { ref } from "vue";
-import useErrorPopup from "@js/composables/useErrorPopup";
+import useGlobalNotification from "@js/composables/useGlobalNotification";
 
 export type OverridableFunctions<T> = {
     onDeleteEntityButtonClickedOverride?: (id: T) => void;
@@ -17,7 +16,7 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
     entityUpdateStrategyBuilder: (params: ConstructorParams<TEntity, T>) => EntityUpdateStrategy<TEntity, T>,
     overridableFunctions?: OverridableFunctions<T>,
 ) {
-    const { showAlert, alertVisible } = useErrorPopup();
+    const { onError, showAlert } = useGlobalNotification();
 
     const entity = ref(new provideEntityBuilder()); //An entity being added/edited
 
@@ -146,14 +145,6 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         }
     }
 
-    function onError(error: any): void {
-        let msg = "Error Processing Request";
-        if (!!error && !!error.toString()) {
-            msg = msg + ": " + error.toString();
-        }
-        showAlert("Error", msg);
-    }
-
     //This method returns true is a page is displayed on a modal device (or a small resolution screen)
     function isMobile(): boolean {
         const isMobileCheckDiv = document.getElementById("isMobileCheckDiv") as Element;
@@ -189,7 +180,7 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         saveEntity,
         deleteEntity,
         onError,
-        alertVisible,
+        showAlert,
         isMobile,
     };
 }

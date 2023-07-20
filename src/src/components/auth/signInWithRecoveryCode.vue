@@ -60,6 +60,7 @@
     import { useI18n } from "vue-i18n";
     import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
+    import useGlobalNotification from "@js/composables/useGlobalNotification";
 
     const { t } = useI18n({
         messages: dictionary,
@@ -72,7 +73,7 @@
     const dialog = true;
     const signingIn = ref(false);
     const code = ref("");
-    const errorMsg = ref("");
+    const { onError } = useGlobalNotification();
 
     const authApiClient: AuthApiClient = new AuthApiClient();
 
@@ -81,9 +82,6 @@
 
         if (valid) {
             signingIn.value = true;
-
-            errorMsg.value = "";
-
             const userCredentials = new SignInWithRecoveryCode(code.value);
 
             try {
@@ -95,10 +93,10 @@
                     LocalSessionStorage.setUserAuthenticated(true);
                     window.location.href = `${(window as any).location.origin}/admin/`;
                 } else {
-                    errorMsg.value = t("password.defaultError");
+                    onError(t("password.defaultError"));
                 }
             } catch {
-                errorMsg.value = t("password.defaultError");
+                onError(t("password.defaultError"));
             } finally {
                 signingIn.value = false;
             }

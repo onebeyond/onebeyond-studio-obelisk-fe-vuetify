@@ -32,6 +32,7 @@
         "qrcode.vue": "3.3.3",
         "reflect-metadata": "0.1.13",
         "tiny-emitter": "2.1.0",
+        "v-snackbars": "3.2.8",
         "vee-validate": "4.8.2",
         "vue": "3.2.47",
         "vue-class-component": "8.0.0-rc.1",
