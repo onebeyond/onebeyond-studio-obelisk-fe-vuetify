@@ -46,7 +46,6 @@
 
     function show(title: string, message: string, type: NotificationType, toastOptions?: ToastOptions): void {
         const color = type;
-        console.log(snackbars.value);
         if (snackbars.value) {
             snackbars.value.push({
                 id: ++ids.value,
@@ -56,7 +55,7 @@
                 position: theSizeOfSnackbar * snackbars.value.length,
                 timeOut: toastOptions?.timeout ?? 5000,
                 closeOnContentClick: toastOptions?.closeOnContentClick ?? true,
-                location: toastOptions?.location ?? "top end",
+                location: toastOptions?.location ?? "bottom end",
             });
         }
     }
