@@ -34,7 +34,6 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         provideEntityBuilder,
         showEntity,
         entityApiClient,
-        onError,
         onEntityUpdated,
         isEditingEntityInline,
         isMobile,
@@ -179,7 +178,6 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         fetchData,
         saveEntity,
         deleteEntity,
-        onError,
         showAlert,
         isMobile,
     };

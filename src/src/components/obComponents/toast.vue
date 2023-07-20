@@ -12,7 +12,9 @@
         z-index="5000"
         @update:model-value="onChanged(snackbar.id, $event)"
     >
-        {{ snackbar.message }}
+        <div class="text-subtitle-1 pb-2" v-if="snackbar.title">{{ snackbar.title }}</div>
+
+        <p>{{ snackbar.message }}</p>
     </VSnackbar>
 </template>
 
@@ -23,6 +25,7 @@
     interface SnackBar {
         id: number;
         message: string;
+        title: string;
         color: string;
         isShow: boolean;
         position: number;
@@ -33,7 +36,7 @@
 
     const snackbars = ref<SnackBar[]>([]);
     const ids = ref(0);
-    const theSizeOfSnackbar = 50;
+    const theSizeOfSnackbar = 100;
 
     const remove = (id: number) => {
         const removedIdx = snackbars.value.findIndex((x) => x.id === id);
@@ -49,6 +52,7 @@
         if (snackbars.value) {
             snackbars.value.push({
                 id: ++ids.value,
+                title,
                 message,
                 color,
                 isShow: true,

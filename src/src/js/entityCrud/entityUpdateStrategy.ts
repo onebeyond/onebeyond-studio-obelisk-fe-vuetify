@@ -3,6 +3,9 @@ import { EntityGrid, EntityGridAction } from "@js/grids/entityGrid";
 import type EntityApiClient from "@js/api/entityApiClient";
 import { useRouter } from "vue-router";
 import type { Ref } from "vue";
+import useGlobalNotification from "@js/composables/useGlobalNotification";
+
+export const { onError } = useGlobalNotification();
 
 export type ConstructorParams<TEntity extends Entity<T>, T> = {
     entity: any;
@@ -10,7 +13,6 @@ export type ConstructorParams<TEntity extends Entity<T>, T> = {
     provideEntityBuilder: EntityBuilder<TEntity, T>;
     showEntity: Ref<boolean>;
     entityApiClient: any;
-    onError: (any) => void;
     onEntityUpdated: () => void;
     isEditingEntityInline: Ref<boolean>;
     isMobile: () => boolean;
@@ -23,7 +25,6 @@ export abstract class EntityUpdateStrategy<TEntity extends Entity<T>, T> {
     provideEntityBuilder: EntityBuilder<TEntity, T>;
     showEntity: Ref<boolean>;
     entityApiClient: EntityApiClient<TEntity, T>;
-    onError: (any) => void;
     onEntityUpdated: () => void;
     isEditingEntityInline: Ref<boolean>;
     isMobile: () => boolean;
@@ -36,7 +37,6 @@ export abstract class EntityUpdateStrategy<TEntity extends Entity<T>, T> {
         this.provideEntityBuilder = params.provideEntityBuilder;
         this.showEntity = params.showEntity;
         this.entityApiClient = params.entityApiClient;
-        this.onError = params.onError;
         this.onEntityUpdated = params.onEntityUpdated;
         this.isEditingEntityInline = params.isEditingEntityInline;
         this.isMobile = params.isMobile;
@@ -63,6 +63,7 @@ export abstract class EntityUpdateStrategyWithGrid<
 }
 
 export class EntityUpdateUsingModal<TEntity extends Entity<T>, T> extends EntityUpdateStrategy<TEntity, T> {
+
     public doAdd(): void {
         this.entity.value = new this.provideEntityBuilder();
         this.onEntityLoaded();
@@ -75,7 +76,7 @@ export class EntityUpdateUsingModal<TEntity extends Entity<T>, T> extends Entity
             this.onEntityLoaded();
             this.showEntity.value = true;
         } catch (e) {
-            this.onError(e);
+            onError(e);
         }
     }
 

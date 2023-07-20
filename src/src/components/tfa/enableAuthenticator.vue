@@ -105,7 +105,7 @@
                 router.push({ name: "Dashboard" });
             }
         } catch {
-            onError(t("password.AuthAddError"));
+            onError(t("password.authAddError"));
         }
     }
 

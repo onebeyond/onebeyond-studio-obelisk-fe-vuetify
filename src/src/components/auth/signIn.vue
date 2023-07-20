@@ -53,6 +53,7 @@
                                     </div>
                                 </div>
                                 <div class="v-card-actions border-0">
+                                    <v-btn color="red" variant="text" @click="snackbar"></v-btn>
                                     <v-btn
                                         id="submit-btn"
                                         color="primary"
@@ -105,6 +106,9 @@
     const authApiClient = new AuthApiClient();
     const formRef = ref<VForm | null>(null);
 
+    function snackbar():void{
+        onError(t("password.defaultError"));
+    }
     async function signIn(): Promise<void> {
         const { valid } = await formRef.value!.validate();
 

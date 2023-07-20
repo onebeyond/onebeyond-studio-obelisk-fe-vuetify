@@ -39,7 +39,6 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         fetchData,
         saveEntity,
         deleteEntity,
-        onError,
         isMobile,
     } = useEntityCrud(
         provideEntityBuilder,
@@ -121,7 +120,6 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         fetchData,
         saveEntity,
         deleteEntity,
-        onError,
         isMobile,
     };
 }

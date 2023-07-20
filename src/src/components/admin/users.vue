@@ -109,6 +109,7 @@
     import ObVuetifyGrid from "@components/obComponents/grids/obVuetifyGrid.vue";
     import { EntityUpdateUsingModalAndGrid, type ConstructorParams } from "@js/entityCrud/entityUpdateStrategy";
     import { VForm } from "vuetify/components";
+    import useGlobalNotification from "@js/composables/useGlobalNotification";
 
     const entityApiClient = new UserApiClient();
 
@@ -119,13 +120,12 @@
         messages: userDictionary,
     });
 
+    const { onError } = useGlobalNotification();
 
     const {
         entity,
         tGrid,
         showEntity,
-        onError,
-        alertVisible,
         isSaving,
         saveEntity,
         closeEntityModal,
