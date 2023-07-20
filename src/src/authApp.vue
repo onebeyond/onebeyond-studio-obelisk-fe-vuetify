@@ -9,6 +9,7 @@
                 </main>
             </global-error-handler>
         </v-main>
+        <!-- Global Toast component for notifications/alerts -->
         <Toast ref="globalToastRef" />
         <v-footer padless>
             <v-card width="100%" class="text-center" flat tile>
