@@ -35,12 +35,6 @@
                                     >{{ t("button.signIn") }}</v-btn
                                 >
                             </div>
-
-                            <div v-if="errorMsg">
-                                <v-alert border="top" color="red lighten-2" dark>
-                                    {{ errorMsg }}
-                                </v-alert>
-                            </div>
                         </v-col>
                     </v-row>
                 </v-container>

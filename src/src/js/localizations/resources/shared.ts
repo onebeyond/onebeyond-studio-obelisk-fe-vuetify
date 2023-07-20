@@ -103,6 +103,7 @@ export default {
             resetPasswordInvalidToken: "The URL is either invalid or has expired",
             email: "Email",
             defaultError: "An error occured while trying to log you in.",
+            AuthAddError: "An error occured while trying to add authenticator.",
         },
         validation: {
             email: "Invalid email format.",

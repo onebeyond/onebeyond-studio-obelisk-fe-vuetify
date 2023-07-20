@@ -8,11 +8,6 @@
                             <v-col text cols="12">
                                 <h1>{{ props.isFirstTimeSetup ? t("setTitle") : t("resetTitle") }}</h1>
 
-                                <div v-if="errorMessage">
-                                    <div class="alert alert-danger">
-                                        {{ errorMessage }}
-                                    </div>
-                                </div>
 
                                 <v-text-field
                                     class="pt-3"
@@ -24,7 +19,6 @@
                                     name="password"
                                     :disabled="passwordChanged"
                                     :label="t('password')"
-                                    @input="resetErrorMessage"
                                     :rules="passwordRules"
                                 >
                                 </v-text-field>
@@ -39,7 +33,6 @@
                                     name="confirmPassword"
                                     :disabled="passwordChanged"
                                     :label="t('confirmPassword')"
-                                    @input="resetErrorMessage"
                                     :rules="[rules.required, rules.passwordMatch]"
                                 >
                                 </v-text-field>
@@ -92,6 +85,7 @@
     import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
     import { ResetPasswordStatus } from "@js/dataModels/auth/resetPasswordStatus";
+    import useGlobalNotification from "@js/composables/useGlobalNotification";
 
     const props = defineProps<{
         isFirstTimeSetup: boolean;
@@ -104,12 +98,11 @@
     });
 
     const formRef = ref<VForm | null>(null);
-
+    const { onError } = useGlobalNotification();
     const password = ref("");
     const confirmPassword = ref("");
     const showForm = ref(true);
     const passwordChanged = ref(false);
-    const errorMessage = ref("");
 
     const token = $route.query.code?.toString();
     const userId = $route.query.loginId?.toString();
@@ -122,13 +115,9 @@
         window.location.href = "/";
     }
 
-    function resetErrorMessage(): void {
-        errorMessage.value = "";
-    }
-
     async function change() {
         if (!(token && userId)) {
-            errorMessage.value = t("password.resetPasswordInvalidToken");
+            onError(t("password.unknownError"));
             return;
         }
 
@@ -146,14 +135,14 @@
                         showForm.value = false;
                         break;
                     case ResetPasswordStatus.InvalidToken:
-                        errorMessage.value = t("password.resetPasswordInvalidToken");
+                        onError(t("password.resetPasswordInvalidToken"));
                         break;
                     default:
-                        errorMessage.value = t("password.unknownError");
+                        onError(t("password.unknownError"));
                         break;
                 }
             } catch {
-                errorMessage.value = t("password.unknownError");
+                onError(t("password.unknownError"));
             }
         }
     }

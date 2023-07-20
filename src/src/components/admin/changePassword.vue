@@ -10,18 +10,6 @@
                                 <v-card-text>
                                     <p>{{ t("instructions") }}</p>
 
-                                    <div v-if="passwordError">
-                                        <v-alert type="error">
-                                            {{ t("password.unknownError") }}
-                                        </v-alert>
-                                    </div>
-
-                                    <div v-if="passwordChanged">
-                                        <v-alert dense type="success">
-                                            {{ t("password.passwordChanged") }}
-                                        </v-alert>
-                                    </div>
-
                                     <v-text-field
                                         v-model="oldPassword"
                                         type="password"
@@ -95,6 +83,7 @@
     import { useRouter } from "vue-router";
     import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
+    import useGlobalNotification from "@js/composables/useGlobalNotification";
 
     const { t } = useI18n({
         messages: changePasswordDictionary,
@@ -103,14 +92,13 @@
     const formRef = ref<VForm | null>(null);
 
     const router = useRouter();
-
+    const { onError, onSuccess } = useGlobalNotification();
     const showForm: boolean = true;
 
     const oldPassword = ref("");
     const newPassword = ref("");
     const confirmPassword = ref("");
     const passwordChanged = ref(false);
-    const passwordError = ref(false);
 
     const authApiClient: AuthApiClient = new AuthApiClient();
     const rules = useRules({ fieldToMatch: newPassword });
@@ -130,9 +118,10 @@
 
             var changePasswordResult = await response.json();
             if (!changePasswordResult.success) {
-                passwordError.value = true;
+                onError(t("password.unknownError"));
             } else {
                 passwordChanged.value = true;
+                onSuccess(t("password.passwordChanged"));
             }
         }
     }

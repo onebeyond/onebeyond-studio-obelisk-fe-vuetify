@@ -98,9 +98,7 @@
 
     import { User } from "@js/dataModels/users/user";
     import { UserRole } from "@js/dataModels/users/userRole";
-
     import UserApiClient from "@js/api/users/userApiClient";
-
     import useEntityGridCrud from "@js/entityCrud/useEntityGridCrud";
     import useUserContext from "@js/composables/useUserContext";
     import useRules from "@js/composables/useRules";
@@ -120,6 +118,7 @@
     const { t } = useI18n({
         messages: userDictionary,
     });
+
 
     const {
         entity,

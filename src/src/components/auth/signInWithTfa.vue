@@ -51,12 +51,6 @@
                                 {{ t("field.recoveryInfo") }}
                                 <router-link to="signInWithRecoveryCode">{{ t("field.recoveryCode") }}</router-link>
                             </p>
-
-                            <div v-if="errorMsg">
-                                <v-alert border="top" color="red lighten-2" dark>
-                                    {{ errorMsg }}
-                                </v-alert>
-                            </div>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -77,6 +71,7 @@
     import { useRoute } from "vue-router";
     import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
+    import useGlobalNotification from "@js/composables/useGlobalNotification";
 
     const $route = useRoute();
     const rules = useRules();
@@ -84,14 +79,13 @@
     const { t } = useI18n({
         messages: dictionary,
     });
-
+    const { onError } = useGlobalNotification();
     const formRef = ref<VForm | null>(null);
 
     const signingIn = ref(false);
     const dialog = true;
     const code = ref("");
     const rememberThisMachine = ref(false);
-    const errorMsg = ref("");
     let rememberMe: any;
 
     const authApiClient: AuthApiClient = new AuthApiClient();
@@ -105,8 +99,6 @@
             signingIn.value = true;
             rememberMe = rememberMeFromUrl;
 
-            errorMsg.value = "";
-
             const userCredentials = new SignInTfa(code.value, rememberThisMachine.value, rememberMe);
 
             try {
@@ -116,10 +108,10 @@
                     LocalSessionStorage.setUserAuthenticated(true);
                     window.location.href = `${(window as any).location.origin}/admin/`;
                 } else {
-                    errorMsg.value = t("password.defaultError");
+                    onError(t("password.defaultError"));
                 }
             } catch {
-                errorMsg.value = t("password.defaultError");
+                onError(t("password.defaultError"));
             } finally {
                 signingIn.value = false;
             }
