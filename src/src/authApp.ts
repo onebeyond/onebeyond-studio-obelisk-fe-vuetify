@@ -6,7 +6,6 @@ import { authRouter } from "@js/routes/authRoutes";
 
 const app = createApp(authApp);
 
-const appConfig = new AppConfiguration(false, app, "#authApp");
-app.use(authRouter);
+const appConfig = new AppConfiguration(false, app, "#authApp", authRouter);
 
 await appConfig.setup();

@@ -23,6 +23,7 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import colors from "vuetify/lib/util/colors";
+import type { Router } from "vue-router";
 
 // import additional languages if needed
 import { en, es } from "vuetify/lib/locale";
@@ -31,12 +32,14 @@ export default class AppConfiguration {
     private enableDebugLogging = false;
     private readonly app: App;
     private readonly rootContainerId: string;
+    private readonly router: Router;
 
-    constructor(enableDebugLogging: boolean, app: App, rootContainerId: string) {
+    constructor(enableDebugLogging: boolean, app: App, rootContainerId: string, router: Router) {
         // eslint-disable-line @typescript-eslint/ban-types
         this.enableDebugLogging = enableDebugLogging;
         this.app = app;
         this.rootContainerId = rootContainerId;
+        this.router = router;
     }
 
     public async setup(): Promise<void> {
@@ -105,23 +108,6 @@ export default class AppConfiguration {
     }
 
     private registerPlugins(): void {
-        // const vuetify = createVuetify({
-        //     components,
-        //     directives,
-        //     lang: {
-        //         locales: { en, es },
-        //         current: "en"
-        //     },
-        //     theme: {
-        //         themes: {
-        //             light: {
-        //                 primary: colors.green.darken3,
-        //                 secondary: "#cccccc"
-        //             }
-        //         }
-        //     }
-        // });
-
         const myCustomLightTheme = {
             dark: false,
             colors: {
@@ -153,6 +139,8 @@ export default class AppConfiguration {
         this.app.use(vuetify);
         const pinia = createPinia();
         this.app.use(pinia);
+
+        this.app.use(this.router);
 
         this.app.use(i18n);
     }
