@@ -28,7 +28,7 @@
         title: string;
         color: string;
         isShow: boolean;
-        SizeOfSnackbar: number;
+        verticalPosition: number;
         closeOnContentClick: boolean;
         timeOut: number;
         location: string;
@@ -36,13 +36,13 @@
 
     const snackbars = ref<SnackBar[]>([]);
     const ids = ref(0);
-    const theSizeOfSnackbar = 100;
+    const bottomMargin = 100;
 
     const remove = (id: number) => {
         const removedIdx = snackbars.value.findIndex((x) => x.id === id);
 
         snackbars.value.splice(removedIdx, 1);
-        snackbars.value.forEach((x, idx) => (x.SizeOfSnackbar = theSizeOfSnackbar * idx));
+        snackbars.value.forEach((x, idx) => (x.verticalPosition = bottomMargin * idx));
     };
 
     const onChanged = (id: number, isShow: boolean) => !isShow && remove(id);
@@ -56,7 +56,7 @@
                 message,
                 color,
                 isShow: true,
-                SizeOfSnackbar: theSizeOfSnackbar * snackbars.value.length,
+                verticalPosition: bottomMargin * snackbars.value.length,
                 timeOut: toastOptions?.timeout ?? 5000,
                 closeOnContentClick: toastOptions?.closeOnContentClick ?? true,
                 location: toastOptions?.location ?? "bottom end",
