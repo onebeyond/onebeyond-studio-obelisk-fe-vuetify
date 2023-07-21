@@ -87,9 +87,6 @@
                 }}</v-btn>
             </template>
         </v-modalPopup>
-
-        <!--alert modal-->
-        <v-modalPopup :namespace="'alertModal'" v-model:visible="alertVisible" />
     </div>
 </template>
 

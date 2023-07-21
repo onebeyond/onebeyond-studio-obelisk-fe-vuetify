@@ -7,7 +7,7 @@
         variant="flat"
         :timeOut="snackbar.timeOut"
         :color="snackbar.color"
-        :style="{ bottom: `${snackbar.position}px` }"
+        :style="{ bottom: `${snackbar.SizeOfSnackbar}px` }"
         :close-on-content-click="snackbar.closeOnContentClick"
         z-index="5000"
         @update:model-value="onChanged(snackbar.id, $event)"
@@ -28,7 +28,7 @@
         title: string;
         color: string;
         isShow: boolean;
-        position: number;
+        SizeOfSnackbar: number;
         closeOnContentClick: boolean;
         timeOut: number;
         location: string;
@@ -42,7 +42,7 @@
         const removedIdx = snackbars.value.findIndex((x) => x.id === id);
 
         snackbars.value.splice(removedIdx, 1);
-        snackbars.value.forEach((x, idx) => (x.position = theSizeOfSnackbar * idx));
+        snackbars.value.forEach((x, idx) => (x.SizeOfSnackbar = theSizeOfSnackbar * idx));
     };
 
     const onChanged = (id: number, isShow: boolean) => !isShow && remove(id);
@@ -56,7 +56,7 @@
                 message,
                 color,
                 isShow: true,
-                position: theSizeOfSnackbar * snackbars.value.length,
+                SizeOfSnackbar: theSizeOfSnackbar * snackbars.value.length,
                 timeOut: toastOptions?.timeout ?? 5000,
                 closeOnContentClick: toastOptions?.closeOnContentClick ?? true,
                 location: toastOptions?.location ?? "bottom end",

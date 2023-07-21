@@ -4,14 +4,14 @@ import type { EntityUpdateStrategyWithGrid, ConstructorParams } from "@js/entity
 import type { Entity, EntityBuilder } from "@js/dataModels/entity";
 import type EntityApiClient from "@js/api/entityApiClient";
 import { onMounted, ref, type Ref } from "vue";
-import type ObSyncfusionGrid from "@components/obComponents/syncfusion/obSyncfusionGrid.vue";
+import type ObVuetifyGrid from "@components/obComponents/grids/obVuetifyGrid.vue";
 import useEntityCrud from "./useEntityCrud";
 
 export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid extends EntityGrid>(
     provideEntityBuilder: EntityBuilder<TEntity, T>,
     entityApiClient: EntityApiClient<TEntity, T>,
     tGrid: TGrid,
-    gridComponent: Ref<InstanceType<typeof ObSyncfusionGrid> | null>,
+    gridComponent: Ref<InstanceType<typeof ObVuetifyGrid> | null>,
     entityUpdateStrategyBuilder: (
         params: ConstructorParams<TEntity, T>,
         entityGrid: TGrid,
