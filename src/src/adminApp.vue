@@ -91,7 +91,8 @@
                 </v-container>
             </global-error-handler>
         </v-main>
-
+        <!-- Global Toast component for notifications/alerts -->
+        <Toast ref="globalToastRef" />
         <v-footer padless>
             <v-card width="100%" class="text-center" flat tile>
                 <v-card-text class="pt-3">
@@ -113,12 +114,15 @@
 </template>
 
 <script setup lang="ts">
-    import { inject, ref } from "vue";
     import UserAvatar from "@components/util/userAvatar.vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
     import { useUserContextStore } from "@js/stores/appStore";
     import { useI18n } from "vue-i18n";
     import adminAppTranslation from "@js/localizations/resources/components/admin/adminApp";
+    import { inject, provide, ref, type Ref } from "vue";
+    import { ShowAlertKey } from "@js/util/symbols";
+    import Toast from "@components/obComponents/toast.vue";
+    import useGetToastShowMethod from "@js/composables/useGetToastShowMethod";
 
     let drawer = ref(false);
     const { t } = useI18n({
@@ -128,6 +132,10 @@
     const $buildDate = inject("$buildDate");
     const store = useUserContextStore();
     const authApiClient: AuthApiClient = new AuthApiClient();
+
+    const globalToastRef: Ref<InstanceType<typeof Toast> | undefined> = ref();
+    const { showMethod } = useGetToastShowMethod(globalToastRef);
+    provide(ShowAlertKey, showMethod);
 
     async function performLogout(): Promise<void> {
         await authApiClient.signOut();

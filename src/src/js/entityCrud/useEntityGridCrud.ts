@@ -39,8 +39,6 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         fetchData,
         saveEntity,
         deleteEntity,
-        onError,
-        alertVisible,
         isMobile,
     } = useEntityCrud(
         provideEntityBuilder,
@@ -89,6 +87,7 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
     function onEntityUpdatedOverride(): void {
         //This event handler will be called after an entity (a new or an existing one) is sucessfully saved on server.
         tGrid.restoreCurrentPage();
+        entity.value = new provideEntityBuilder();
         showEntity.value = false;
         isEditingEntityInline.value = false;
     }
@@ -122,8 +121,6 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         fetchData,
         saveEntity,
         deleteEntity,
-        onError,
-        alertVisible,
         isMobile,
     };
 }

@@ -1,9 +1,8 @@
 import type { EntityUpdateStrategy, ConstructorParams } from "@js/entityCrud/entityUpdateStrategy";
-
 import type { Entity, EntityBuilder } from "@js/dataModels/entity";
 import type EntityApiClient from "@js/api/entityApiClient";
 import { ref } from "vue";
-import useErrorPopup from "@js/composables/useErrorPopup";
+import useGlobalNotification from "@js/composables/useGlobalNotification";
 
 export type OverridableFunctions<T> = {
     onDeleteEntityButtonClickedOverride?: (id: T) => void;
@@ -17,8 +16,6 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
     entityUpdateStrategyBuilder: (params: ConstructorParams<TEntity, T>) => EntityUpdateStrategy<TEntity, T>,
     overridableFunctions?: OverridableFunctions<T>,
 ) {
-    const { showAlert, alertVisible } = useErrorPopup();
-
     const entity = ref(new provideEntityBuilder()); //An entity being added/edited
 
     const isSaving = ref(false);
@@ -26,7 +23,7 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
     const isEditingEntityInline = ref(false);
     const showEntity = ref(false);
     const showDeleteEntity = ref(false);
-
+    const { onError } = useGlobalNotification();
     //You can define how your page is going to react on add/edit
     //(create an entity in a modal or on a sep page) using EntityUpdateStrategy class
     const entityUpdateStrategy = entityUpdateStrategyBuilder({
@@ -35,10 +32,10 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         provideEntityBuilder,
         showEntity,
         entityApiClient,
-        onError,
         onEntityUpdated,
         isEditingEntityInline,
         isMobile,
+        onError,
     });
 
     // Can override in case of a custom url needed
@@ -146,14 +143,6 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         }
     }
 
-    function onError(error: any): void {
-        let msg = "Error Processing Request";
-        if (!!error && !!error.toString()) {
-            msg = msg + ": " + error.toString();
-        }
-        showAlert("Error", msg);
-    }
-
     //This method returns true is a page is displayed on a modal device (or a small resolution screen)
     function isMobile(): boolean {
         const isMobileCheckDiv = document.getElementById("isMobileCheckDiv") as Element;
@@ -188,8 +177,6 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         fetchData,
         saveEntity,
         deleteEntity,
-        onError,
-        alertVisible,
         isMobile,
     };
 }

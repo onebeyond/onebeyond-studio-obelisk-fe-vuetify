@@ -70,6 +70,7 @@
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
     import { onMounted, ref } from "vue";
+    import useGlobalNotification from "@js/composables/useGlobalNotification";
 
     const router = useRouter();
 
@@ -79,14 +80,13 @@
     let tfaSettings: enableAuthenticatorSettings = new enableAuthenticatorSettings();
     const tfaApiClient = new TFAApiClient();
     let code = ref("");
-    let errorMsg = ref("");
     const props = defineProps(["showEnableAuthenticator"]);
     const qrCode = ref(null);
     const rules: object = {
         code: (value) => !!value || t("message.authenticatorRequired"),
     };
     const emit = defineEmits(["showTwoFactorAuthentication"]);
-
+    const { onError } = useGlobalNotification();
     const data = await tfaApiClient.getTfaAuthenticationKey();
     tfaSettings = data;
     onMounted(() => {
@@ -98,8 +98,6 @@
     });
 
     async function enableTfa() {
-        const defaultError = "An error occured while trying to add authenticator.";
-
         try {
             var inputModel = new EnableTfaRequest(code.value);
             const response = await tfaApiClient.enableTfa(inputModel);
@@ -107,7 +105,7 @@
                 router.push({ name: "Dashboard" });
             }
         } catch {
-            errorMsg.value = defaultError;
+            onError(t("password.authAddError"));
         }
     }
 

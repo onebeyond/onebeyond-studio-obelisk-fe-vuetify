@@ -40,6 +40,7 @@
     const { t } = useI18n({
         messages: dictionary,
     });
+
     const tfaApiClient = new TFAApiClient();
     const props = defineProps(["showDisableTFA"]);
     const emit = defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticatorCard"]);
