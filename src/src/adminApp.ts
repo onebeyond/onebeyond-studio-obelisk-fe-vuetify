@@ -5,7 +5,6 @@ import AppConfiguration from "./js/vueConfig/appConfiguration";
 import { adminRouter } from "@js/routes/adminRoutes";
 const app = createApp(adminApp);
 
-const appConfig = new AppConfiguration(false, app, "#adminApp");
-app.use(adminRouter);
+const appConfig = new AppConfiguration(false, app, "#adminApp", adminRouter);
 
 await appConfig.setup();
