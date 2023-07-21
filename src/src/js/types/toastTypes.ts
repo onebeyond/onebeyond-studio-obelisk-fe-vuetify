@@ -5,7 +5,6 @@ export interface ToastOptions {
     message: string;
     color: string;
     isShow: boolean;
-    position: number;
     closeOnContentClick: boolean;
     timeout: number;
     location: string;
