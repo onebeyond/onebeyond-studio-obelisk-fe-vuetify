@@ -4,7 +4,6 @@ import "@js/util/stringExtensions";
 //Global components
 //NOTE: Only add here if truly required globally, doing so inflates the bundle size
 import SessionTimeoutComponent from "@components/util/sessionTimeout.vue";
-import UserContextSetter from "@components/obComponents/userContextSetter.vue";
 import GlobalErrorHandler from "@components/util/globalErrorHandler.vue";
 import ModalPopup from "@components/util/modalPopup.vue";
 
@@ -148,7 +147,6 @@ export default class AppConfiguration {
     // NOTE: You should keep this to the minimum!
     private registerGlobalVueComponents(): void {
         this.app.component("session-timeout", SessionTimeoutComponent);
-        this.app.component("user-context", UserContextSetter);
         this.app.component("v-modalPopup", ModalPopup);
         this.app.component("language-selector", LanguageSelector);
         this.app.component("global-error-handler", GlobalErrorHandler);

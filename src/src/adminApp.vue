@@ -106,9 +106,6 @@
         <global-error-handler>
             <!--@* Session timeout *@-->
             <session-timeout></session-timeout>
-
-            <!-- @* User Context*@-->
-            <user-context></user-context>
         </global-error-handler>
     </v-app>
 </template>
@@ -119,7 +116,7 @@
     import { useUserContextStore } from "@js/stores/appStore";
     import { useI18n } from "vue-i18n";
     import adminAppTranslation from "@js/localizations/resources/components/admin/adminApp";
-    import { inject, provide, ref, type Ref } from "vue";
+    import { inject, provide, ref, type Ref, onMounted } from "vue";
     import { ShowAlertKey } from "@js/util/symbols";
     import Toast from "@components/obComponents/toast.vue";
     import useGetToastShowMethod from "@js/composables/useGetToastShowMethod";
@@ -136,6 +133,10 @@
     const globalToastRef: Ref<InstanceType<typeof Toast> | undefined> = ref();
     const { showMethod } = useGetToastShowMethod(globalToastRef);
     provide(ShowAlertKey, showMethod);
+
+    onMounted(async () => {
+        await store.getUserContext();
+    });
 
     async function performLogout(): Promise<void> {
         await authApiClient.signOut();
