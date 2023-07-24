@@ -113,13 +113,14 @@
 <script setup lang="ts">
     import UserAvatar from "@components/util/userAvatar.vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
-    import { useUserContextStore } from "@js/stores/appStore";
     import { useI18n } from "vue-i18n";
     import adminAppTranslation from "@js/localizations/resources/components/admin/adminApp";
     import { inject, provide, ref, type Ref, onMounted } from "vue";
     import { ShowAlertKey } from "@js/util/symbols";
     import Toast from "@components/obComponents/toast.vue";
     import useGetToastShowMethod from "@js/composables/useGetToastShowMethod";
+    import useGetUserContext from "@js/composables/useGetUserContext";
+    import { useUserContextStore } from "@js/stores/appStore";
 
     let drawer = ref(false);
     const { t } = useI18n({
@@ -127,6 +128,7 @@
     });
     const $buildNumber = inject("$buildNumber");
     const $buildDate = inject("$buildDate");
+    const { getUserContext } = useGetUserContext();
     const store = useUserContextStore();
     const authApiClient: AuthApiClient = new AuthApiClient();
 
@@ -135,7 +137,7 @@
     provide(ShowAlertKey, showMethod);
 
     onMounted(async () => {
-        await store.getUserContext();
+        await getUserContext();
     });
 
     async function performLogout(): Promise<void> {
