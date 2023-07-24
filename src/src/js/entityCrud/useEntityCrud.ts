@@ -8,6 +8,7 @@ export type OverridableFunctions<T> = {
     onDeleteEntityButtonClickedOverride?: (id: T) => void;
     onEntityUpdatedOverride?: () => void;
     onEntityDeletedOverride?: () => void;
+    onEntityLoadedOverride?: () => void;
 };
 
 export default function useEntityCrud<TEntity extends Entity<T>, T>(
@@ -85,6 +86,9 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         // (1) a new entity is created(when we add a new entity)
         // (2) an entity is retrieved from server (when we edit an entity)
         //Please override it if you need to perform any additional operations on this event
+        if (overridableFunctions?.onEntityLoadedOverride) {
+            overridableFunctions.onEntityLoadedOverride();
+        }
     }
 
     function onEntityUpdated(): void {
