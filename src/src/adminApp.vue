@@ -13,15 +13,15 @@
                     <template v-slot:activator="{ props }">
                         <span color="primary" dark v-bind="props">
                             <UserAvatar
-                                :fullName="store.userContext.userName"
-                                :initials="store.userContext.initials"
+                                :fullName="userContext.userName"
+                                :initials="userContext.initials"
                             ></UserAvatar>
                         </span>
                     </template>
                     <v-list dense>
                         <v-list-item>
                             <v-icon>mdi-account-outline</v-icon>
-                            <strong>{{ store.userContext.userName }}</strong>
+                            <strong>{{ userContext.userName }}</strong>
                         </v-list-item>
                         <hr />
                         <v-list-item>
@@ -120,7 +120,6 @@
     import Toast from "@components/obComponents/toast.vue";
     import useGetToastShowMethod from "@js/composables/useGetToastShowMethod";
     import useGetUserContext from "@js/composables/useGetUserContext";
-    import { useUserContextStore } from "@js/stores/appStore";
 
     let drawer = ref(false);
     const { t } = useI18n({
@@ -128,8 +127,7 @@
     });
     const $buildNumber = inject("$buildNumber");
     const $buildDate = inject("$buildDate");
-    const { getUserContext } = useGetUserContext();
-    const store = useUserContextStore();
+    const { getUserContext, userContext } = useGetUserContext();
     const authApiClient: AuthApiClient = new AuthApiClient();
 
     const globalToastRef: Ref<InstanceType<typeof Toast> | undefined> = ref();

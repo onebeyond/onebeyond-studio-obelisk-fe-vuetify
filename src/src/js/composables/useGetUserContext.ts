@@ -2,16 +2,18 @@ import type { UserContext } from "@js/dataModels/users/userContext";
 import LocalSessionStorage from "@js/stores/localSessionStorage";
 import { useUserContextStore } from "@js/stores/appStore";
 import AccountApiClient from "@js/api/accounts/accountApiClient";
+import { storeToRefs } from "pinia";
 
 export default function useGetUserContext() {
     const accountApiClient = new AccountApiClient();
-    const { userContext, setUserContext } = useUserContextStore();
+    const store = useUserContextStore();
+    const { userContext } = storeToRefs(store);
 
     async function getUserContext(): Promise<void> {
-        if (userContext.isEmpty()) {
+        if (userContext.value.isEmpty()) {
             try {
-                const userContext: UserContext = await accountApiClient.whoAmI();
-                setUserContext(userContext);
+                const newUserContext: UserContext = await accountApiClient.whoAmI();
+                store.setUserContext(newUserContext);
             } catch {
                 // Redirect to Login page if unable to get the User Context
                 LocalSessionStorage.setUserAuthenticated(false);
@@ -20,5 +22,5 @@ export default function useGetUserContext() {
         }
     }
 
-    return { getUserContext };
+    return { getUserContext, userContext };
 }
