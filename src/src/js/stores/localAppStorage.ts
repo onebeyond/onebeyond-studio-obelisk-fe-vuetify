@@ -9,6 +9,10 @@ export default class LocalAppStorage {
         return window.localStorage.getItem(this.getKey(key));
     }
 
+    public static removeValueForKey(key: string): void {
+        return window.localStorage.removeItem(this.getKey(key));
+    }
+
     private static getKey(key: string): string {
         return `${this.APPLICATION_NAME}-${key}`;
     }
