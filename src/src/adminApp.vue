@@ -13,15 +13,15 @@
                     <template v-slot:activator="{ props }">
                         <span color="primary" dark v-bind="props">
                             <UserAvatar
-                                :fullName="store.userContext.userName"
-                                :initials="store.userContext.initials"
+                                :fullName="userContext.userName"
+                                :initials="userContext.initials"
                             ></UserAvatar>
                         </span>
                     </template>
                     <v-list dense>
                         <v-list-item>
                             <v-icon>mdi-account-outline</v-icon>
-                            <strong>{{ store.userContext.userName }}</strong>
+                            <strong>{{ userContext.userName }}</strong>
                         </v-list-item>
                         <hr />
                         <v-list-item>
@@ -106,9 +106,6 @@
         <global-error-handler>
             <!--@* Session timeout *@-->
             <session-timeout></session-timeout>
-
-            <!-- @* User Context*@-->
-            <user-context></user-context>
         </global-error-handler>
     </v-app>
 </template>
@@ -116,13 +113,13 @@
 <script setup lang="ts">
     import UserAvatar from "@components/util/userAvatar.vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
-    import { useUserContextStore } from "@js/stores/appStore";
     import { useI18n } from "vue-i18n";
     import adminAppTranslation from "@js/localizations/resources/components/admin/adminApp";
-    import { inject, provide, ref, type Ref } from "vue";
+    import { inject, provide, ref, type Ref, onMounted } from "vue";
     import { ShowAlertKey } from "@js/util/symbols";
     import Toast from "@components/obComponents/toast.vue";
     import useGetToastShowMethod from "@js/composables/useGetToastShowMethod";
+    import useGetUserContext from "@js/composables/useGetUserContext";
 
     let drawer = ref(false);
     const { t } = useI18n({
@@ -130,12 +127,16 @@
     });
     const $buildNumber = inject("$buildNumber");
     const $buildDate = inject("$buildDate");
-    const store = useUserContextStore();
+    const { getUserContext, userContext } = useGetUserContext();
     const authApiClient: AuthApiClient = new AuthApiClient();
 
     const globalToastRef: Ref<InstanceType<typeof Toast> | undefined> = ref();
     const { showMethod } = useGetToastShowMethod(globalToastRef);
     provide(ShowAlertKey, showMethod);
+
+    onMounted(async () => {
+        await getUserContext();
+    });
 
     async function performLogout(): Promise<void> {
         await authApiClient.signOut();
