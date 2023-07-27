@@ -86,18 +86,15 @@
     const dialog = true;
     const code = ref("");
     const rememberThisMachine = ref(false);
-    let rememberMe: any;
+    const rememberMe = $route.query.rememberMe === "true";
 
     const authApiClient: AuthApiClient = new AuthApiClient();
-
-    const rememberMeFromUrl = $route.query.rememberMe;
 
     async function signIn(): Promise<void> {
         const { valid } = await formRef.value!.validate();
 
         if (valid) {
             signingIn.value = true;
-            rememberMe = rememberMeFromUrl;
 
             const userCredentials = new SignInTfa(code.value, rememberThisMachine.value, rememberMe);
 
@@ -106,7 +103,7 @@
 
                 if (data.status === SignInStatus.Success) {
                     LocalSessionStorage.setUserAuthenticated(true);
-                    window.location.href = `${(window as any).location.origin}/admin/`;
+                    window.location.href = `${window.location.origin}/admin/`;
                 } else {
                     onError(t("password.defaultError"));
                 }

@@ -17,19 +17,19 @@ export default abstract class WebApiClient {
         this.apiBaseUrl = apiBaseUrl;
     }
 
-    protected async post(endpoint?: string, body?: any): Promise<Response> {
+    protected async post(endpoint?: string, body?: unknown): Promise<Response> {
         return this.fetch(endpoint, WebApiClient.buildRequest("POST", body ? JSON.stringify(body) : null));
     }
 
-    protected async put(endpoint?: string, body?: any): Promise<Response> {
+    protected async put(endpoint?: string, body?: unknown): Promise<Response> {
         return this.fetch(endpoint, WebApiClient.buildRequest("PUT", body ? JSON.stringify(body) : null));
     }
 
-    protected async get(endpoint?: string, body?: any): Promise<Response> {
+    protected async get(endpoint?: string, body?: unknown): Promise<Response> {
         return this.fetch(endpoint, WebApiClient.buildRequest("GET", body ? JSON.stringify(body) : null));
     }
 
-    protected async delete(endpoint?: string, body?: any): Promise<Response> {
+    protected async delete(endpoint?: string, body?: unknown): Promise<Response> {
         return this.fetch(endpoint, WebApiClient.buildRequest("DELETE", body ? JSON.stringify(body) : null));
     }
 
@@ -47,8 +47,10 @@ export default abstract class WebApiClient {
         try {
             // Make the request
             response = await fetchFunction();
-        } catch (err: any) {
-            return Promise.reject(new WebApiError(err.message, WebApiError.UnreachableServerHttpCode, request));
+        } catch (err: unknown) {
+            return Promise.reject(
+                new WebApiError((err as Error).message, WebApiError.UnreachableServerHttpCode, request),
+            );
         }
 
         // Call response interceptors, if any
@@ -63,18 +65,18 @@ export default abstract class WebApiClient {
 
     protected static buildRequest(
         method: string,
-        body?: any | null,
-        headers?: any | null,
+        body?: BodyInit | null,
+        headers?: HeadersInit | null,
         contentTypeOverride?: string,
     ): RequestInit {
-        let contentType: string | null = "application/json;charset=utf-8";
+        let contentType: string = "application/json;charset=utf-8";
         if (contentTypeOverride) {
             contentType = contentTypeOverride;
         } else if (method === "GET") {
-            contentType = null;
+            contentType = "";
         }
 
-        const defaultHeaders = {
+        const defaultHeaders: HeadersInit = {
             Accept: "application/json, text/plain, */*",
             "Content-Type": contentType,
             "X-Requested-With": "XMLHttpRequest", // force server to return a 401 in case of authorization errors

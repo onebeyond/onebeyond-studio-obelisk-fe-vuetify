@@ -8,7 +8,6 @@
                             <v-col text cols="12">
                                 <h1>{{ props.isFirstTimeSetup ? t("setTitle") : t("resetTitle") }}</h1>
 
-
                                 <v-text-field
                                     class="pt-3"
                                     v-model="password"
@@ -147,4 +146,3 @@
         }
     }
 </script>
-

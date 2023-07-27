@@ -19,7 +19,7 @@ export default class tfaApiClient extends ObResourceApiClient {
         return plainToInstance(LoginTfaSettings, await data.json());
     }
 
-    public async enableTfa(input: EnableTfaRequest): Promise<any> {
+    public async enableTfa(input: EnableTfaRequest): Promise<string[]> {
         const response = await this.post("enabletfa", input);
         if (response.status === 204) {
             window.location.href = "/admin";
@@ -27,19 +27,17 @@ export default class tfaApiClient extends ObResourceApiClient {
         return response.json();
     }
 
-    public async forgetBrowser(): Promise<any> {
-        const response = await this.post("forgetBrowser");
-        return response;
+    public async forgetBrowser(): Promise<void> {
+        await this.post("forgetBrowser");
     }
 
-    public async generateRecoveryCodes(): Promise<any> {
+    public async generateRecoveryCodes(): Promise<string[]> {
         const response = await this.post("generateRecoveryCodes");
         return response.json();
     }
 
-    public async reset(): Promise<any> {
-        const response = await this.post("resetTfa");
-        return response;
+    public async reset(): Promise<void> {
+        await this.post("resetTfa");
     }
 
     public async disableTfa(): Promise<void> {

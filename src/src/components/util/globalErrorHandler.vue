@@ -9,18 +9,18 @@
         </slot>
 
         <v-modalPopup :visible="showPopup" @close="refreshPage">
-            <template slot="header">
+            <template v-slot:header>
                 <v-card-title color="primary">{{ $t("popup.title") }}</v-card-title>
             </template>
 
-            <template slot="content">
+            <template v-slot:content>
                 <v-card-text>
                     <v-alert type="error">{{ errorMessage }}</v-alert>
                     <div>{{ $t("popup.reloadMessage") }}</div>
                 </v-card-text>
             </template>
 
-            <template slot="footer">
+            <template v-slot:footer>
                 <v-btn type="button" class="btn btn-primary" @click="refreshPage">{{ $t("button.reload") }}</v-btn>
             </template>
         </v-modalPopup>
@@ -28,11 +28,10 @@
 </template>
 
 <script setup lang="ts">
-    import { onErrorCaptured } from "vue";
+    import { onErrorCaptured, type ComponentPublicInstance } from "vue";
     import { WebApiError } from "@js/api/webApiClient";
     import dictionary from "@js/localizations/resources/components/globalErrorHandler";
     import { useI18n } from "vue-i18n";
-
     const { t } = useI18n({
         messages: dictionary,
     });
@@ -48,20 +47,22 @@
      * @param _vm The Vue vm
      * @param _info Info about the component/hook/method that raised the error
      */
-    function errorCaptured(error: any, _vm: any, _info: string): boolean {
+    function errorCaptured(error: unknown, _vm: ComponentPublicInstance | null, _info: string): boolean {
         // log the error in the console regardless
         console.error(error);
 
         // set the error message for the popup
-        errorMessage = error.message;
-        if (error.httpCode) {
-            switch (error.httpCode) {
-                case WebApiError.UnreachableServerHttpCode:
-                    errorMessage = `${t("errorMessages.unreachableServer")}`;
+        if (error instanceof WebApiError) {
+            errorMessage = error.message;
+            if (error.httpCode) {
+                switch (error.httpCode) {
+                    case WebApiError.UnreachableServerHttpCode:
+                        errorMessage = `${t("errorMessages.unreachableServer")}`;
 
-                    // For now show the popup only if in this case
-                    showPopup = true;
-                    break;
+                        // For now show the popup only if in this case
+                        showPopup = true;
+                        break;
+                }
             }
         }
 

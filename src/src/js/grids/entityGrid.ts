@@ -1,9 +1,9 @@
 export abstract class EntityGrid {
     constructor() {}
 
-    abstract rememberCurrentPageBeforeGridAction(action: any);
+    abstract rememberCurrentPageBeforeGridAction(action: EntityGridAction);
     abstract restoreCurrentPage();
-    abstract setInstance(gridRef: any);
+    abstract setInstance(gridRef: unknown);
 }
 
 export enum EntityGridAction {

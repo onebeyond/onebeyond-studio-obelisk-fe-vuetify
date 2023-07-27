@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-dialog v-model="props.showEnableAuthenticator" persistent max-width="480px">
+        <v-dialog v-model="showEnableAuthenticator" persistent max-width="480px">
             <v-card>
                 <v-container>
                     <v-row>
@@ -27,10 +27,13 @@
                                     </li>
                                     <li>
                                         {{ t("scanQrCode") }}
-                                        <kbd>{{ tfaSettings.sharedKey }}</kbd>
+                                        <kbd>{{ tfaSettings?.sharedKey }}</kbd>
                                         {{ t("scanQrCodeInfo") }}
-                                        <div id="qrCode" ref="qrCode"></div>
-                                        <div id="qrCodeData" :data-url="tfaSettings.authenticationUri"></div>
+                                        <QRCode
+                                            :value="tfaSettings?.authenticationUri"
+                                            :size="200"
+                                            v-if="tfaSettings?.authenticationUri"
+                                        />
                                     </li>
                                     <li>
                                         {{ t("scanQrCodeInfoTwo") }}
@@ -65,36 +68,35 @@
 <script setup lang="ts">
     import TFAApiClient from "@js/api/tfa/tfaApiClient";
     import dictionary from "@js/localizations/resources/components/tfa/enableAuthenticator";
-    import enableAuthenticatorSettings from "@js/dataModels/tfa/enableAuthenticatorSettings";
+    import type enableAuthenticatorSettings from "@js/dataModels/tfa/enableAuthenticatorSettings";
     import EnableTfaRequest from "@js/dataModels/tfa/enableTfaRequest";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
-    import { onMounted, ref } from "vue";
+    import { onMounted, ref, type Ref, toRef } from "vue";
     import useGlobalNotification from "@js/composables/useGlobalNotification";
+    import QRCode from "qrcode.vue";
 
     const router = useRouter();
 
     const { t } = useI18n({
         messages: dictionary,
     });
-    let tfaSettings: enableAuthenticatorSettings = new enableAuthenticatorSettings();
+
+    const tfaSettings: Ref<enableAuthenticatorSettings | undefined> = ref();
     const tfaApiClient = new TFAApiClient();
+
     let code = ref("");
     const props = defineProps(["showEnableAuthenticator"]);
-    const qrCode = ref(null);
-    const rules: object = {
+    const showEnableAuthenticator = toRef(props, "showEnableAuthenticator");
+    const rules = {
         code: (value) => !!value || t("message.authenticatorRequired"),
     };
+
     const emit = defineEmits(["showTwoFactorAuthentication"]);
     const { onError } = useGlobalNotification();
-    const data = await tfaApiClient.getTfaAuthenticationKey();
-    tfaSettings = data;
-    onMounted(() => {
-        new QRCode(qrCode.value, {
-            text: tfaSettings.authenticationUri,
-            width: 200,
-            height: 200,
-        });
+
+    onMounted(async () => {
+        tfaSettings.value = await tfaApiClient.getTfaAuthenticationKey();
     });
 
     async function enableTfa() {

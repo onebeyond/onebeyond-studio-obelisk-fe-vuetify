@@ -54,7 +54,7 @@ export default function useEntityCrud<TEntity extends Entity<T>, T>(
         return await entityUpdateStrategy.doEdit(id);
     }
 
-    function onViewEntityDetailsButtonClicked(id: any): void {
+    function onViewEntityDetailsButtonClicked(id: T): void {
         entityUpdateStrategy.doViewDetails(id);
     }
 

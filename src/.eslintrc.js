@@ -25,5 +25,8 @@ module.exports = {
             },
         ],
         "@typescript-eslint/no-explicit-any": ["warn"],
+        "vue/valid-v-slot": ['error', {
+            allowModifiers: true,
+          }],
     },
 };

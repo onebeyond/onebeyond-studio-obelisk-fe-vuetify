@@ -85,7 +85,7 @@
 
                 if (data.status === SignInStatus.Success) {
                     LocalSessionStorage.setUserAuthenticated(true);
-                    window.location.href = `${(window as any).location.origin}/admin/`;
+                    window.location.href = `${window.location.origin}/admin/`;
                 } else {
                     onError(t("password.defaultError"));
                 }

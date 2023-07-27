@@ -7,7 +7,7 @@ let global: ComponentCustomProperties;
 
 const SetGlobalProperties = (app: App) => {
     const rootPath: string = Configuration.appSettings.apiUrl;
-    const basePath: string = (window as any).BaseUrl;
+    const basePath: string = window.BaseUrl;
 
     //custom globals on the vue instance
     app.config.globalProperties.$basePath = basePath;

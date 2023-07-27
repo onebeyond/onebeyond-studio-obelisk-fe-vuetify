@@ -25,7 +25,7 @@ import colors from "vuetify/lib/util/colors";
 import type { Router } from "vue-router";
 
 // import additional languages if needed
-import { en, es } from "vuetify/lib/locale";
+// import { en, es } from "vuetify/lib/locale";
 
 export default class AppConfiguration {
     private enableDebugLogging = false;
@@ -42,7 +42,7 @@ export default class AppConfiguration {
     }
 
     public async setup(): Promise<void> {
-        this.log("App", `window.env = ${(window as any).env}`);
+        this.log("App", `window.env = ${window.env}`);
 
         await this.loadSettings();
     }
@@ -52,7 +52,7 @@ export default class AppConfiguration {
     }
 
     private async loadSettings(): Promise<void> {
-        await Configuration.load((window as any).env);
+        await Configuration.load(window.env);
         this.inspect(Configuration.appSettings);
 
         this.setupVueVariables();
@@ -67,7 +67,7 @@ export default class AppConfiguration {
         //custom globals on the vue instance
         this.app.config.globalProperties.$sessionTimeoutInMinutes =
             Configuration.appSettings.sessionTimeoutInMinutes || 60;
-        this.app.config.globalProperties.$rootPath = (window as any).location.origin;
+        this.app.config.globalProperties.$rootPath = window.location.origin;
 
         this.setWebApiBaseUrl(Configuration.appSettings);
 
@@ -90,11 +90,11 @@ export default class AppConfiguration {
         let customApiUrl: string | null = null;
         if (appSettings.allowApiUrlOverrideFromDevTools) {
             // Allow API Url to be overridden from console
-            (window as any).setApiUrl = (url: string) => {
+            window.setApiUrl = (url: string) => {
                 LocalSessionStorage.setCustomApiUrl(url);
                 location.reload();
             };
-            (window as any).resetApiUrl = () => {
+            window.resetApiUrl = () => {
                 LocalSessionStorage.setCustomApiUrl("");
                 location.reload();
             };
@@ -152,7 +152,7 @@ export default class AppConfiguration {
         this.app.component("global-error-handler", GlobalErrorHandler);
     }
 
-    private inspect(object: any): void {
+    private inspect(object: unknown): void {
         if (this.enableDebugLogging) {
             console.log(object);
         }

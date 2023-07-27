@@ -37,9 +37,9 @@ export default function useGlobalNotification() {
 
     /**
      * A simplified alias for showAlert.
-     * 
+     *
      * Will accept any input. If e is a WebApiError, an appropriate message will be displayed based on the httpCode.
-     * If e is a string, it will be displayed directly. 
+     * If e is a string, it will be displayed directly.
      * Any other argument will result in a generic error message being displayed.
      */
     function onError(e: unknown): void {
@@ -54,6 +54,7 @@ export default function useGlobalNotification() {
         } else if (typeof e === "string" || e instanceof String) {
             message = e.toString();
         }
+
         showAlert(i18n.global.t("errors.error"), message, "error");
     }
 

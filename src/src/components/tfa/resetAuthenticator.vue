@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-dialog v-model="props.showResetAuthenticator" persistent max-width="480px">
+        <v-dialog v-model="showResetAuthenticator" persistent max-width="480px">
             <v-card>
                 <v-container>
                     <v-row>
@@ -42,22 +42,20 @@
     import dictionary from "@js/localizations/resources/components/tfa/resetAuthenticator";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
+    import { toRef } from "vue";
 
     const router = useRouter();
 
     const { t } = useI18n({
         messages: dictionary,
     });
-    const emit = defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticatorCard"]);
+    const emit = defineEmits(["showTwoFactorAuthentication"]);
     const tfaApiClient = new TFAApiClient();
     const props = defineProps(["showResetAuthenticator"]);
+    const showResetAuthenticator = toRef(props, "showResetAuthenticator");
 
     function showTwoFactorAuthentication(): void {
         emit("showTwoFactorAuthentication");
-    }
-
-    function showEnableAuthenticatorCard(): void {
-        emit("showEnableAuthenticatorCard");
     }
 
     async function resetTfa(): Promise<void> {
