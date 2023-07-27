@@ -46,7 +46,7 @@ export default function useGlobalNotification() {
         let message = i18n.global.t("errors.errorProcessingRequest");
 
         if (e instanceof WebApiError) {
-            if (e.httpCode === 400)  message = e.message;
+            if (e.httpCode === 400) message = e.message;
             if (e.httpCode === 403 || e.httpCode === 401)
                 message = message + `: ${i18n.global.t("errors.accessDenied")}`;
             if (e.httpCode === 404) message = message + `: ${i18n.global.t("errors.resourceNotFound")}`;

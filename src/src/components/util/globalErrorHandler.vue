@@ -9,18 +9,18 @@
         </slot>
 
         <v-modalPopup :visible="showPopup" @close="refreshPage">
-            <template v-slot:header>
+            <template #header>
                 <v-card-title color="primary">{{ $t("popup.title") }}</v-card-title>
             </template>
 
-            <template v-slot:content>
+            <template #content>
                 <v-card-text>
                     <v-alert type="error">{{ errorMessage }}</v-alert>
                     <div>{{ $t("popup.reloadMessage") }}</div>
                 </v-card-text>
             </template>
 
-            <template v-slot:footer>
+            <template #footer>
                 <v-btn type="button" class="btn btn-primary" @click="refreshPage">{{ $t("button.reload") }}</v-btn>
             </template>
         </v-modalPopup>
