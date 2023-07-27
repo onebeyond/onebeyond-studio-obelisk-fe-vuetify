@@ -24,9 +24,6 @@ import * as directives from "vuetify/directives";
 import colors from "vuetify/lib/util/colors";
 import type { Router } from "vue-router";
 
-// import additional languages if needed
-// import { en, es } from "vuetify/lib/locale";
-
 export default class AppConfiguration {
     private enableDebugLogging = false;
     private readonly app: App;
