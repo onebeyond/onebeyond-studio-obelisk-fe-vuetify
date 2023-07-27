@@ -14,7 +14,7 @@
     >
         <div class="text-subtitle-1 pb-2" v-if="snackbar.title">{{ snackbar.title }}</div>
 
-        <p>{{ snackbar.mestosage }}</p>
+        <p>{{ snackbar.message }}</p>
     </VSnackbar>
 </template>
 

@@ -108,6 +108,11 @@ export default {
         },
         errors: {
             error: "Error",
+            errorProcessingRequest: "Error Processing Request",
+            accessDenied: "Access denied",
+            resourceNotFound: "Resource not found",
+            internalServerError: "Internal Server Error",
+            serviceUnavailable: "Service Unavailable",
         },
         validation: {
             email: "Invalid email format.",
