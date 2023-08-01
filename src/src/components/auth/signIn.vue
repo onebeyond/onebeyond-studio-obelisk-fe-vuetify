@@ -88,13 +88,14 @@
     import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
     import useGlobalNotification from "@js/composables/useGlobalNotification";
+    import useGetUserContext from "@js/composables/useGetUserContext";
 
     const router = useRouter();
     const { t } = useI18n({
         messages: signInDictionary,
     });
     const { onError } = useGlobalNotification();
-
+    const { getUserContext } = useGetUserContext();
     const rules = useRules();
 
     const dialog = true;
@@ -117,6 +118,8 @@
 
                 if (data.status === SignInStatus.Success) {
                     LocalSessionStorage.setUserAuthenticated(true);
+
+                    await getUserContext();
                     window.location.href = `${window.location.origin}/admin/`;
                 } else if (data.status === SignInStatus.RequiresVerification) {
                     router.push({

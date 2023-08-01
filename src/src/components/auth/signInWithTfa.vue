@@ -72,10 +72,11 @@
     import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
     import useGlobalNotification from "@js/composables/useGlobalNotification";
+    import useGetUserContext from "@js/composables/useGetUserContext";
 
     const $route = useRoute();
     const rules = useRules();
-
+    const { getUserContext } = useGetUserContext();
     const { t } = useI18n({
         messages: dictionary,
     });
@@ -103,6 +104,7 @@
 
                 if (data.status === SignInStatus.Success) {
                     LocalSessionStorage.setUserAuthenticated(true);
+                    await getUserContext();
                     window.location.href = `${window.location.origin}/admin/`;
                 } else {
                     onError(t("password.defaultError"));

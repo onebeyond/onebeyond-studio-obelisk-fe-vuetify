@@ -27,7 +27,7 @@
     const { t } = useI18n();
 
     const props = defineProps<{
-        title: string;
+        title?: string;
         message?: string;
         visible: boolean;
         onClose?: () => void;

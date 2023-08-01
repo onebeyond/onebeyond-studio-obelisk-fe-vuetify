@@ -112,11 +112,11 @@
     import AuthApiClient from "@js/api/auth/authApiClient";
     import { useI18n } from "vue-i18n";
     import adminAppTranslation from "@js/localizations/resources/components/admin/adminApp";
-    import { inject, provide, ref, type Ref, onMounted } from "vue";
+    import { inject, provide, ref, type Ref } from "vue";
     import { ShowAlertKey } from "@js/util/symbols";
     import Toast from "@components/obComponents/obToast.vue";
     import useGetToastShowMethod from "@js/composables/useGetToastShowMethod";
-    import useGetUserContext from "@js/composables/useGetUserContext";
+    import { useUserContextStore } from "@js/stores/appStore";
 
     let drawer = ref(false);
     const { t } = useI18n({
@@ -124,18 +124,15 @@
     });
     const $buildNumber = inject("$buildNumber");
     const $buildDate = inject("$buildDate");
-    const { getUserContext, userContext } = useGetUserContext();
+    const { clearUserContext, userContext } = useUserContextStore();
     const authApiClient: AuthApiClient = new AuthApiClient();
 
     const globalToastRef: Ref<InstanceType<typeof Toast> | undefined> = ref();
     const { showMethod } = useGetToastShowMethod(globalToastRef);
     provide(ShowAlertKey, showMethod);
 
-    onMounted(async () => {
-        await getUserContext();
-    });
-
     async function performLogout(): Promise<void> {
+        clearUserContext();
         await authApiClient.signOut();
         window.location.href = `${window.location.origin}/auth/`;
     }
