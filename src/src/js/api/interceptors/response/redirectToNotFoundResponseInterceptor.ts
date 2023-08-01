@@ -7,7 +7,7 @@ import InterceptorResponse from "@js/api/interceptors/interceptorResponse";
 export default class RedirectToNotFoundResponseInterceptor implements IResponseInterceptor {
     async run(response: Response, _request: () => Promise<Response>): Promise<InterceptorResponse> {
         if (response.status === 403) {
-            window.location.href = `${(window as any).location.origin}/admin/notfound`;
+            window.location.href = `${window.location.origin}/admin/notfound`;
             return new InterceptorResponse(false, false);
         }
 

@@ -118,8 +118,9 @@
 
                 if (data.status === SignInStatus.Success) {
                     LocalSessionStorage.setUserAuthenticated(true);
+
                     await getUserContext();
-                    window.location.href = `${(window as any).location.origin}/admin/`;
+                    window.location.href = `${window.location.origin}/admin/`;
                 } else if (data.status === SignInStatus.RequiresVerification) {
                     router.push({
                         name: "signInWithTfa",

@@ -12,10 +12,7 @@
                 <v-menu offset-y transition="slide-y-transition">
                     <template v-slot:activator="{ props }">
                         <span color="primary" dark v-bind="props">
-                            <UserAvatar
-                                :fullName="userContext.userName"
-                                :initials="userContext.initials"
-                            ></UserAvatar>
+                            <UserAvatar :fullName="userContext.userName" :initials="userContext.initials"></UserAvatar>
                         </span>
                     </template>
                     <v-list dense>
@@ -117,7 +114,7 @@
     import adminAppTranslation from "@js/localizations/resources/components/admin/adminApp";
     import { inject, provide, ref, type Ref } from "vue";
     import { ShowAlertKey } from "@js/util/symbols";
-    import Toast from "@components/obComponents/toast.vue";
+    import Toast from "@components/obComponents/obToast.vue";
     import useGetToastShowMethod from "@js/composables/useGetToastShowMethod";
     import { useUserContextStore } from "@js/stores/appStore";
 
@@ -137,6 +134,6 @@
     async function performLogout(): Promise<void> {
         clearUserContext();
         await authApiClient.signOut();
-        window.location.href = `${(window as any).location.origin}/auth/`;
+        window.location.href = `${window.location.origin}/auth/`;
     }
 </script>

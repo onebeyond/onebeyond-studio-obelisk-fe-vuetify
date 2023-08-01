@@ -5,11 +5,11 @@ import { useRouter } from "vue-router";
 import type { Ref } from "vue";
 
 export type ConstructorParams<TEntity extends Entity<T>, T> = {
-    entity: any;
+    entity: Ref<TEntity>;
     onEntityLoaded: () => void;
     provideEntityBuilder: EntityBuilder<TEntity, T>;
     showEntity: Ref<boolean>;
-    entityApiClient: any;
+    entityApiClient: EntityApiClient<TEntity, T>;
     onError: (any) => void;
     onEntityUpdated: () => void;
     isEditingEntityInline: Ref<boolean>;
@@ -69,7 +69,7 @@ export class EntityUpdateUsingModal<TEntity extends Entity<T>, T> extends Entity
         this.showEntity.value = true;
     }
 
-    public async doEdit(entityId: any): Promise<void> {
+    public async doEdit(entityId: T): Promise<void> {
         try {
             this.entity.value = await this.entityApiClient.getEntity(entityId);
             this.onEntityLoaded();
@@ -79,8 +79,8 @@ export class EntityUpdateUsingModal<TEntity extends Entity<T>, T> extends Entity
         }
     }
 
-    public doViewDetails(entityId: any): void {
-        // eslint-disable-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public doViewDetails(entityId: T): void {
         //Do nothing? Or the reaction should be the same as doEdit?
     }
 
@@ -112,7 +112,7 @@ export class EntityUpdateUsingModalAndGrid<
         this.entityGrid.rememberCurrentPageBeforeGridAction(EntityGridAction.EntityAdd);
     }
 
-    public async doEdit(entityId: any): Promise<void> {
+    public async doEdit(entityId: T): Promise<void> {
         await super.doEdit(entityId);
         this.entityGrid.rememberCurrentPageBeforeGridAction(EntityGridAction.EntityEdit);
     }
@@ -146,24 +146,24 @@ export class EntityUpdateUsingSeparatePage<TEntity extends Entity<T>, T> extends
         if (this.addView) {
             this.$router.push({
                 name: this.addView,
-                params: { id: this.provideEntityBuilder.idDefault() as any },
+                params: { id: this.provideEntityBuilder.idDefault() as string },
             });
         } else {
             super.doAdd();
         }
     }
 
-    public async doEdit(entityId: any): Promise<void> {
+    public async doEdit(entityId: T): Promise<void> {
         if (this.editView) {
-            this.$router.push({ name: this.editView, params: { id: entityId } });
+            this.$router.push({ name: this.editView, params: { id: entityId as string } });
         } else {
             await super.doEdit(entityId);
         }
     }
 
-    public doViewDetails(entityId: any): void {
+    public doViewDetails(entityId: T): void {
         if (this.detailsView) {
-            this.$router.push({ name: this.detailsView, params: { id: entityId } });
+            this.$router.push({ name: this.detailsView, params: { id: entityId as string } });
         } else {
             super.doViewDetails(entityId);
         }
@@ -207,7 +207,7 @@ export class EntityUpdateUsingSeparatePageAndGrid<
         this.entityGrid.rememberCurrentPageBeforeGridAction(EntityGridAction.EntityAdd);
     }
 
-    public async doEdit(entityId: any): Promise<void> {
+    public async doEdit(entityId: T): Promise<void> {
         await super.doEdit(entityId);
         this.entityGrid.rememberCurrentPageBeforeGridAction(EntityGridAction.EntityEdit);
     }
@@ -224,7 +224,7 @@ export class EntityUpdateUsingInlineGrid<
         this.isEditingEntityInline.value = !this.isMobile();
     }
 
-    public async doEdit(entityId: any): Promise<void> {
+    public async doEdit(entityId: T): Promise<void> {
         await super.doEdit(entityId);
         this.isEditingEntityInline.value = !this.isMobile();
     }

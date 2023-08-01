@@ -17,7 +17,7 @@ export default function useGetUserContext() {
             } catch {
                 // Redirect to Login page if unable to get the User Context
                 LocalSessionStorage.setUserAuthenticated(false);
-                window.location.href = `${(window as any).location.origin}/auth/`;
+                window.location.href = `${window.location.origin}/auth/`;
             }
         }
     }

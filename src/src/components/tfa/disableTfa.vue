@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-dialog v-model="props.showDisableTFA" persistent max-width="480px">
+        <v-dialog v-model="showDisableTFA" persistent max-width="480px">
             <v-card>
                 <v-form>
                     <v-container>
@@ -35,6 +35,7 @@
     import dictionary from "@js/localizations/resources/components/tfa/disabletfa";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
+    import { toRef } from "vue";
 
     const router = useRouter();
     const { t } = useI18n({
@@ -43,6 +44,7 @@
 
     const tfaApiClient = new TFAApiClient();
     const props = defineProps(["showDisableTFA"]);
+    const showDisableTFA = toRef(props, "showDisableTFA");
     const emit = defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticatorCard"]);
 
     function showEnableAuthenticatorCard(): void {

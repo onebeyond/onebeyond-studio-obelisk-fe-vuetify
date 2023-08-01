@@ -3,7 +3,7 @@ import type { EntityUpdateStrategyWithGrid, ConstructorParams } from "@js/entity
 
 import type { Entity, EntityBuilder } from "@js/dataModels/entity";
 import type EntityApiClient from "@js/api/entityApiClient";
-import { onMounted, ref, type Ref } from "vue";
+import { onMounted, type Ref } from "vue";
 import type ObVuetifyGrid from "@components/obComponents/grids/obVuetifyGrid.vue";
 import useEntityCrud, { type OverridableFunctions } from "./useEntityCrud";
 
@@ -48,8 +48,6 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         provideOverridenFunctions(),
     );
 
-    const gridInstance = ref<any>();
-
     function getEntityUpdateStrategyBuilder() {
         return (params: ConstructorParams<TEntity, T>) => entityUpdateStrategyBuilder(params, tGrid);
     }
@@ -69,14 +67,14 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
 
     function setGridInstance(): void {
         tGrid.setInstance(getGridReference());
-        gridInstance.value = getGridReference();
     }
 
-    function getGridReference(): any {
+    function getGridReference(): unknown {
         const gridReference = gridComponent.value?.entityGridRef;
         if (gridReference) {
             return gridReference;
         }
+
         throw new Error("No grid reference found");
     }
 

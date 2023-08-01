@@ -22,7 +22,7 @@ export abstract class DateTime {
     }
 
     public static splitDateAndTime(date: Date | string, timeZoneId: string): [Date, string] {
-        var dateAsString = formatInTimeZone(date, timeZoneId, "yyyy-MM-dd HH:mm");
+        const dateAsString = formatInTimeZone(date, timeZoneId, "yyyy-MM-dd HH:mm");
         return DateTime.parseDateAndTime(dateAsString);
     }
 

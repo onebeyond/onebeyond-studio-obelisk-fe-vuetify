@@ -59,7 +59,7 @@ adminRouter.beforeEach((to, _from, next) => {
     if (LocalSessionStorage.isUserAuthenticated()) {
         next();
     } else {
-        window.location.href = `${(window as any).location.origin}/auth/`;
+        window.location.href = `${window.location.origin}/auth/`;
     }
 });
 

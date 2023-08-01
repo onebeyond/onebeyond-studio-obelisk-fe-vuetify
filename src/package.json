@@ -29,7 +29,7 @@
         "path-browserify": "1.0.1",
         "pinia": "2.0.32",
         "popper.js": "1.16.1",
-        "qrcode.vue": "3.3.3",
+        "qrcode.vue": "3.4.0",
         "reflect-metadata": "0.1.13",
         "tiny-emitter": "2.1.0",
         "v-snackbars": "3.2.8",

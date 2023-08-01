@@ -72,6 +72,6 @@
         clearUserContext();
         await accountApiClient.signOut();
 
-        window.location.href = `${(window as any).location.origin}/auth/`;
+        window.location.href = `${window.location.origin}/auth/`;
     }
 </script>

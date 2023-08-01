@@ -1,4 +1,4 @@
-export type CrudAction = (id: any) => void;
+export type CrudAction = (id: string) => void;
 
 export interface Command {
     buttonIcon: string;
@@ -22,4 +22,8 @@ export interface Query {
 export interface OrderBy {
     key: string;
     order?: boolean | "asc" | "desc";
+}
+
+export interface VuetifyGrid {
+    page: number;
 }

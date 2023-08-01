@@ -1,5 +1,5 @@
 import { computed, type Ref } from "vue";
-import type Toast from "@components/obComponents/toast.vue";
+import type Toast from "@components/obComponents/obToast.vue";
 import type { NotificationType } from "@js/types/toastTypes";
 
 export default function useGetToastShowMethod(toastRef: Ref<InstanceType<typeof Toast> | undefined>) {

@@ -39,7 +39,7 @@
     import { useRouter } from "vue-router";
     import { inject, provide, ref, type Ref } from "vue";
     import { ShowAlertKey } from "@js/util/symbols";
-    import Toast from "@components/obComponents/toast.vue";
+    import Toast from "@components/obComponents/obToast.vue";
     import useGetToastShowMethod from "@js/composables/useGetToastShowMethod";
     import { useI18n } from "vue-i18n";
     import authAppTranslation from "@js/localizations/resources/components/admin/authApp";

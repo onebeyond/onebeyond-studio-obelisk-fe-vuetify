@@ -33,6 +33,7 @@
             <v-row justify="end">
                 <v-btn
                     v-for="command in entityGrid.commands"
+                    :key="command.buttonLabel"
                     :prepend-icon="command.buttonIcon"
                     variant="text"
                     @click="command.action(item.raw.id)"
@@ -45,11 +46,11 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted } from "vue";
+    import { ref, onMounted, toRef, type Ref } from "vue";
     import { VuetifyEntityGrid } from "@js/grids/vuetify/vuetifyEntityGrid";
     import { VDataTableServer } from "vuetify/lib/labs/components";
 
-    const entityGridRef = ref(0);
+    const entityGridRef: Ref<VDataTableServer> = ref();
     defineExpose({ entityGridRef });
 
     const searchText = ref("");
@@ -58,6 +59,7 @@
     const props = defineProps({
         entityGrid: { type: VuetifyEntityGrid, required: true },
     });
+    const entityGrid = toRef(props, "entityGrid");
 
     onMounted(() => {
         props.entityGrid.setRefreshMethod(refresh);
@@ -69,6 +71,6 @@
     }
 
     async function search(): Promise<void> {
-        props.entityGrid.search = searchText.value;
+        entityGrid.value.search = searchText.value;
     }
 </script>

@@ -19,7 +19,7 @@ export default class RedirectToLoginResponseInterceptor implements IResponseInte
             } catch {
                 // Avoid issues in case the user has been already logged out
             }
-            window.location.href = `${(window as any).location.origin}/auth/`;
+            window.location.href = `${window.location.origin}/auth/`;
             return new InterceptorResponse(false, false);
         }
 

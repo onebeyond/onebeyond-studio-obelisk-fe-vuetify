@@ -37,15 +37,16 @@ export default function useGlobalNotification() {
 
     /**
      * A simplified alias for showAlert.
-     * 
+     *
      * Will accept any input. If e is a WebApiError, an appropriate message will be displayed based on the httpCode.
-     * If e is a string, it will be displayed directly. 
+     * If e is a string, it will be displayed directly.
      * Any other argument will result in a generic error message being displayed.
      */
     function onError(e: unknown): void {
         let message = i18n.global.t("errors.errorProcessingRequest");
 
         if (e instanceof WebApiError) {
+            if (e.httpCode === 400) message = e.message;
             if (e.httpCode === 403 || e.httpCode === 401)
                 message = message + `: ${i18n.global.t("errors.accessDenied")}`;
             if (e.httpCode === 404) message = message + `: ${i18n.global.t("errors.resourceNotFound")}`;
@@ -54,6 +55,7 @@ export default function useGlobalNotification() {
         } else if (typeof e === "string" || e instanceof String) {
             message = e.toString();
         }
+
         showAlert(i18n.global.t("errors.error"), message, "error");
     }
 
