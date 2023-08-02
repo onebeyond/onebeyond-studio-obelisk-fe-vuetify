@@ -18,7 +18,7 @@
         "emitDecoratorMetadata": true,
         "allowJs": true,
         "moduleResolution": "node",
-        "lib": ["ES2017", "dom"],
+        "lib": ["ES2022", "dom"],
         "types": ["webpack-env"],
         "typeRoots": ["src/@types"]
     },
