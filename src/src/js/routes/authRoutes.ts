@@ -62,7 +62,7 @@ const authRouter = createRouter({
         {
             path: "/:catchAll(.*)",
             name: "PageNotFound",
-            component: () => import("@components/pagenotfound/pagenotfound.vue"),
+            component: () => import("@components/pageNotFound/pageNotFound.vue"),
             meta: { title: "Page not found" },
         },
     ],
