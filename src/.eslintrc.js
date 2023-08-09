@@ -24,9 +24,12 @@ module.exports = {
                 ignores: ["dashboard", "users", "home"],
             },
         ],
-        "@typescript-eslint/no-explicit-any": ["warn"],
-        "vue/valid-v-slot": ['error', {
-            allowModifiers: true,
-          }],
+        "@typescript-eslint/no-explicit-any": ["error"],
+        "vue/valid-v-slot": [
+            "error",
+            {
+                allowModifiers: true,
+            },
+        ],
     },
 };

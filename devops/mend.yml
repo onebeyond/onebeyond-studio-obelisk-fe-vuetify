@@ -1,0 +1,45 @@
+trigger: none
+
+pr: none
+
+schedules:
+- cron: "0 5 * * *"
+  displayName: 'Daily Mend Build'
+  branches:
+    include:
+    - main
+
+pool:
+  vmImage: 'ubuntu-latest' 
+
+jobs:
+  - job: Build_Analyse_Web_UI
+    displayName: "Build & Analyse Web UI"
+    variables:
+      webpackNpmCommand: 'build -- --env BUILD_NUMBER=$(Build.BuildNumber)'
+      projects.workingFolders.WebUI: 'src'
+      # Makes sesne to add Sonar here as well (as a separate from WebAPI project)
+      #sonarCloud.projectKey: 'dcslsoftwareltd_FundManager.UI' # Comes from project setup in SonarCloud
+      #sonarCloud.projectName: 'FundManager.UI'                # Comes from project setup in SonarCloud
+    steps:
+      - task: Npm@1
+        displayName: 'NPM Install'
+        inputs:
+          command: 'custom'
+          customCommand: 'install'
+          workingDir: '$(projects.workingFolders.WebUI)'
+          customRegistry: useNpmrc
+
+      - task: Npm@1
+        displayName: 'Build Web UI SPA'
+        inputs:
+          command: custom
+          workingDir: '$(projects.workingFolders.webUI)'
+          verbose: false
+          customCommand: 'run $(webpackNpmCommand)' #webpack vsts task does not work with webpack 5 https://github.com/Dealogic/webpack-vsts-extension/issues/95
+
+      - task: WhiteSource@21
+        displayName: "Analyse Projects"
+        inputs:
+          cwd: '$(System.DefaultWorkingDirectory)'
+          projectName: 'ObeliskUI'

@@ -1,0 +1,17 @@
+trigger: 'none' # It is triggered by a PR being created
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  run.sonar: true
+  run.tests: true
+  sonarCloud.endpoint: 'ObeliskBackendSonarCloud' # Service connection as it stands in Azure DevOps
+
+stages:
+  - stage: Build
+    dependsOn: []
+    jobs:
+      - template: 'build-jobs.yml'
+        parameters:
+          publishArtefacts: false
