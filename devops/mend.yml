@@ -42,4 +42,4 @@ jobs:
         displayName: "Analyse Projects"
         inputs:
           cwd: '$(System.DefaultWorkingDirectory)'
-          projectName: 'ObeliskUI'
+          projectName: 'ObeliskFEVuetify'
