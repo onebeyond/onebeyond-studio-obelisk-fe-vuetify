@@ -1,0 +1,79 @@
+parameters:
+  - name: publishArtefacts
+    displayName: 'Publish artefacts'
+    type: boolean
+
+jobs:
+  - job: Build_Publish_Web_UI
+    displayName: 'Build & Publish Web UI'
+    variables:
+      webpackNpmCommand: 'build -- --env BUILD_NUMBER=$(Build.BuildNumber)'
+      projects.workingFolders.WebUI: 'src'
+      sonarCloud.projectKey: 'onebeyond-studio-obelisk-fe-vuetify'  # Comes from project setup in SonarCloud
+      sonarCloud.projectName: 'onebeyond-studio-obelisk-fe-vuetify' # Comes from project setup in SonarCloud
+
+    steps:
+      - task: Npm@1
+        displayName: 'NPM Install'
+        inputs:
+          command: 'custom'
+          customCommand: 'install'
+          workingDir: '$(projects.workingFolders.WebUI)'
+          customRegistry: useNpmrc
+
+      - task: PowerShell@2
+        displayName: 'Lint'  
+        inputs:    
+          targetType: 'inline'
+          script: |
+            cd $(projects.workingFolders.WebUI)
+            npm run lint
+
+      - task: SonarCloudPrepare@1
+        displayName: 'Prepare SonarCloud Analysis'
+        condition: and(succeeded(), eq(variables['run.sonar'], 'true'))        
+        inputs:
+          SonarCloud: $(sonarCloud.endpoint)
+          organization: 'dcslsoftwareltd'
+          scannerMode: 'CLI'
+          configMode: manual
+          cliProjectKey: $(sonarCloud.projectKey)
+          cliProjectName: $(sonarCloud.projectName)
+          extraProperties: |
+            sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
+            sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx
+
+      - task: Npm@1
+        displayName: 'Build Web UI SPA'
+        inputs:
+          command: custom
+          workingDir: '$(projects.workingFolders.WebUI)'
+          verbose: false
+          customCommand: 'run $(webpackNpmCommand)' #webpack vsts task does not work with webpack 5 https://github.com/Dealogic/webpack-vsts-extension/issues/95
+
+      - task: SonarCloudAnalyze@1
+        displayName: 'Analyze SonarCloud'
+        condition: and(succeeded(), eq(variables['run.sonar'], 'true'))
+
+      - ${{ if eq(parameters.publishArtefacts, true) }}:
+        - task: ArchiveFiles@2
+          displayName: 'Archive Web UI SPA'
+          inputs:
+            includeRootFolder: false
+            rootFolderOrFile: '$(projects.workingFolders.WebUI)/dist'
+            archiveFile: '$(Build.ArtifactStagingDirectory)/WebUISpa-$(Build.BuildId).zip'
+
+        - task: PublishPipelineArtifact@1
+          displayName: 'Publish Web UI SPA Artifact'
+          inputs:
+            targetPath: '$(Build.ArtifactStagingDirectory)/WebUISpa-$(Build.BuildId).zip'
+            artifact: WebUISpa
+
+  - ${{ if eq(parameters.publishArtefacts, true) }}:
+    - job: Build_Publish_Infra
+      displayName: 'Build & Publish Infra'
+      steps:
+        - publish: '$(Build.SourcesDirectory)/devops/Terraform'
+          displayName: 'Publish TF Files'
+          artifact: 'TF-Files'
+
