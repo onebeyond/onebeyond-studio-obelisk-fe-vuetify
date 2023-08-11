@@ -19,6 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
+              working-directory: src
               npm ci
               npm run build
               npm run lint
