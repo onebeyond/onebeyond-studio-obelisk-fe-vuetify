@@ -3,7 +3,7 @@ name: "Check PR"
 on:
   pull_request:
     branches:
-      - "main"
+      - "addPrGithubAction"
     paths:
       - "src/**"
   workflow_dispatch:
