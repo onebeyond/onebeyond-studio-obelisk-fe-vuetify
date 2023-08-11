@@ -6,6 +6,7 @@ on:
       - "main"
     paths:
       - "src/**"
+      - ".github/workflows/**"
   workflow_dispatch:
 
 concurrency:
@@ -16,9 +17,12 @@ jobs:
   build_and_test:
     name: "Build & Lint"
     runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: ./src
     steps:
-      - uses: actions/checkout@v3
-      - run: |
-              npm ci
-              npm run build
-              npm run lint
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - run: npm ci
+      - run: npm run build
+      - run: npm run lint
