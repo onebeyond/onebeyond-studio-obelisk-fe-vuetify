@@ -107,7 +107,8 @@ export class VuetifyEntityGrid extends EntityGrid {
     public async refresh(): Promise<void> {
         try {
             this.isLoading = true;
-            const response = await this._dataAdaptor?.executeApi(this.query, this.search);
+            const response = await this._dataAdaptor?.executeApi(this.query, this.search, this.extraFilters);
+            this.data = response.data;
 
             if (response) {
                 this.data = response.data;

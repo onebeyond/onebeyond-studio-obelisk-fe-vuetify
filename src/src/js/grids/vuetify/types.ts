@@ -14,7 +14,7 @@ export class Column {
     allowFiltering?: boolean = false;
     filterType?: FilterType = FilterType.NoFilter;
     valueAccessor?: any = [];
-    dataType: string | null = null;
+    isDateTimeOffset: boolean = false; //Need to specify for DateTimeOffset field so it will convert to current timezone to utc
 }
 
 export interface Query {
