@@ -12,16 +12,13 @@
                 <v-menu offset-y transition="slide-y-transition">
                     <template v-slot:activator="{ props }">
                         <span color="primary" dark v-bind="props">
-                            <UserAvatar
-                                :fullName="store.userContext.userName"
-                                :initials="store.userContext.initials"
-                            ></UserAvatar>
+                            <UserAvatar :fullName="userContext.userName" :initials="userContext.initials"></UserAvatar>
                         </span>
                     </template>
                     <v-list dense>
                         <v-list-item>
                             <v-icon>mdi-account-outline</v-icon>
-                            <strong>{{ store.userContext.userName }}</strong>
+                            <strong>{{ userContext.userName }}</strong>
                         </v-list-item>
                         <hr />
                         <v-list-item>
@@ -91,7 +88,8 @@
                 </v-container>
             </global-error-handler>
         </v-main>
-
+        <!-- Global Toast component for notifications/alerts -->
+        <Toast ref="globalToastRef" />
         <v-footer padless>
             <v-card width="100%" class="text-center" flat tile>
                 <v-card-text class="pt-3">
@@ -105,20 +103,20 @@
         <global-error-handler>
             <!--@* Session timeout *@-->
             <session-timeout></session-timeout>
-
-            <!-- @* User Context*@-->
-            <user-context></user-context>
         </global-error-handler>
     </v-app>
 </template>
 
 <script setup lang="ts">
-    import { inject, ref } from "vue";
     import UserAvatar from "@components/util/userAvatar.vue";
     import AuthApiClient from "@js/api/auth/authApiClient";
-    import { useUserContextStore } from "@js/stores/appStore";
     import { useI18n } from "vue-i18n";
     import adminAppTranslation from "@js/localizations/resources/components/admin/adminApp";
+    import { inject, provide, ref, type Ref } from "vue";
+    import { ShowAlertKey } from "@js/util/symbols";
+    import Toast from "@components/obComponents/obToast.vue";
+    import useGetToastShowMethod from "@js/composables/useGetToastShowMethod";
+    import { useUserContextStore } from "@js/stores/appStore";
 
     let drawer = ref(false);
     const { t } = useI18n({
@@ -126,11 +124,16 @@
     });
     const $buildNumber = inject("$buildNumber");
     const $buildDate = inject("$buildDate");
-    const store = useUserContextStore();
+    const { clearUserContext, userContext } = useUserContextStore();
     const authApiClient: AuthApiClient = new AuthApiClient();
 
+    const globalToastRef: Ref<InstanceType<typeof Toast> | undefined> = ref();
+    const { showMethod } = useGetToastShowMethod(globalToastRef);
+    provide(ShowAlertKey, showMethod);
+
     async function performLogout(): Promise<void> {
+        clearUserContext();
         await authApiClient.signOut();
-        window.location.href = `${(window as any).location.origin}/auth/`;
+        window.location.href = `${window.location.origin}/auth/`;
     }
 </script>

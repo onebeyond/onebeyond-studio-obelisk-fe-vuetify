@@ -87,9 +87,6 @@
                 }}</v-btn>
             </template>
         </v-modalPopup>
-
-        <!--alert modal-->
-        <v-modalPopup :namespace="'alertModal'" v-model:visible="alertVisible" />
     </div>
 </template>
 
@@ -98,9 +95,7 @@
 
     import { User } from "@js/dataModels/users/user";
     import { UserRole } from "@js/dataModels/users/userRole";
-
     import UserApiClient from "@js/api/users/userApiClient";
-
     import useEntityGridCrud from "@js/entityCrud/useEntityGridCrud";
     import useUserContext from "@js/composables/useUserContext";
     import useRules from "@js/composables/useRules";
@@ -111,6 +106,7 @@
     import ObVuetifyGrid from "@components/obComponents/grids/obVuetifyGrid.vue";
     import { EntityUpdateUsingModalAndGrid, type ConstructorParams } from "@js/entityCrud/entityUpdateStrategy";
     import { VForm } from "vuetify/components";
+    import useGlobalNotification from "@js/composables/useGlobalNotification";
 
     const entityApiClient = new UserApiClient();
 
@@ -121,12 +117,12 @@
         messages: userDictionary,
     });
 
+    const { onError } = useGlobalNotification();
+
     const {
         entity,
         tGrid,
         showEntity,
-        onError,
-        alertVisible,
         isSaving,
         saveEntity,
         closeEntityModal,

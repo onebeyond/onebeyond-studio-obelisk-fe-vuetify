@@ -44,13 +44,14 @@
 <script setup lang="ts">
     import dictionary from "@js/localizations/resources/components/tfa/generateRecoveryCodes";
     import { useI18n } from "vue-i18n";
+    import { toRef } from "vue";
 
     const { t } = useI18n({
         messages: dictionary,
     });
     const props = defineProps(["showGenerateRecoveryCodes", "showRecoveryCodes"]);
     const emit = defineEmits(["showTwoFactorAuthentication", "showEnableAuthenticatorCard", "showRecoveryCodesCard"]);
-    let showGenerateRecoveryCodes = props.showGenerateRecoveryCodes;
+    const showGenerateRecoveryCodes = toRef(props, "showGenerateRecoveryCodes");
 
     function showEnableAuthenticatorCard(): void {
         emit("showEnableAuthenticatorCard");

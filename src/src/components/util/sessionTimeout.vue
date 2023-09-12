@@ -28,6 +28,7 @@
     import sessionTimeoutDictionary from "@js/localizations/resources/components/sessionTimeout";
     import { useI18n } from "vue-i18n";
     import { onMounted } from "vue";
+    import { useUserContextStore } from "@js/stores/appStore";
 
     const { t } = useI18n({
         messages: sessionTimeoutDictionary,
@@ -39,6 +40,7 @@
     let showLogoutDialog = false;
     let secondsLeft = 0;
     const accountApiClient = new AccountApiClient();
+    const { clearUserContext } = useUserContextStore();
 
     onMounted(() => {
         // We can retrieve the setting from the configuration as we can be sure it has been already loaded
@@ -67,8 +69,9 @@
         }
         showLogoutDialog = false;
 
+        clearUserContext();
         await accountApiClient.signOut();
 
-        window.location.href = `${(window as any).location.origin}/auth/`;
+        window.location.href = `${window.location.origin}/auth/`;
     }
 </script>

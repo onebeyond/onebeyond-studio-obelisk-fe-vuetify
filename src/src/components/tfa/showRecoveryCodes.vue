@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-dialog v-model="props.showRecoveryCodes" persistent max-width="480px">
+        <v-dialog v-model="showRecoveryCodes" persistent max-width="480px">
             <v-card>
                 <v-container>
                     <v-row>
@@ -28,6 +28,7 @@
                                                 <code
                                                     class="text-center ma-1"
                                                     v-for="item in recoveryCodes.slice((i - 1) * 2, i * 2)"
+                                                    :key="item"
                                                     >{{ item }} <br
                                                 /></code>
                                             </v-row>
@@ -52,7 +53,7 @@
     import dictionary from "@js/localizations/resources/components/tfa/showRecoveryCodes";
     import { useI18n } from "vue-i18n";
     import { useRouter } from "vue-router";
-    import { ref } from "vue";
+    import { ref, toRef } from "vue";
 
     const router = useRouter();
 
@@ -64,6 +65,7 @@
     let recoveryCodes = ref<string[]>([]);
     const emit = defineEmits(["showTwoFactorAuthentication"]);
     const props = defineProps(["showRecoveryCodes"]);
+    const showRecoveryCodes = toRef(props, "showRecoveryCodes");
 
     await getRecoveryCodes();
 
@@ -73,7 +75,8 @@
         if (response.length == 0) {
             returnToDashboard();
         }
-        recoveryCodes = response;
+
+        recoveryCodes.value = response;
     }
 
     function showTwoFactorAuthentication(): void {

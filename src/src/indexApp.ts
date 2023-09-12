@@ -6,7 +6,6 @@ import { indexRouter } from "@js/routes/indexRoutes";
 
 const app = createApp(indexApp);
 
-const appConfig = new AppConfiguration(false, app, "#indexApp");
-app.use(indexRouter);
+const appConfig = new AppConfiguration(false, app, "#indexApp", indexRouter);
 
 await appConfig.setup();

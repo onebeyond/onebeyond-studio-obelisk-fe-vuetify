@@ -36,14 +36,14 @@ const adminRouter = createRouter({
         {
             path: "/:catchAll(.*)",
             name: "PageNotFound",
-            component: () => import("@components/pagenotfound/pagenotfound.vue"),
+            component: () => import("@components/pageNotFound/pageNotFound.vue"),
             meta: { title: "Page not found" },
         },
         //-- 404 Error page ---------------------------------------------------
         {
             path: "/notfound",
             name: "PageNotFoundPage",
-            component: () => import("@components/pagenotfound/pagenotfound.vue"),
+            component: () => import("@components/pageNotFound/pageNotFound.vue"),
             meta: { title: "Page not found" },
         },
     ],
@@ -59,7 +59,7 @@ adminRouter.beforeEach((to, _from, next) => {
     if (LocalSessionStorage.isUserAuthenticated()) {
         next();
     } else {
-        window.location.href = `${(window as any).location.origin}/auth/`;
+        window.location.href = `${window.location.origin}/auth/`;
     }
 });
 

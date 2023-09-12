@@ -18,7 +18,13 @@ function isEmpty(value: unknown): boolean {
 export default function useRules(params?: { fieldToMatch?: Ref<string> }) {
     const { t } = useI18n();
 
-    const required = (value: unknown) => !!value || t("validation.required");
+    const required = (value: unknown) => {
+        if (isEmpty(value) || !String(value).trim().length) {
+            return t("validation.required");
+        } else {
+            return true;
+        }
+    };
 
     const emailRegex =
         /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i;

@@ -2,31 +2,23 @@
     <div>
         <select v-model="$i18n.locale" @change="changeLanguage($event)" class="form-control">
             <option v-for="locale in $i18n.availableLocales" :key="locale" :value="locale">
-                {{ $i18n.messages[locale]["application"]["language"] }}
+                {{ $i18n.locale }}
             </option>
         </select>
     </div>
 </template>
 
-<script lang="ts">
-    import { Vue, Component } from "vue-property-decorator";
+<script setup lang="ts">
     import { i18nConfig } from "@js/localizations/i18nConfig";
     import LocalAppStorage from "@js/stores/localAppStorage";
+    import { useLocale } from "vuetify";
 
-    @Component({
-        name: "LanguageSelector",
-        components: {},
-    })
-    export default class LanguageSelector extends Vue {
-        constructor() {
-            super();
-        }
+    const { current } = useLocale();
 
-        public changeLanguage(event): void {
-            if (event.target.value !== LocalAppStorage.getValueForKey("currentLocale")) {
-                i18nConfig.use(event.target.value);
-                this.$vuetify.lang.current = event.target.value;
-            }
+    function changeLanguage(event): void {
+        if (event.target.value !== LocalAppStorage.getValueForKey("currentLocale")) {
+            i18nConfig.use(event.target.value);
+            current.value = event.target.value;
         }
     }
 </script>

@@ -1,12 +1,7 @@
 import ObApiClient from "@js/api/obApiClient";
-import {
-    type Query,
-    type OrderBy,
-    FilterType,
-    StringOperators,
-    NumberOperators
-} from "@js/grids/vuetify/types";
-import { DateTime } from "@js/util/dateTime";
+import PagedList from "@js/dataModels/pagedList";
+import type { Query, OrderBy } from "@js/grids/vuetify/types";
+
 export class DataAdaptor extends ObApiClient {
     private readonly errorCallback: Function;
 
@@ -15,8 +10,8 @@ export class DataAdaptor extends ObApiClient {
         this.errorCallback = errorCallback;
     }
 
-    public async executeApi(query: Query, search: string, extraFilters: any): Promise<any> {
-        let filters: string[] = [];
+    public async executeApi(query: Query, search: string): Promise<PagedList<unknown>> {
+        const filters: string[] = [];
 
         if (search) {
             filters.push(`search=${search}`);
@@ -151,13 +146,15 @@ export class DataAdaptor extends ObApiClient {
         const finalQuery = `?${filters.join("&")}`;
 
         try {
-            let response = await this.get(finalQuery);
+            const response = await this.get(finalQuery);
             return await response.json();
         } catch (e) {
-            if (!!this.errorCallback) {
+            if (this.errorCallback) {
                 this.errorCallback(e);
             }
         }
+
+        return new PagedList();
     }
 
     public constructSortQuery(columns: OrderBy[]): string {

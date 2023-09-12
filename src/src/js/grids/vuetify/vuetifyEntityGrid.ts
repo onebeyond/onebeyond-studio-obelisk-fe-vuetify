@@ -1,11 +1,11 @@
 import { EntityGrid, EntityGridAction } from "../entityGrid";
 import { DataAdaptor } from "./dataAdaptor";
-import type { CrudAction, Command, Column, Query } from "@js/grids/vuetify/types";
+import type { CrudAction, Command, Column, Query, VuetifyGrid } from "@js/grids/vuetify/types";
 
 //encapsulates all the logic related to the grid vue component we're currently using in the template
 export class VuetifyEntityGrid extends EntityGrid {
-    protected _instance: any | null; //This is an instance of the backing grid, e.g. vue server grid
-    public data: any[] = [];
+    protected _instance: VuetifyGrid | null; //This is an instance of the backing grid, e.g. vue server grid
+    public data: unknown[] = [];
     public count: number = 0;
     public isLoading: boolean = false;
     public currentOrderByField: string = "";
@@ -36,8 +36,8 @@ export class VuetifyEntityGrid extends EntityGrid {
         this._dataAdaptor = null;
     }
 
-    public setInstance(instance: any): void {
-        this._instance = instance;
+    public setInstance(instance: unknown): void {
+        this._instance = instance as VuetifyGrid;
     }
 
     public get columns(): Column[] {
@@ -50,7 +50,7 @@ export class VuetifyEntityGrid extends EntityGrid {
         return columns;
     }
 
-    public get instance(): any {
+    public get instance(): VuetifyGrid {
         if (this._instance == null) {
             throw new Error("Grid instance is not set");
         }
@@ -107,9 +107,12 @@ export class VuetifyEntityGrid extends EntityGrid {
     public async refresh(): Promise<void> {
         try {
             this.isLoading = true;
-            const response = await this._dataAdaptor?.executeApi(this.query, this.search, this.extraFilters);
-            this.data = response.data;
-            this.count = response.count;
+            const response = await this._dataAdaptor?.executeApi(this.query, this.search);
+
+            if (response) {
+                this.data = response.data;
+                this.count = response.count;
+            }
         } finally {
             this.isLoading = false;
         }
@@ -163,7 +166,7 @@ export class VuetifyEntityGrid extends EntityGrid {
     public addCustomCommand(command: Command) {
         this._hasActionColumn = true;
 
-        this.commands;
+        this.commands.push(command);
     }
 
     public setRefreshMethod(refresh: Function) {

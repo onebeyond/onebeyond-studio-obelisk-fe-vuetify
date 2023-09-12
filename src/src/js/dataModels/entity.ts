@@ -49,6 +49,6 @@ export class GuidEntity extends Entity<string> {
 
 //That's the way we provide access to entity's constructor, pleease see entityCrudMixin -> provideEntityBuilder
 export interface EntityBuilder<TEntity extends Entity<T>, T> {
-    new (...args: any[]): TEntity;
+    new (...args: unknown[]): TEntity;
     idDefault(): T;
 }

@@ -11,12 +11,6 @@
                                 <v-card-text>
                                     <p>{{ t("instructions") }}.</p>
 
-                                    <div v-if="passwordError">
-                                        <v-alert type="error">
-                                            {{ t("password.unknownError") }}
-                                        </v-alert>
-                                    </div>
-
                                     <v-text-field
                                         v-model="emailInput"
                                         type="text"
@@ -26,7 +20,6 @@
                                         name="email"
                                         :data-vv-as="t('password.email')"
                                         :label="t('password.email')"
-                                        @input="passwordError = false"
                                         :rules="[rules.required, rules.email]"
                                     >
                                     </v-text-field>
@@ -75,6 +68,7 @@
     import { useRouter } from "vue-router";
     import useRules from "@js/composables/useRules";
     import { VForm } from "vuetify/components";
+    import useGlobalNotification from "@js/composables/useGlobalNotification";
 
     const $router = useRouter();
     const rules = useRules();
@@ -84,9 +78,9 @@
         messages: forgotPassword,
     });
 
+    const { onError } = useGlobalNotification();
     const emailInput = ref("");
     const showForm = ref(true);
-    const passwordError = ref(false);
     const showPasswordConfirmation = ref(false);
     const authApiClient: AuthApiClient = new AuthApiClient();
 
@@ -99,7 +93,7 @@
                 showPasswordConfirmation.value = true;
                 showForm.value = false;
             } catch {
-                passwordError.value = true;
+                onError(t("password.unknownError"));
             }
         }
     }

@@ -78,6 +78,7 @@ export default {
             failTitle: "Upload Failed",
             failMessage: "File was not uploaded successfully, please try again",
             pageNotFound: "Oops! Page not found",
+            success: "Success",
         },
         placeholder: {
             multiSelectSearch: "Type to search",
@@ -103,6 +104,15 @@ export default {
             resetPasswordInvalidToken: "The URL is either invalid or has expired",
             email: "Email",
             defaultError: "An error occured while trying to log you in.",
+            authAddError: "An error occured while trying to add authenticator.",
+        },
+        errors: {
+            error: "Error",
+            errorProcessingRequest: "Error Processing Request",
+            accessDenied: "Access denied",
+            resourceNotFound: "Resource not found",
+            internalServerError: "Internal Server Error",
+            serviceUnavailable: "Service Unavailable",
         },
         validation: {
             email: "Invalid email format.",

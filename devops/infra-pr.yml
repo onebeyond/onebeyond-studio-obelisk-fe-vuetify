@@ -1,0 +1,16 @@
+trigger: none # Configured via branch policies
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  serviceConnection: 'Obelisk Frontend Subscription' # As it stands in Azure DevOps
+
+steps:
+  - template: 'infra-build-tfp-steps.yml'
+    parameters:
+      stageCode: 'qa'
+      azServiceConnection: '$(serviceConnection)'
+      tfWorkingDirectory: '$(Build.SourcesDirectory)/devops/Terraform'
+      tfBackendResourceGroupName: 'obelisk-infra-rg'
+      tfBackendStorageAccountName: 'obeliskinfrastorage'      

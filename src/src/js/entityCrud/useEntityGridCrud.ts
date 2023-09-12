@@ -3,9 +3,9 @@ import type { EntityUpdateStrategyWithGrid, ConstructorParams } from "@js/entity
 
 import type { Entity, EntityBuilder } from "@js/dataModels/entity";
 import type EntityApiClient from "@js/api/entityApiClient";
-import { onMounted, ref, type Ref } from "vue";
+import { onMounted, type Ref } from "vue";
 import type ObVuetifyGrid from "@components/obComponents/grids/obVuetifyGrid.vue";
-import useEntityCrud from "./useEntityCrud";
+import useEntityCrud, { type OverridableFunctions } from "./useEntityCrud";
 
 export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid extends EntityGrid>(
     provideEntityBuilder: EntityBuilder<TEntity, T>,
@@ -16,6 +16,7 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         params: ConstructorParams<TEntity, T>,
         entityGrid: TGrid,
     ) => EntityUpdateStrategyWithGrid<TEntity, T, TGrid>,
+    overridableFunctions?: OverridableFunctions<T>,
 ) {
     const {
         entity,
@@ -39,8 +40,6 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         fetchData,
         saveEntity,
         deleteEntity,
-        onError,
-        alertVisible,
         isMobile,
     } = useEntityCrud(
         provideEntityBuilder,
@@ -48,8 +47,6 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         getEntityUpdateStrategyBuilder(),
         provideOverridenFunctions(),
     );
-
-    const gridInstance = ref<any>();
 
     function getEntityUpdateStrategyBuilder() {
         return (params: ConstructorParams<TEntity, T>) => entityUpdateStrategyBuilder(params, tGrid);
@@ -60,6 +57,7 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
             onDeleteEntityButtonClickedOverride,
             onEntityUpdatedOverride,
             onEntityDeletedOverride,
+            onEntityLoadedOverride: overridableFunctions?.onEntityLoadedOverride,
         };
     }
 
@@ -69,14 +67,14 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
 
     function setGridInstance(): void {
         tGrid.setInstance(getGridReference());
-        gridInstance.value = getGridReference();
     }
 
-    function getGridReference(): any {
+    function getGridReference(): unknown {
         const gridReference = gridComponent.value?.entityGridRef;
         if (gridReference) {
             return gridReference;
         }
+
         throw new Error("No grid reference found");
     }
 
@@ -84,18 +82,31 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         tGrid.rememberCurrentPageBeforeGridAction(EntityGridAction.EntityDelete);
         showDeleteEntity.value = true;
         entity.value.id = id;
+
+        if (overridableFunctions?.onDeleteEntityButtonClickedOverride) {
+            overridableFunctions.onDeleteEntityButtonClickedOverride(id);
+        }
     }
 
     function onEntityUpdatedOverride(): void {
         //This event handler will be called after an entity (a new or an existing one) is sucessfully saved on server.
         tGrid.restoreCurrentPage();
+        entity.value = new provideEntityBuilder();
         showEntity.value = false;
         isEditingEntityInline.value = false;
+
+        if (overridableFunctions?.onEntityUpdatedOverride) {
+            overridableFunctions.onEntityUpdatedOverride();
+        }
     }
 
     function onEntityDeletedOverride(): void {
         //This event handler will be called after an entity is sucessfully deleted on server.
         tGrid.restoreCurrentPage();
+
+        if (overridableFunctions?.onEntityDeletedOverride) {
+            overridableFunctions.onEntityDeletedOverride();
+        }
     }
 
     return {
@@ -122,8 +133,6 @@ export default function useEntityGridCrud<TEntity extends Entity<T>, T, TGrid ex
         fetchData,
         saveEntity,
         deleteEntity,
-        onError,
-        alertVisible,
         isMobile,
     };
 }

@@ -1,4 +1,4 @@
-export type CrudAction = (id: any) => void;
+export type CrudAction = (id: string) => void;
 
 export interface Command {
     buttonIcon: string;
@@ -10,7 +10,7 @@ export class Column {
     title: string = "";
     key: string = "";
     sortable: boolean = false;
-    align?: 'start' | 'end';
+    align?: "start" | "end";
     allowFiltering?: boolean = false;
     filterType?: FilterType = FilterType.NoFilter;
     valueAccessor?: any = [];
@@ -25,7 +25,11 @@ export interface Query {
 
 export interface OrderBy {
     key: string;
-    order?: boolean | 'asc' | 'desc';
+    order?: boolean | "asc" | "desc";
+}
+
+export interface VuetifyGrid {
+    page: number;
 }
 
 export enum FilterType {
@@ -48,7 +52,7 @@ export enum FilterType {
     ComplexDateTime = 16,
     ComplexDateOnly = 17,
     ComplexDateRange = 18,
-    ComplexDateTimeRange = 19
+    ComplexDateTimeRange = 19,
 }
 
 export enum StringOperators {
@@ -56,7 +60,7 @@ export enum StringOperators {
     Equals = "Equals",
     StartsWith = "Starts With",
     EndsWith = "Ends With",
-    Not = "Not"
+    Not = "Not",
 }
 
 export enum NumberOperators {

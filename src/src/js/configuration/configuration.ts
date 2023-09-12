@@ -1,4 +1,5 @@
 import AppSettings from "@js/dataModels/settings/appSettings";
+import Settings from "@js/dataModels/settings/settings";
 import { plainToClassFromExist } from "class-transformer";
 
 export default abstract class Configuration {
@@ -6,7 +7,7 @@ export default abstract class Configuration {
     private static readonly _publicConfigurationFolder = "configuration";
     private static _appSettings: Readonly<AppSettings> | null = null;
 
-    public static async load(environment: string, onSettingsLoaded: Function | null = null): Promise<any> {
+    public static async load(environment: string, onSettingsLoaded: Function | null = null): Promise<void> {
         // eslint-disable-line @typescript-eslint/ban-types
         this._appSettings = new AppSettings();
 
@@ -26,7 +27,7 @@ export default abstract class Configuration {
         return this._appSettings;
     }
 
-    private static async readFromFile(jsonFile: string): Promise<any> {
+    private static async readFromFile(jsonFile: string): Promise<void> {
         if (!jsonFile) {
             throw Error("Please specify a valid JSON file to load");
         }
@@ -34,24 +35,20 @@ export default abstract class Configuration {
         try {
             // Load from the default settings first
             const response = await fetch(new Request(`/${this._publicConfigurationFolder}/${jsonFile}`));
-            const json = await response.json();
-            this.setEnvironmentVariables(jsonFile, json);
-        } catch (e: any) {
-            this.logError(jsonFile, `Failed to load ${jsonFile}: ${e.message}`);
+            const settings: Settings = await response.json();
+            this.setEnvironmentVariables(jsonFile, settings);
+        } catch (e: unknown) {
+            this.logError(jsonFile, `Failed to load ${jsonFile}: ${(e as Error).message}`);
         }
     }
 
-    private static setEnvironmentVariables(jsonFile: string, jsonSettings: any): void {
-        if (!jsonSettings) {
-            throw Error("Please specify a properly formatted JSON file to load");
-        }
-
+    private static setEnvironmentVariables(jsonFile: string, settings: Settings): void {
         try {
-            plainToClassFromExist(this._appSettings, jsonSettings.appSettings);
-        } catch (e: any) {
+            plainToClassFromExist(this._appSettings, settings.appSettings);
+        } catch (e: unknown) {
             this.logError(
                 jsonFile,
-                `An error occurred while setting configuration variables for ${jsonSettings} ${e.message}`,
+                `An error occurred while setting configuration variables for ${settings} ${(e as Error).message}`,
             );
         }
     }

@@ -9,15 +9,12 @@ const indexRouter = createRouter({
             name: "Home",
             component: () => import("@components/home/home.vue"),
             meta: { title: "Home" },
-            // beforeEnter(_to, _from, _next) {
-            //     window.location.href = `${(window as any).location.origin}/admin/`;
-            // }
         },
         //-- 404 Error page ---------------------------------------------------
         {
             path: "/:catchAll(.*)",
             name: "PageNotFound",
-            component: () => import("@components/pagenotfound/pagenotfound.vue"),
+            component: () => import("@components/pageNotFound/pageNotFound.vue"),
             meta: { title: "Page not found" },
         },
     ],

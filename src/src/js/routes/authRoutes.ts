@@ -30,13 +30,19 @@ const authRouter = createRouter({
             name: "setPassword",
             component: () => import("@components/auth/setPassword.vue"),
             meta: { title: "Set Password" },
+            props: () => ({
+                isFirstTimeSetup: true,
+            }),
         },
         //-- reset password -------------------------------------------------
         {
             path: "/resetPassword",
             name: "resetPassword",
-            component: () => import("@components/auth/resetPassword.vue"),
-            meta: { title: "Change Password" },
+            component: () => import("@components/auth/setPassword.vue"),
+            meta: { title: "Reset Password" },
+            props: () => ({
+                isFirstTimeSetup: false,
+            }),
         },
         //-- login with 2 fa ---------------------------------------------------
         {
@@ -56,7 +62,7 @@ const authRouter = createRouter({
         {
             path: "/:catchAll(.*)",
             name: "PageNotFound",
-            component: () => import("@components/pagenotfound/pagenotfound.vue"),
+            component: () => import("@components/pageNotFound/pageNotFound.vue"),
             meta: { title: "Page not found" },
         },
     ],
