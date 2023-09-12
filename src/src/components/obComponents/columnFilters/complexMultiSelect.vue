@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
     import { toRef, ref } from "vue";
-    import { Column, FilterType, StringOperators } from "@js/grids/vuetify/types";
+    import { Column, FilterType } from "@js/grids/vuetify/types";
 
     const props = defineProps({
         column: {
@@ -63,12 +63,11 @@
     const column = toRef(props, "column");
     const filterType = FilterType;
     const modelValue = ref(null);
-    const modelOperatorValue = ref(StringOperators.Contains);
     const emit = defineEmits(["addFilter", "clearComplexFilter"]);
     const updateKey = ref(0);
 
     function addComplexFilter() {
-        emit("addFilter", column.value!.filterType, column.value!.key, modelValue.value, modelOperatorValue.value);
+        emit("addFilter", column.value!.filterType, column.value!.key, modelValue.value);
         updateKey.value++;
     }
 

@@ -9,8 +9,7 @@
             <div style="background-color: white; width: 280px">
                 <template
                     v-if="
-                        column.filterType == filterType.ComplexBoolean ||
-                        column.filterType == filterType.ComplexDropdown
+                        column.filterType == filterType.ComplexDate || column.filterType == filterType.ComplexDateOnly
                     "
                 >
                     <v-row no-gutters>
@@ -22,18 +21,7 @@
                         </v-col>
                     </v-row>
                     <div>
-                        <v-select
-                            :key="column.key"
-                            v-model="modelValue"
-                            :items="
-                                column.filterType == filterType.ComplexBoolean ? booleanArray : column.valueAccessor
-                            "
-                            :label="column.title"
-                            persistent-hint
-                            item-value="id"
-                            item-title="name"
-                            :autofocus="true"
-                        />
+                        <DatePicker :label="column.title" clearable="true" :name="column.title" v-model="modelValue" />
                     </div>
                 </template>
             </div>
@@ -54,19 +42,16 @@
     const column = toRef(props, "column");
     const filterType = FilterType;
     const modelValue = ref(null);
-    const booleanArray = [
-        { id: 1, name: "Yes" },
-        { id: 0, name: "No" },
-    ];
-    const emit = defineEmits(["addFilter", "clearComplexFilter"]);
+    const emit = defineEmits(["addDateFilter", "clearComplexFilter"]);
     const updateKey = ref(0);
 
     function addComplexFilter() {
         emit(
-            "addFilter",
+            "addDateFilter",
             column.value!.filterType,
             column.value!.key,
-            modelValue.value
+            modelValue.value,
+            column.value!.isDateTimeOffset,
         );
         updateKey.value++;
     }

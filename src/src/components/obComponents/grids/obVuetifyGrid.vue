@@ -108,7 +108,7 @@
                         >
                             <complexDropDown
                                 :column="column"
-                                @addComplexFilter="addComplexFilter"
+                                @addFilter="addFilter"
                                 @clearComplexFilter="clearComplexFilter"
                             />
                         </template>
@@ -116,6 +116,29 @@
                             <complexMultiSelect
                                 :column="column"
                                 @addFilter="addFilter"
+                                @clearComplexFilter="clearComplexFilter"
+                            />
+                        </template>
+                        <template
+                            v-if="
+                                column.filterType == filterType.ComplexDate ||
+                                column.filterType == filterType.ComplexDateOnly
+                            "
+                        >
+                            <complexDate
+                                :column="column"
+                                @addDateFilter="addDateFilter"
+                                @clearComplexFilter="clearComplexFilter"
+                            />
+                        </template>
+                        <template
+                            v-if="
+                                column.filterType == filterType.ComplexDateTime
+                            "
+                        >
+                            <complexDateTime
+                                :column="column"
+                                @addDateFilter="addDateFilter"
                                 @clearComplexFilter="clearComplexFilter"
                             />
                         </template>
@@ -171,120 +194,8 @@
                                 </v-btn>
                             </template>
                             <v-card>
-                                <div style="background-color: white; width: 280px">
-                                    <template v-if="column.filterType == filterType.ComplexText">
-                                        <v-row no-gutters>
-                                            <v-col cols="6">
-                                                <v-btn
-                                                    text
-                                                    block
-                                                    @click="
-                                                        addComplexFilter(
-                                                            column.filterType,
-                                                            column.key,
-                                                            multiSearch[column.key],
-                                                            getStringOperatorByKey(column.key),
-                                                        )"
-                                                    color="success">
-                                                    Filter
-                                                </v-btn>
-                                            </v-col>
-                                            <v-col cols="6">
-                                                <v-btn
-                                                    text
-                                                    block
-                                                    @click="clearComplexFilter(column.key, column.filterType)"
-                                                    color="warning">
-                                                    Clear
-                                                </v-btn>
-                                            </v-col>
-                                        </v-row>
-                                        <div :key="getColumnKey(column.key)">
-                                            <v-select
-                                                :key="column.key"
-                                                :value="getStringOperatorByKey(column.key)"
-                                                :items="stringOperators"
-                                                :autofocus="true"
-                                                @update:model-value="(e) => updateOperator(column.key, e)"/>
-                                            <v-text-field
-                                                :key="column.key"
-                                                v-model="multiSearch[column.key]"
-                                                type="text"
-                                                :placeholder="column.title"
-                                                :autofocus="true"/>
-                                        </div>
-                                    </template>
-                                    <template
-                                        v-if="column.filterType == filterType.ComplexDate || column.filterType == filterType.ComplexDateOnly">
-                                        <div :key="getColumnKey(column.key)">
-                                            <v-row no-gutters>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="
-                                                            addDateFilter(
-                                                                column.filterType,
-                                                                column.key,
-                                                                multiSearch[column.key],
-                                                                column.isDateTimeOffset)"
-                                                        color="success">
-                                                        Filter
-                                                    </v-btn>
-                                                </v-col>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="clearComplexFilter(column.key, column.filterType)"
-                                                        color="warning">
-                                                        Clear
-                                                    </v-btn>
-                                                </v-col>
-                                            </v-row>
-                                            <date-picker
-                                                :label="column.title"
-                                                :clearable="true"
-                                                :name="column.title"
-                                                v-model="multiSearch[column.key]"
-                                            />
-                                        </div>
-                                    </template>
-                                    <template v-if="column.filterType == filterType.ComplexDateTime">
-                                        <div :key="getColumnKey(column.key)">
-                                            <v-row no-gutters>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="
-                                                            addDateFilter(
-                                                                column.filterType,
-                                                                column.key,
-                                                                multiSearch[column.key],
-                                                                column.isDateTimeOffset)"
-                                                        color="success">
-                                                        Filter
-                                                        </v-btn>
-                                                </v-col>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="clearComplexFilter(column.key, column.filterType)"
-                                                        color="warning">
-                                                        Clear
-                                                    </v-btn>
-                                                </v-col>
-                                            </v-row>
-                                            <date-time-picker
-                                                :label="column.title"
-                                                :clearable="true"
-                                                :name="column.title"
-                                                v-model="multiSearch[column.key]"
-                                            />
-                                        </div>
-                                    </template>
+                               
+                                   
                                     <template v-if="column.filterType == filterType.ComplexDateRange">
                                         <div :key="getColumnKey(column.key)">
                                             <v-row no-gutters>
@@ -371,156 +282,8 @@
                                             />
                                         </div>
                                     </template>
-                                    <template v-if="column.filterType == filterType.ComplexNumber">
-                                        <div :key="getColumnKey(column.key)">
-                                            <v-row no-gutters>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="
-                                                            addComplexFilter(
-                                                                column.filterType,
-                                                                column.key,
-                                                                multiSearch[column.key],
-                                                                getNumberOperatorByKey(column.key),
-                                                            )"
-                                                        color="success">
-                                                        Filter
-                                                        </v-btn>
-                                                </v-col>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="clearComplexFilter(column.key, column.filterType)"
-                                                        color="warning">
-                                                        Clear
-                                                        </v-btn>
-                                                </v-col>
-                                            </v-row>
-                                            <v-select
-                                                :key="column.key"
-                                                :value="getNumberOperatorByKey(column.key)"
-                                                :items="numberOperators"
-                                                :autofocus="true"
-                                                @update:model-value="(e) => updateOperator(column.key, e)"
-                                            />
-                                            <v-text-field
-                                                :key="column.key"
-                                                v-model="multiSearch[column.key]"
-                                                type="text"
-                                                :placeholder="column.title"
-                                                :autofocus="true"
-                                            />
-                                        </div>
-                                    </template>
-                                    <template v-if="column.filterType == filterType.ComplexDropdown ||column.filterType == filterType.ComplexBoolean">
-                                        <div>
-                                            <v-row no-gutters>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="
-                                                            addFilter(
-                                                                column.filterType,
-                                                                column.key,
-                                                                multiSearch[column.key],
-                                                            )"
-                                                        color="success">
-                                                        Filter
-                                                    </v-btn>
-                                                </v-col>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="clearComplexFilter(column.key, column.filterType)"
-                                                        color="warning">
-                                                        Clear
-                                                    </v-btn>
-                                                </v-col>
-                                            </v-row>
-                                            <v-select
-                                                :key="column.key"
-                                                v-model="multiSearch[column.key]"
-                                                :items="
-                                                    column.filterType == filterType.ComplexBoolean
-                                                        ? booleanArray
-                                                        : column.valueAccessor"
-                                                :label="column.title"
-                                                persistent-hint
-                                                item-value="id"
-                                                item-title="name"
-                                                :autofocus="true"
-                                            />
-                                        </div>
-                                    </template>
-                                    <template v-if="column.filterType == filterType.ComplexMultiSelectCheckbox">
-                                        <div :key="getColumnKey(column.key)">
-                                            <v-row no-gutters>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="
-                                                            addFilter(
-                                                                column.filterType,
-                                                                column.key,
-                                                                multiSearch[column.key],
-                                                            )"
-                                                        color="success">
-                                                        Filter
-                                                    </v-btn>
-                                                </v-col>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="clearComplexFilter(column.key, column.filterType)"
-                                                        color="warning">
-                                                        Clear
-                                                    </v-btn>
-                                                </v-col>
-                                            </v-row>
-                                            <v-select
-                                                :key="column.key"
-                                                v-model="multiSearch[column.key]"
-                                                :items="column.valueAccessor"
-                                                :label="column.title"
-                                                multiple
-                                                persistent-hint
-                                                item-value="id"
-                                                item-title="name"
-                                                :autofocus="true">
-                                                <template v-slot:prepend-item>
-                                                    <v-list-item
-                                                        title="Select All"
-                                                        @click="
-                                                            toggleList(
-                                                                column.filterType,
-                                                                column.key,
-                                                                column.valueAccessor,
-                                                                multiSearch[column.key],
-                                                            )">
-                                                        <template v-slot:prepend>
-                                                            <v-checkbox-btn
-                                                                :color="
-                                                                    checkSomeItems(column.key)
-                                                                        ? 'indigo-darken-4'
-                                                                        : undefined"
-                                                                :indeterminate="
-                                                                    checkSomeItems(column.key) &&
-                                                                    !checkAllItems(column.key, column.valueAccessor)"
-                                                                :model-value="
-                                                                    checkAllItems(column.key, column.valueAccessor)"/>
-                                                        </template>
-                                                    </v-list-item>
-                                                </template>
-                                            </v-select>
-                                        </div>
-                                    </template>
+                                  
+                                    
                                     <template v-if="column.filterType == filterType.ComplexNumberRange">
                                         <v-row no-gutters>
                                             <v-col cols="6">
@@ -604,6 +367,8 @@
     import ComplexNumber from "@components/obComponents/columnFilters/complexNumber.vue";
     import complexDropDown from "@components/obComponents/columnFilters/complexDropDown.vue";
     import complexMultiSelect from "@components/obComponents/columnFilters/complexMultiSelect.vue";
+    import complexDate from "@components/obComponents/columnFilters/complexDate.vue";
+    import complexDateTime from "@components/obComponents/columnFilters/complexDateTime.vue";
 
     const entityGridRef: Ref<VDataTableServer> = ref();
     defineExpose({ entityGridRef });
