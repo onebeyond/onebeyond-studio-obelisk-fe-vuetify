@@ -68,3 +68,29 @@ export enum NumberOperators {
     GreaterOrEqual = "Greater then or equal",
     LessOrEqual = "Less then or equal",
 }
+
+export class Filter {
+    type: FilterType = FilterType.NoFilter;
+    key: string = "";
+    primaryValue: string | number | [] | Date | null = null;
+    secondaryValue: string | number | [] | Date | null = null;
+    isDateTimeOffset: boolean = false;
+    opearator: StringOperators | NumberOperators | null = null;
+
+    constructor(
+        type: FilterType, 
+        key: string, 
+        primaryValue: string | number | [] | Date | null = null,
+        secondaryValue: string | number | [] | Date | null = null,
+        isDateTimeOffset: boolean = false,
+        opearator: StringOperators | NumberOperators | null = null)
+    {
+        this.type = type;
+        this.key = key;
+        this.primaryValue = primaryValue;
+        this.secondaryValue = secondaryValue;
+        this.isDateTimeOffset = isDateTimeOffset;
+        this.opearator = opearator;
+    }
+
+}

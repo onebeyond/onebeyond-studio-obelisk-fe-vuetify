@@ -1,6 +1,6 @@
 import { EntityGrid, EntityGridAction } from "../entityGrid";
 import { DataAdaptor } from "./dataAdaptor";
-import type { CrudAction, Command, Column, Query, VuetifyGrid } from "@js/grids/vuetify/types";
+import type { CrudAction, Command, Column, Query, VuetifyGrid, Filter } from "@js/grids/vuetify/types";
 
 //encapsulates all the logic related to the grid vue component we're currently using in the template
 export class VuetifyEntityGrid extends EntityGrid {
@@ -19,7 +19,7 @@ export class VuetifyEntityGrid extends EntityGrid {
         page: 1,
         orderBy: [],
     };
-    public extraFilters: any[] = [];
+    public extraFilters: Filter[] = [];
 
     public search: string = "";
 

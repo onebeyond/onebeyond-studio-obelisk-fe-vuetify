@@ -8,7 +8,8 @@
             @keydown.enter="search"
             @click:clear="search"
             @click:prepend-inner="search"
-            hide-details/>
+            hide-details
+        />
     </div>
     <VDataTableServer
         ref="entityGridRef"
@@ -22,16 +23,20 @@
         :loading="entityGrid.isLoading"
         :search="entityGrid.search"
         item-value="id"
-        @update:options="async () => await entityGrid.refresh()">
+        @update:options="async () => await entityGrid.refresh()"
+    >
         <template v-slot:headers="{ columns, isSorted, getSortIcon, toggleSort }">
             <tr
-                v-if="(!entityGrid.hasColumnComplexFilter && !entityGrid.hasColumnSimpleFilter) 
-                    || entityGrid.hasColumnSimpleFilter">
+                v-if="
+                    (!entityGrid.hasColumnComplexFilter && !entityGrid.hasColumnSimpleFilter) ||
+                    entityGrid.hasColumnSimpleFilter
+                "
+            >
                 <template v-for="column in columns" :key="column.key">
                     <td>
                         <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{ column.title }}</span>
                         <template v-if="isSorted(column)">
-                            <v-icon :icon="getSortIcon(column)"/>
+                            <v-icon :icon="getSortIcon(column)" />
                         </template>
                     </td>
                 </template>
@@ -41,155 +46,39 @@
                     <td>
                         <div v-if="column.allowFiltering">
                             <template v-if="column.filterType == filterType.SimpleText">
-                                <v-text-field
-                                    :key="column.key"
-                                    v-model="multiSearch[column.key]"
-                                    type="text"
-                                    :placeholder="column.title"
-                                    :autofocus="true"
-                                    @input="
-                                        addFilter(
-                                            column.filterType, 
-                                            column.key, 
-                                            multiSearch[column.key])"
-                                    @click:clear="
-                                        addFilter(
-                                            column.filterType, 
-                                            column.key,
-                                            multiSearch[column.key])"
-                                    @click:prepend-inner="
-                                        addFilter(
-                                            column.filterType, 
-                                            column.key, 
-                                            multiSearch[column.key])"/>
+                                <SimpleText :column="column" @addFilter="addFilter" />
                             </template>
                             <template v-if="column.filterType == filterType.SimpleNumber">
-                                <v-text-field
-                                    :key="column.key"
-                                    v-model="multiSearch[column.key]"
-                                    type="number"
-                                    :placeholder="column.title"
-                                    :autofocus="true"
-                                    @input="
-                                        addFilter(
-                                            column.filterType, 
-                                            column.key, 
-                                            multiSearch[column.key])"
-                                    @click:clear="
-                                        addFilter(
-                                            column.filterType, 
-                                            column.key,
-                                            multiSearch[column.key])"
-                                    @click:prepend-inner="
-                                        addFilter(
-                                            column.filterType, 
-                                            column.key, 
-                                            multiSearch[column.key])"/>
+                                <SimpleNumber :column="column" @addFilter="addFilter" />
                             </template>
-                            <template v-if="column.filterType == filterType.SimpleDate || column.filterType == filterType.SimpleDateOnly">
-                                <date-picker
-                                    :label="column.title"
-                                    :clearable="true"
-                                    :name="column.title"
-                                    v-model="multiSearch[column.key]"
-                                    @update:modelValue="
-                                        addDateFilter(
-                                            column.filterType,
-                                            column.key,
-                                            multiSearch[column.key],
-                                            column.isDateTimeOffset)"/>
+                            <template
+                                v-if="
+                                    column.filterType == filterType.SimpleDate ||
+                                    column.filterType == filterType.SimpleDateOnly
+                                "
+                            >
+                                <SimpleDate :column="column" @addDateFilter="addDateFilter" />
                             </template>
                             <template v-if="column.filterType == filterType.SimpleDateTime">
-                                <date-time-picker
-                                    :label="column.title"
-                                    :clearable="true"
-                                    :name="column.title"
-                                    v-model="multiSearch[column.key]"
-                                    @update:modelValue="
-                                        addDateFilter(
-                                            column.filterType,
-                                            column.key,
-                                            multiSearch[column.key],
-                                            column.isDateTimeOffset)"/>
+                                <SimpleDateTime :column="column" @addDateFilter="addDateFilter" />
                             </template>
+
                             <template v-if="column.filterType == filterType.SimpleDropdown">
-                                <v-select
-                                    :key="column.key"
-                                    v-model="multiSearch[column.key]"
-                                    :items="column.valueAccessor"
-                                    :label="column.title"
-                                    persistent-hint
-                                    item-value="id"
-                                    item-title="name"
-                                    :autofocus="true"
-                                    @update:model-value="
-                                        addFilter(
-                                            column.filterType, 
-                                            column.key, 
-                                            multiSearch[column.key])"/>
+                                <SimpleDropDown :column="column" @addFilter="addFilter" />
                             </template>
-                            <template v-if="column.filterType == filterType.SimpleMultiSelectCheckbox || column.filterType == filterType.SimpleBoolean">
-                                <div>
-                                    <v-select
-                                        :key="column.key"
-                                        v-model="multiSearch[column.key]"
-                                        :items="column.filterType == filterType.SimpleBoolean ? booleanArray: column.valueAccessor"
-                                        :label="column.title"
-                                        multiple
-                                        persistent-hint
-                                        item-value="id"
-                                        item-title="name"
-                                        :autofocus="true"
-                                        @update:model-value="
-                                            addFilter(
-                                                column.filterType,
-                                                column.key,
-                                                multiSearch[column.key])">
-                                        <template v-slot:prepend-item>
-                                            <v-list-item
-                                                title="Select All"
-                                                @click="
-                                                    toggleList(
-                                                        column.filterType,
-                                                        column.key,
-                                                        column.filterType == filterType.SimpleBoolean
-                                                            ? booleanArray
-                                                            : column.valueAccessor,
-                                                        multiSearch[column.key])">
-                                                <template v-slot:prepend>
-                                                    <v-checkbox-btn
-                                                        :color="
-                                                            checkSomeItems(column.key) ? 'indigo-darken-4' : undefined
-                                                        "
-                                                        :indeterminate="
-                                                            checkSomeItems(column.key) &&
-                                                            !checkAllItems(
-                                                                column.key,
-                                                                column.filterType == filterType.SimpleBoolean
-                                                                    ? booleanArray
-                                                                    : column.valueAccessor,
-                                                            )
-                                                        "
-                                                        :model-value="
-                                                            checkAllItems(
-                                                                column.key,
-                                                                column.filterType == filterType.SimpleBoolean
-                                                                    ? booleanArray
-                                                                    : column.valueAccessor,
-                                                            )
-                                                        "
-                                                    />
-                                                </template>
-                                            </v-list-item>
-                                        </template>
-                                    </v-select>
-                                </div>
+                            <template
+                                v-if="
+                                    column.filterType == filterType.SimpleMultiSelectCheckbox ||
+                                    column.filterType == filterType.SimpleBoolean
+                                "
+                            >
+                                <SimpleMultiSelect :column="column" @addFilter="addFilter" />
                             </template>
                         </div>
                     </td>
                 </template>
             </tr>
-            <tr v-if="entityGrid.hasColumnComplexFilter">
+            <!-- <tr v-if="entityGrid.hasColumnComplexFilter">
                 <template v-for="column in columns" :key="column.key">
                     <td>
                         <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{ column.title }}</span>
@@ -633,7 +522,7 @@
                         </v-menu>
                     </td>
                 </template>
-            </tr>
+            </tr>-->
         </template>
         <template v-for="(_, slot) of $slots" v-slot:[slot]="scope">
             <slot :name="slot" v-bind="scope" />
@@ -646,7 +535,8 @@
                     :key="command.buttonLabel"
                     :prepend-icon="command.buttonIcon"
                     variant="text"
-                    @click="command.action(item.raw.id)">
+                    @click="command.action(item.raw.id)"
+                >
                     {{ command.buttonLabel }}
                 </v-btn>
             </v-row>
@@ -655,11 +545,17 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, toRef, type Ref } from "vue";
+    import { ref, onMounted, toRef, type Ref, nextTick } from "vue";
     import { VuetifyEntityGrid } from "@js/grids/vuetify/vuetifyEntityGrid";
     import { VDataTableServer, VDatePicker } from "vuetify/lib/labs/components";
-    import { FilterType, StringOperators, NumberOperators } from "@js/grids/vuetify/types";
+    import { FilterType, StringOperators, NumberOperators, Filter } from "@js/grids/vuetify/types";
     import { DateTime } from "@js/util/dateTime";
+    import SimpleText from "@components/obComponents/columnFilters/simpleText.vue";
+    import SimpleNumber from "@components/obComponents/columnFilters/simpleNumber.vue";
+    import SimpleDate from "@components/obComponents/columnFilters/simpleDate.vue";
+    import SimpleDateTime from "@components/obComponents/columnFilters/simpleDateTime.vue";
+    import SimpleDropDown from "@components/obComponents/columnFilters/simpleDropDown.vue";
+    import SimpleMultiSelect from "@components/obComponents/columnFilters/SimpleMultiSelect.vue";
 
     const entityGridRef: Ref<VDataTableServer> = ref();
     defineExpose({ entityGridRef });
@@ -699,26 +595,67 @@
         entityGrid.value.search = searchText.value;
     }
 
-    async function addFilter(type: FilterType, key: string, value: any): Promise<void> {
+    async function addFilter(type: FilterType, key: string, value: string | number | null) {
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-        props.entityGrid.extraFilters.push({ type, key, value });
-        console.log(props.entityGrid.extraFilters);
-        props.entityGrid.refresh();
-        menuNumber++;
-    }
-
-    async function addDateFilter(type: FilterType, key: string, value: any, isDateTimeOffset: boolean = false): Promise<void> {
-        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-        console.log(value);
         if (value != null) {
-            props.entityGrid.extraFilters.push({ type, key, value, isDateTimeOffset });
+            var filter = new Filter(type, key, value);
+            props.entityGrid.extraFilters.push(filter);
         }
-        console.log(props.entityGrid.extraFilters);
         props.entityGrid.refresh();
         menuNumber++;
     }
 
-    async function addRangeFilter(
+    async function addDateFilter(
+        type: FilterType,
+        key: string,
+        value: Date | null,
+        isDateTimeOffset: boolean = false,
+    ): Promise<void> {
+        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
+        if (value != null) {
+            var filter = new Filter(type, key, value, null, isDateTimeOffset);
+            props.entityGrid.extraFilters.push(filter);
+        }
+        props.entityGrid.refresh();
+        menuNumber++;
+    }
+
+    /*async function toggleList(type: FilterType, key: string, items: any, selectedItems: any): Promise<void> {
+        if (selectedItems && selectedItems.length == items.length) {
+            delete multiSearch.value[key];
+            updateNumber++;
+            props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
+        } else {
+            const data = items.map((i) => i.id);
+            multiSearch.value[key] = data;
+            props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
+            var filter = new Filter(type, key, data);
+            props.entityGrid.extraFilters.push(filter);
+        }
+        await nextTick();
+        props.entityGrid.refresh();
+    }*/
+
+    async function toggleList(type: FilterType, key: string, selectedItems: []): Promise<void> {
+        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
+
+        const data = selectedItems.map((i) => i.id);
+        var filter = new Filter(type, key, data);
+        props.entityGrid.extraFilters.push({ type, key, filter });
+
+        await nextTick();
+        props.entityGrid.refresh();
+    }
+
+    /* function checkSomeItems(key: string): boolean {
+        return multiSearch.value[key] == undefined ? false : multiSearch.value[key].length > 0;
+    }
+
+    function checkAllItems(key: string, items: any): boolean {
+        return multiSearch.value[key] == undefined ? false : multiSearch.value[key].length == items.length;
+    }
+
+    /* async function addRangeFilter(
         type: FilterType,
         key: string,
         primaryValue: any,
@@ -786,20 +723,7 @@
         menuNumber++;
     }
 
-    async function toggleList(type: FilterType, key: string, items: any, selectedItems: any): Promise<void> {
-        if (selectedItems && selectedItems.length == items.length) {
-            delete multiSearch.value[key];
-            updateNumber++;
-            props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-        } else {
-            const data = items.map((i) => i.id);
-            multiSearch.value[key] = data;
-            props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-            props.entityGrid.extraFilters.push({ type, key, value: data });
-        }
-        await nextTick();
-        props.entityGrid.refresh();
-    }
+   
 
     function getStringOperatorByKey(key: string): string {
         if (multiOp.value[key] == undefined) {
@@ -827,11 +751,5 @@
         return key + "" + menuNumber;
     }
 
-    function checkSomeItems(key: string): boolean {
-        return multiSearch.value[key] == undefined ? false : multiSearch.value[key].length > 0;
-    }
-
-    function checkAllItems(key: string, items: any): boolean {
-        return multiSearch.value[key] == undefined ? false : multiSearch.value[key].length == items.length;
-    }
+ */
 </script>

@@ -1,6 +1,13 @@
 import ObApiClient from "@js/api/obApiClient";
 import PagedList from "@js/dataModels/pagedList";
-import { type Query, type OrderBy, FilterType, StringOperators, NumberOperators } from "@js/grids/vuetify/types";
+import {
+    type Query,
+    type OrderBy,
+    FilterType,
+    StringOperators,
+    NumberOperators,
+    Filter,
+} from "@js/grids/vuetify/types";
 import { DateTime } from "@js/util/dateTime";
 
 export class DataAdaptor extends ObApiClient {
@@ -11,7 +18,7 @@ export class DataAdaptor extends ObApiClient {
         this.errorCallback = errorCallback;
     }
 
-    public async executeApi(query: Query, search: string, extraFilters: any): Promise<PagedList<unknown>> {
+    public async executeApi(query: Query, search: string, extraFilters: Filter[]): Promise<PagedList<unknown>> {
         const filters: string[] = [];
 
         if (search) {
@@ -20,26 +27,37 @@ export class DataAdaptor extends ObApiClient {
         if (extraFilters) {
             extraFilters.forEach((filter) => {
                 const filterKey = filter.key;
-                if (filter.type == FilterType.SimpleText || filter.type == FilterType.SimpleNumber) {
-                    if (filter.value.trim() != "" && filter.value != undefined) {
-                        filters.push(`${filterKey}=${filter.value}`);
+                if (filter.type == FilterType.SimpleText
+                     || filter.type == FilterType.SimpleNumber) {
+                    if (
+                        filter.primaryValue != null &&
+                        filter.primaryValue!.trim() != "" &&
+                        filter.primaryValue != undefined
+                    ) {
+                        filters.push(`${filterKey}=${filter.primaryValue}`);
                     }
-                } else if (filter.type == FilterType.SimpleDate || filter.type == FilterType.ComplexDate) {
-                    if (filter.value != null) {
-                        const startDate = DateTime.getConvertedDate(filter.value, filter.isDateTimeOffset);
-                        const endDate = DateTime.getConvertedDate(DateTime.getEndOfDay(filter.value), filter.isDateTimeOffset);
+                } else if (filter.type == FilterType.SimpleDate 
+                    || filter.type == FilterType.ComplexDate) {
+                    if (filter.primaryValue != null) {
+                        console.log(filter.isDateTimeOffset);
+                        const startDate = DateTime.getConvertedDate(filter.primaryValue, filter.isDateTimeOffset);
+                        const endDate = DateTime.getConvertedDate(
+                            DateTime.getEndOfDay(filter.primaryValue),
+                            filter.isDateTimeOffset,
+                        );
                         filters.push(`${filterKey}=${startDate}%26${endDate}`);
                     }
                 } else if (filter.type == FilterType.SimpleDateTime || filter.type == FilterType.ComplexDateTime) {
-                    if (filter.value != null) {
-                        const startDate = DateTime.getConvertedDate(filter.value, filter.isDateTimeOffset);
+                    if (filter.primaryValue != null) {
+                        const startDate = DateTime.getConvertedDate(filter.primaryValue, filter.isDateTimeOffset);
                         filters.push(`${filterKey}=${startDate}`);
                     }
                 } else if (filter.type == FilterType.SimpleDateOnly || filter.type == FilterType.ComplexDateOnly) {
-                    if (filter.value != null) {
-                        filters.push(`${filterKey}=${DateTime.getDateOnly(filter.value)}`);
+                    if (filter.primaryValue != null) {
+                        filters.push(`${filterKey}=${DateTime.getDateOnly(filter.primaryValue)}`);
                     }
-                } else if (
+                } 
+                /*else if (
                     filter.type == FilterType.ComplexDateRange ||
                     filter.type == FilterType.ComplexDateTimeRange
                 ) {
@@ -65,8 +83,8 @@ export class DataAdaptor extends ObApiClient {
                     if (
                         filter.operator != "" &&
                         filter.operator != undefined &&
-                        filter.value != "" &&
-                        filter.value != undefined
+                        filter.primaryValue != "" &&
+                        filter.primaryValue != undefined
                     ) {
                         const indexOfStringOp = Object.values(StringOperators).indexOf(
                             filter.operator as unknown as StringOperators,
@@ -89,28 +107,29 @@ export class DataAdaptor extends ObApiClient {
                             filters.push(`${filterKey}=${filter.value}`);
                         }
                     }
-                } else if (
+                } */
+                else if (
                     filter.type == FilterType.SimpleDropdown ||
                     filter.type == FilterType.ComplexDropdown ||
                     filter.type == FilterType.ComplexBoolean
                 ) {
-                    if (filter.value != undefined) {
-                        filters.push(`${filterKey}=${filter.value}`);
+                    if (filter.primaryValue != undefined) {
+                        filters.push(`${filterKey}=${filter.primaryValue}`);
                     }
                 } else if (
                     filter.type == FilterType.SimpleMultiSelectCheckbox ||
                     filter.type == FilterType.ComplexMultiSelectCheckbox ||
                     filter.type == FilterType.SimpleBoolean
                 ) {
-                    if (Array.isArray(filter.value)) {
-                        for (let i = 0; i < filter.value.length; i++) {
-                            if (filter.value[i] != undefined) {
-                                filters.push(`${filterKey}[${i}]=${filter.value[i]}`);
+                    if (Array.isArray(filter.primaryValue)) {
+                        for (let i = 0; i < filter.primaryValue.length; i++) {
+                            if (filter.primaryValue[i] != undefined) {
+                                filters.push(`${filterKey}[${i}]=${filter.primaryValue[i]}`);
                             }
                         }
                     } else {
-                        if (filter.value != undefined) {
-                            filters.push(`${filterKey}=${filter.value}`);
+                        if (filter.primaryValue != undefined) {
+                            filters.push(`${filterKey}=${filter.primaryValue}`);
                         }
                     }
                 } else if (filter.type == FilterType.ComplexNumberRange) {

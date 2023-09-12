@@ -149,8 +149,8 @@ export default class AppConfiguration {
         this.app.component("v-modalPopup", ModalPopup);
         this.app.component("language-selector", LanguageSelector);
         this.app.component("global-error-handler", GlobalErrorHandler);
-        this.app.component("date-picker", DatePicker);
-        this.app.component("date-time-picker", DateTimePicker);
+        this.app.component("DatePicker", DatePicker);
+        this.app.component("DateTimePicker", DateTimePicker);
     }
 
     private inspect(object: unknown): void {
