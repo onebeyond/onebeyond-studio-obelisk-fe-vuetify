@@ -30,7 +30,6 @@
     const emit = defineEmits(["addFilter"]);
 
     function addFilter() {
-        console.log(modelValue.value);
         emit("addFilter", column.value!.filterType, column.value!.key, modelValue.value);
     }
 </script>

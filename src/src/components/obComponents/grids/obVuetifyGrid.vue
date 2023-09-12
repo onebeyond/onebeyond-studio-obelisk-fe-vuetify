@@ -78,6 +78,50 @@
                     </td>
                 </template>
             </tr>
+            <tr v-if="entityGrid.hasColumnComplexFilter">
+                <template v-for="column in columns" :key="column.key">
+                    <td>
+                        <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{ column.title }}</span>
+                        <template v-if="isSorted(column)">
+                            <v-icon :icon="getSortIcon(column)"></v-icon>
+                        </template>
+
+                        <template v-if="column.filterType == filterType.ComplexText">
+                            <ComplexText
+                                :column="column"
+                                @addComplexFilter="addComplexFilter"
+                                @clearComplexFilter="clearComplexFilter"
+                            />
+                        </template>
+                        <template v-if="column.filterType == filterType.ComplexNumber">
+                            <ComplexNumber
+                                :column="column"
+                                @addComplexFilter="addComplexFilter"
+                                @clearComplexFilter="clearComplexFilter"
+                            />
+                        </template>
+                        <template
+                            v-if="
+                                column.filterType == filterType.ComplexDropdown ||
+                                column.filterType == filterType.ComplexBoolean
+                            "
+                        >
+                            <complexDropDown
+                                :column="column"
+                                @addComplexFilter="addComplexFilter"
+                                @clearComplexFilter="clearComplexFilter"
+                            />
+                        </template>
+                        <template v-if="column.filterType == filterType.ComplexMultiSelectCheckbox">
+                            <complexMultiSelect
+                                :column="column"
+                                @addFilter="addFilter"
+                                @clearComplexFilter="clearComplexFilter"
+                            />
+                        </template>
+                    </td>
+                </template>
+            </tr>
             <!-- <tr v-if="entityGrid.hasColumnComplexFilter">
                 <template v-for="column in columns" :key="column.key">
                     <td>
@@ -555,7 +599,11 @@
     import SimpleDate from "@components/obComponents/columnFilters/simpleDate.vue";
     import SimpleDateTime from "@components/obComponents/columnFilters/simpleDateTime.vue";
     import SimpleDropDown from "@components/obComponents/columnFilters/simpleDropDown.vue";
-    import SimpleMultiSelect from "@components/obComponents/columnFilters/SimpleMultiSelect.vue";
+    import SimpleMultiSelect from "@components/obComponents/columnFilters/simpleMultiSelect.vue";
+    import ComplexText from "@components/obComponents/columnFilters/complexText.vue";
+    import ComplexNumber from "@components/obComponents/columnFilters/complexNumber.vue";
+    import complexDropDown from "@components/obComponents/columnFilters/complexDropDown.vue";
+    import complexMultiSelect from "@components/obComponents/columnFilters/complexMultiSelect.vue";
 
     const entityGridRef: Ref<VDataTableServer> = ref();
     defineExpose({ entityGridRef });
@@ -620,33 +668,25 @@
         menuNumber++;
     }
 
-    /*async function toggleList(type: FilterType, key: string, items: any, selectedItems: any): Promise<void> {
-        if (selectedItems && selectedItems.length == items.length) {
-            delete multiSearch.value[key];
-            updateNumber++;
-            props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-        } else {
-            const data = items.map((i) => i.id);
-            multiSearch.value[key] = data;
-            props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-            var filter = new Filter(type, key, data);
+    async function addComplexFilter(
+        type: FilterType,
+        key: string,
+        value: any,
+        operator: StringOperators | NumberOperators | null,
+    ): Promise<void> {
+        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
+        if (value != null) {
+            var filter = new Filter(type, key, value, null, false, operator);
             props.entityGrid.extraFilters.push(filter);
         }
-        await nextTick();
         props.entityGrid.refresh();
-    }*/
-
-    async function toggleList(type: FilterType, key: string, selectedItems: []): Promise<void> {
-        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-
-        const data = selectedItems.map((i) => i.id);
-        var filter = new Filter(type, key, data);
-        props.entityGrid.extraFilters.push({ type, key, filter });
-
-        await nextTick();
-        props.entityGrid.refresh();
+        menuNumber++;
     }
 
+    async function clearComplexFilter(key: string) {
+        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
+        props.entityGrid.refresh();
+    }
     /* function checkSomeItems(key: string): boolean {
         return multiSearch.value[key] == undefined ? false : multiSearch.value[key].length > 0;
     }
@@ -682,12 +722,7 @@
         menuNumber++;
     }
 
-    async function addComplexFilter(type: FilterType, key: string, value: any, operator: string): Promise<void> {
-        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-        props.entityGrid.extraFilters.push({ type, key, value, operator });
-        props.entityGrid.refresh();
-        menuNumber++;
-    }
+    
 
     async function clearRangeFilter(key: string, filterType: FilterType): Promise<void> {
         if (filterType == FilterType.ComplexNumberRange) {

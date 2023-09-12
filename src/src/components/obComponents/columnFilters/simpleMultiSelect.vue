@@ -57,13 +57,10 @@
     ];
 
     function addFilter() {
-        console.log(modelValue.value);
         emit("addFilter", column.value!.filterType, column.value!.key, modelValue.value);
     }
 
     function toggleList() {
-        console.log(2);
-        console.log(items);
         const items = column.value.filterType == filterType.SimpleBoolean ? booleanArray : column.value.valueAccessor;
         if (modelValue.value != null && modelValue.value.length == items.length) {
             modelValue.value = null;
