@@ -65,11 +65,13 @@ export class VuetifyEntityGrid extends EntityGrid {
 
     public enableColumnComplexFilter(): VuetifyEntityGrid {
         this.hasColumnComplexFilter = true;
+        this.hasColumnSimpleFilter = false;
         return this;
     }
 
     public enableColumnSimpleFilter(): VuetifyEntityGrid {
         this.hasColumnSimpleFilter = true;
+        this.hasColumnComplexFilter = false;
         return this;
     }
 

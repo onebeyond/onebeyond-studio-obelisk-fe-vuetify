@@ -57,7 +57,6 @@ export abstract class DateTime {
     
         if (!isUTC) {
             const dateTime = toDate(dateTimeAsString, { timeZone: "UTC" });
-            console.log(dateTime);
             return dateTime.toISOString();
         }
         const dateTime = toDate(dateTimeAsString, { timeZone: DateTime.getCurrentTimeZoneId() });

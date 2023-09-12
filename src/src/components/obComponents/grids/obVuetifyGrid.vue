@@ -131,205 +131,37 @@
                                 @clearComplexFilter="clearComplexFilter"
                             />
                         </template>
-                        <template
-                            v-if="
-                                column.filterType == filterType.ComplexDateTime
-                            "
-                        >
+                        <template v-if="column.filterType == filterType.ComplexDateTime">
                             <complexDateTime
                                 :column="column"
                                 @addDateFilter="addDateFilter"
                                 @clearComplexFilter="clearComplexFilter"
                             />
                         </template>
+                        <template v-if="column.filterType == filterType.ComplexNumberRange">
+                            <complexNumberRange
+                                :column="column"
+                                @addRangeFilter="addRangeFilter"
+                                @clearComplexFilter="clearComplexFilter"
+                            />
+                        </template>
+                        <template v-if="column.filterType == filterType.ComplexDateRange">
+                            <complexDateRange
+                                :column="column"
+                                @addDateRangeFilter="addDateRangeFilter"
+                                @clearComplexFilter="clearComplexFilter"
+                            />
+                        </template>
+                        <template v-if="column.filterType == filterType.ComplexDateTimeRange">
+                            <complexDateTimeRange
+                                :column="column"
+                                @addDateRangeFilter="addDateRangeFilter"
+                                @clearComplexFilter="clearComplexFilter"
+                            />
+                        </template>
                     </td>
                 </template>
             </tr>
-            <!-- <tr v-if="entityGrid.hasColumnComplexFilter">
-                <template v-for="column in columns" :key="column.key">
-                    <td>
-                        <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{ column.title }}</span>
-                        <template v-if="isSorted(column)">
-                            <v-icon :icon="getSortIcon(column)"></v-icon>
-                        </template>
-                        <v-menu
-                            offset-y
-                            :close-on-content-click="false"
-                            v-if="column.allowFiltering"
-                            :key="getMenuKey(column.key)"
-                        >
-                            <template v-slot:activator="{ props }">
-                                <v-btn
-                                    icon
-                                    v-bind="props"
-                                    v-if="
-                                        column.filterType != FilterType.ComplexNumberRange &&
-                                        column.filterType != FilterType.ComplexDateRange &&
-                                        column.filterType != FilterType.ComplexDateTimeRange
-                                    "
-                                >
-                                    <v-icon small :color="multiSearch[column.key] ? 'primary' : ''">
-                                        mdi-filter-variant
-                                    </v-icon>
-                                </v-btn>
-                                <v-btn
-                                    icon
-                                    v-bind="props"
-                                    v-if="
-                                        column.filterType == FilterType.ComplexNumberRange ||
-                                        column.filterType == FilterType.ComplexDateRange ||
-                                        column.filterType == FilterType.ComplexDateTimeRange
-                                    "
-                                >
-                                    <v-icon
-                                        small
-                                        :color="
-                                            multiRangePrimary[column.key] || multiRangeSecondary[column.key]
-                                                ? 'primary'
-                                                : ''
-                                        "
-                                    >
-                                        mdi-filter-variant
-                                    </v-icon>
-                                </v-btn>
-                            </template>
-                            <v-card>
-                               
-                                   
-                                    <template v-if="column.filterType == filterType.ComplexDateRange">
-                                        <div :key="getColumnKey(column.key)">
-                                            <v-row no-gutters>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="
-                                                            addDateRangeFilter(
-                                                                column.filterType,
-                                                                column.key,
-                                                                multiRangePrimary[column.key],
-                                                                multiRangeSecondary[column.key],
-                                                                column.isDateTimeOffset,
-                                                            )"
-                                                        color="success">
-                                                        Filter
-                                                        </v-btn>
-                                                </v-col>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="clearRangeFilter(column.key, column.filterType)"
-                                                        color="warning">
-                                                        Clear
-                                                    </v-btn>
-                                                </v-col>
-                                            </v-row>
-                                            <date-picker
-                                                label="Greater than or equal to"
-                                                :clearable="true"
-                                                :name="column.title"
-                                                v-model="multiRangePrimary[column.key]"
-                                            />
-                                            <date-picker
-                                                label="less than or equal to"
-                                                :clearable="true"
-                                                :name="column.title"
-                                                v-model="multiRangeSecondary[column.key]"
-                                            />
-                                        </div>
-                                    </template>
-                                    <template v-if="column.filterType == filterType.ComplexDateTimeRange">
-                                        <div :key="getColumnKey(column.key)">
-                                            <v-row no-gutters>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="
-                                                            addDateRangeFilter(
-                                                                column.filterType,
-                                                                column.key,
-                                                                multiRangePrimary[column.key],
-                                                                multiRangeSecondary[column.key],
-                                                                column.isDateTimeOffset,
-                                                            )"
-                                                        color="success">
-                                                        Filter
-                                                    </v-btn>
-                                                </v-col>
-                                                <v-col cols="6">
-                                                    <v-btn
-                                                        text
-                                                        block
-                                                        @click="clearRangeFilter(column.key, column.filterType)"
-                                                        color="warning">
-                                                        Clear
-                                                    </v-btn>
-                                                </v-col>
-                                            </v-row>
-                                            <date-time-picker
-                                                label="Greater than or equal to"
-                                                :clearable="true"
-                                                :name="column.title"
-                                                v-model="multiRangePrimary[column.key]"
-                                            />
-                                            <date-time-picker
-                                                label="less than or equal to"
-                                                :clearable="true"
-                                                :name="column.title"
-                                                v-model="multiRangeSecondary[column.key]"
-                                            />
-                                        </div>
-                                    </template>
-                                  
-                                    
-                                    <template v-if="column.filterType == filterType.ComplexNumberRange">
-                                        <v-row no-gutters>
-                                            <v-col cols="6">
-                                                <v-btn
-                                                    text
-                                                    block
-                                                    @click="
-                                                        addRangeFilter(
-                                                            column.filterType,
-                                                            column.key,
-                                                            multiRangePrimary[column.key],
-                                                            multiRangeSecondary[column.key],
-                                                        )"
-                                                    color="success">
-                                                    Filter
-                                                    </v-btn>
-                                            </v-col>
-                                            <v-col cols="6">
-                                                <v-btn
-                                                    text
-                                                    block
-                                                    @click="clearRangeFilter(column.key, column.filterType)"
-                                                    color="warning">
-                                                Clear
-                                                </v-btn>
-                                            </v-col>
-                                        </v-row>
-                                        <v-text-field
-                                            v-model="multiRangePrimary[column.key]"
-                                            type="number"
-                                            placeholder="Greater than or equal to"
-                                            :autofocus="true"
-                                        />
-                                        <v-text-field
-                                            v-model="multiRangeSecondary[column.key]"
-                                            type="number"
-                                            placeholder="less than or equal to"
-                                            :autofocus="true"
-                                        />
-                                    </template>
-                                </div>
-                            </v-card>
-                        </v-menu>
-                    </td>
-                </template>
-            </tr>-->
         </template>
         <template v-for="(_, slot) of $slots" v-slot:[slot]="scope">
             <slot :name="slot" v-bind="scope" />
@@ -352,11 +184,10 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, toRef, type Ref, nextTick } from "vue";
+    import { ref, onMounted, toRef, type Ref } from "vue";
     import { VuetifyEntityGrid } from "@js/grids/vuetify/vuetifyEntityGrid";
-    import { VDataTableServer, VDatePicker } from "vuetify/lib/labs/components";
+    import { VDataTableServer } from "vuetify/lib/labs/components";
     import { FilterType, StringOperators, NumberOperators, Filter } from "@js/grids/vuetify/types";
-    import { DateTime } from "@js/util/dateTime";
     import SimpleText from "@components/obComponents/columnFilters/simpleText.vue";
     import SimpleNumber from "@components/obComponents/columnFilters/simpleNumber.vue";
     import SimpleDate from "@components/obComponents/columnFilters/simpleDate.vue";
@@ -369,26 +200,15 @@
     import complexMultiSelect from "@components/obComponents/columnFilters/complexMultiSelect.vue";
     import complexDate from "@components/obComponents/columnFilters/complexDate.vue";
     import complexDateTime from "@components/obComponents/columnFilters/complexDateTime.vue";
+    import complexNumberRange from "@components/obComponents/columnFilters/complexNumberRange.vue";
+    import complexDateRange from "@components/obComponents/columnFilters/complexDateRange.vue";
+    import complexDateTimeRange from "@components/obComponents/columnFilters/complexDateTimeRange.vue";
 
     const entityGridRef: Ref<VDataTableServer> = ref();
     defineExpose({ entityGridRef });
     const filterType = FilterType;
     const searchText = ref("");
     const key = ref(0);
-    const multiSearch = ref({});
-    const multiRangePrimary = ref({});
-    const multiRangeSecondary = ref({});
-    const multiOp = ref({});
-    let updateNumber = 0;
-    let menuNumber = 0;
-
-    const booleanArray = [
-        { id: 1, name: "Yes" },
-        { id: 0, name: "No" },
-    ];
-
-    const stringOperators = Object.values(StringOperators);
-    const numberOperators = Object.values(NumberOperators);
 
     const props = defineProps({
         entityGrid: { type: VuetifyEntityGrid, required: true },
@@ -415,7 +235,6 @@
             props.entityGrid.extraFilters.push(filter);
         }
         props.entityGrid.refresh();
-        menuNumber++;
     }
 
     async function addDateFilter(
@@ -430,13 +249,12 @@
             props.entityGrid.extraFilters.push(filter);
         }
         props.entityGrid.refresh();
-        menuNumber++;
     }
 
     async function addComplexFilter(
         type: FilterType,
         key: string,
-        value: any,
+        value: string | number | [] | null,
         operator: StringOperators | NumberOperators | null,
     ): Promise<void> {
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
@@ -445,111 +263,37 @@
             props.entityGrid.extraFilters.push(filter);
         }
         props.entityGrid.refresh();
-        menuNumber++;
     }
 
     async function clearComplexFilter(key: string) {
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
         props.entityGrid.refresh();
     }
-    /* function checkSomeItems(key: string): boolean {
-        return multiSearch.value[key] == undefined ? false : multiSearch.value[key].length > 0;
-    }
 
-    function checkAllItems(key: string, items: any): boolean {
-        return multiSearch.value[key] == undefined ? false : multiSearch.value[key].length == items.length;
-    }
-
-    /* async function addRangeFilter(
+    async function addRangeFilter(
         type: FilterType,
         key: string,
-        primaryValue: any,
-        secondaryValue: any,
+        primaryValue: string | number | [] | null,
+        secondaryValue: string | number | [] | null,
     ): Promise<void> {
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-        props.entityGrid.extraFilters.push({ type, key, primaryValue, secondaryValue });
+        var filter = new Filter(type, key, primaryValue, secondaryValue, false);
+        props.entityGrid.extraFilters.push(filter);
         props.entityGrid.refresh();
-        menuNumber++;
     }
 
     async function addDateRangeFilter(
         type: FilterType,
         key: string,
-        primaryValue: any,
-        secondaryValue: any,
+        primaryValue: Date | null,
+        secondaryValue: Date | null,
         isDateTimeOffset: boolean = false,
     ): Promise<void> {
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
         if (primaryValue != null || secondaryValue != null) {
-            props.entityGrid.extraFilters.push({ type, key, primaryValue, secondaryValue, isDateTimeOffset });
+            var filter = new Filter(type, key, primaryValue, secondaryValue, isDateTimeOffset);
+            props.entityGrid.extraFilters.push(filter);
         }
         props.entityGrid.refresh();
-        menuNumber++;
     }
-
-    
-
-    async function clearRangeFilter(key: string, filterType: FilterType): Promise<void> {
-        if (filterType == FilterType.ComplexNumberRange) {
-            multiRangePrimary.value[key] = "";
-            multiRangeSecondary.value[key] = "";
-        }
-        if (filterType == FilterType.ComplexDateRange || filterType == FilterType.ComplexDateTimeRange) {
-            multiRangePrimary.value[key] = null;
-            multiRangeSecondary.value[key] = null;
-        }
-        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-        props.entityGrid.refresh();
-        menuNumber++;
-    }
-
-    async function clearComplexFilter(key: string, filterType: FilterType): Promise<void> {
-        if (filterType == FilterType.ComplexMultiSelectCheckbox) {
-            delete multiSearch.value[key];
-            updateNumber++;
-        } else {
-            multiSearch.value[key] = "";
-        }
-        if (filterType == FilterType.ComplexText) {
-            updateOperator(key, "Contains");
-            updateNumber++;
-        }
-        if (filterType == FilterType.ComplexNumber) {
-            multiOp.value[key] = "Equals";
-            updateNumber++;
-        }
-        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-        props.entityGrid.refresh();
-        menuNumber++;
-    }
-
-   
-
-    function getStringOperatorByKey(key: string): string {
-        if (multiOp.value[key] == undefined) {
-            multiOp.value[key] = StringOperators.Contains;
-        }
-        return multiOp.value[key];
-    }
-
-    function updateOperator(key: string, value: string): void {
-        multiOp.value[key] = value;
-    }
-
-    function getNumberOperatorByKey(key: string): string {
-        if (multiOp.value[key] == undefined) {
-            multiOp.value[key] = NumberOperators.Equals;
-        }
-        return multiOp.value[key];
-    }
-
-    function getColumnKey(key: string): string {
-        return key + "" + updateNumber;
-    }
-
-    function getMenuKey(key: string): string {
-        return key + "" + menuNumber;
-    }
-
- */
 </script>

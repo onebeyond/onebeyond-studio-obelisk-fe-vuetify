@@ -75,7 +75,7 @@ export class Filter {
     primaryValue: string | number | [] | Date | null = null;
     secondaryValue: string | number | [] | Date | null = null;
     isDateTimeOffset: boolean = false;
-    opearator: StringOperators | NumberOperators | null = null;
+    operator: StringOperators | NumberOperators | null = null;
 
     constructor(
         type: FilterType, 
@@ -90,7 +90,7 @@ export class Filter {
         this.primaryValue = primaryValue;
         this.secondaryValue = secondaryValue;
         this.isDateTimeOffset = isDateTimeOffset;
-        this.opearator = opearator;
+        this.operator = opearator;
     }
 
 }
