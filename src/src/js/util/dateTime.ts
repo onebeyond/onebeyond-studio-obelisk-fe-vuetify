@@ -54,8 +54,10 @@ export abstract class DateTime {
 
     public static getConvertedDate(value: Date, isUTC: boolean): string {
         const dateTimeAsString = format(value, "yyyy-MM-dd HH:mm:ss.SSS");
-        if (isUTC) {
+    
+        if (!isUTC) {
             const dateTime = toDate(dateTimeAsString, { timeZone: "UTC" });
+            console.log(dateTime);
             return dateTime.toISOString();
         }
         const dateTime = toDate(dateTimeAsString, { timeZone: DateTime.getCurrentTimeZoneId() });

@@ -26,15 +26,13 @@ export class DataAdaptor extends ObApiClient {
                     }
                 } else if (filter.type == FilterType.SimpleDate || filter.type == FilterType.ComplexDate) {
                     if (filter.value != null) {
-                        const utcFlag = !filter.isDateTimeOffset;
-                        const startDate = DateTime.getConvertedDate(filter.value, utcFlag);
-                        const endDate = DateTime.getConvertedDate(DateTime.getEndOfDay(filter.value), utcFlag);
+                        const startDate = DateTime.getConvertedDate(filter.value, filter.isDateTimeOffset);
+                        const endDate = DateTime.getConvertedDate(DateTime.getEndOfDay(filter.value), filter.isDateTimeOffset);
                         filters.push(`${filterKey}=${startDate}%26${endDate}`);
                     }
                 } else if (filter.type == FilterType.SimpleDateTime || filter.type == FilterType.ComplexDateTime) {
                     if (filter.value != null) {
-                        const utcFlag = !filter.isDateTimeOffset;
-                        const startDate = DateTime.getConvertedDate(filter.value, utcFlag);
+                        const startDate = DateTime.getConvertedDate(filter.value, filter.isDateTimeOffset);
                         filters.push(`${filterKey}=${startDate}`);
                     }
                 } else if (filter.type == FilterType.SimpleDateOnly || filter.type == FilterType.ComplexDateOnly) {
@@ -45,16 +43,15 @@ export class DataAdaptor extends ObApiClient {
                     filter.type == FilterType.ComplexDateRange ||
                     filter.type == FilterType.ComplexDateTimeRange
                 ) {
-                    const utcFlag = !filter.isDateTimeOffset;
                     const startDate =
                         filter.primaryValue != undefined && filter.primaryValue != null
-                            ? DateTime.getConvertedDate(filter.primaryValue, utcFlag)
+                            ? DateTime.getConvertedDate(filter.primaryValue, filter.isDateTimeOffset)
                             : null;
                     const endDate =
                         filter.secondaryValue != null && filter.secondaryValue != undefined
                             ? filter.type == FilterType.ComplexDateRange
-                                ? DateTime.getConvertedDate(DateTime.getEndOfDay(filter.secondaryValue), utcFlag)
-                                : DateTime.getConvertedDate(filter.secondaryValue, utcFlag)
+                                ? DateTime.getConvertedDate(DateTime.getEndOfDay(filter.secondaryValue), filter.isDateTimeOffset)
+                                : DateTime.getConvertedDate(filter.secondaryValue, filter.isDateTimeOffset)
                             : null;
 
                     if (startDate != null && endDate != null) {

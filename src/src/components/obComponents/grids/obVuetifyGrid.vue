@@ -97,7 +97,7 @@
                                             column.filterType,
                                             column.key,
                                             multiSearch[column.key],
-                                            column.dataType)"/>
+                                            column.isDateTimeOffset)"/>
                             </template>
                             <template v-if="column.filterType == filterType.SimpleDateTime">
                                 <date-time-picker
@@ -110,7 +110,7 @@
                                             column.filterType,
                                             column.key,
                                             multiSearch[column.key],
-                                            column.dataType)"/>
+                                            column.isDateTimeOffset)"/>
                             </template>
                             <template v-if="column.filterType == filterType.SimpleDropdown">
                                 <v-select
@@ -294,7 +294,7 @@
                                                                 column.filterType,
                                                                 column.key,
                                                                 multiSearch[column.key],
-                                                                column.dataType)"
+                                                                column.isDateTimeOffset)"
                                                         color="success">
                                                         Filter
                                                     </v-btn>
@@ -329,7 +329,7 @@
                                                                 column.filterType,
                                                                 column.key,
                                                                 multiSearch[column.key],
-                                                                column.dataType)"
+                                                                column.isDateTimeOffset)"
                                                         color="success">
                                                         Filter
                                                         </v-btn>
@@ -365,7 +365,7 @@
                                                                 column.key,
                                                                 multiRangePrimary[column.key],
                                                                 multiRangeSecondary[column.key],
-                                                                column.dataType,
+                                                                column.isDateTimeOffset,
                                                             )"
                                                         color="success">
                                                         Filter
@@ -408,7 +408,7 @@
                                                                 column.key,
                                                                 multiRangePrimary[column.key],
                                                                 multiRangeSecondary[column.key],
-                                                                column.dataType,
+                                                                column.isDateTimeOffset,
                                                             )"
                                                         color="success">
                                                         Filter
@@ -707,11 +707,13 @@
         menuNumber++;
     }
 
-    async function addDateFilter(type: FilterType, key: string, value: any, dataType: null): Promise<void> {
+    async function addDateFilter(type: FilterType, key: string, value: any, isDateTimeOffset: boolean = false): Promise<void> {
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
+        console.log(value);
         if (value != null) {
-            props.entityGrid.extraFilters.push({ type, key, value, dataType });
+            props.entityGrid.extraFilters.push({ type, key, value, isDateTimeOffset });
         }
+        console.log(props.entityGrid.extraFilters);
         props.entityGrid.refresh();
         menuNumber++;
     }
@@ -733,11 +735,11 @@
         key: string,
         primaryValue: any,
         secondaryValue: any,
-        dataType: null,
+        isDateTimeOffset: boolean = false,
     ): Promise<void> {
         props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
         if (primaryValue != null || secondaryValue != null) {
-            props.entityGrid.extraFilters.push({ type, key, primaryValue, secondaryValue, dataType });
+            props.entityGrid.extraFilters.push({ type, key, primaryValue, secondaryValue, isDateTimeOffset });
         }
         props.entityGrid.refresh();
         menuNumber++;
