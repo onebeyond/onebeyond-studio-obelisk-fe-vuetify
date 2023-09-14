@@ -2,7 +2,7 @@ import { ref, type Ref } from "vue";
 
 export default function useSingleSelectHelper<TEntity, TLookup, TLookupId>(
     lookupTrackingPropName: string,
-    entityPropName: string
+    entityPropName: string,
 ) {
     type CallbackMethod = () => void;
     const items: Ref<TLookup[]> = ref([]);
@@ -45,15 +45,15 @@ export default function useSingleSelectHelper<TEntity, TLookup, TLookupId>(
     }
 
     return {
-      items,
-      selectedItem,
-      isLoading,
-      select,
-      remove,
-      resetSelectedItem,
-      startLoading,
-      endLoading,
-      setDataSource,
-      selectItem,
-  };
+        items,
+        selectedItem,
+        isLoading,
+        select,
+        remove,
+        resetSelectedItem,
+        startLoading,
+        endLoading,
+        setDataSource,
+        selectItem,
+    };
 }

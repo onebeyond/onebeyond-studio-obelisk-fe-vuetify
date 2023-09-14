@@ -100,7 +100,7 @@ export class DataAdaptor extends ObApiClient {
                             }
                         }
                         break;
-                    case FilterType.ComplexNumberRange:
+                    case FilterType.ComplexNumberRange: {
                         const start =
                             filter.primaryValue != undefined && filter.primaryValue != "" ? filter.primaryValue : null;
                         const end =
@@ -115,8 +115,9 @@ export class DataAdaptor extends ObApiClient {
                             filters.push(`${filterKey}=%26${end}`);
                         }
                         break;
+                    }
                     case FilterType.ComplexDateRange:
-                    case FilterType.ComplexDateTimeRange:
+                    case FilterType.ComplexDateTimeRange: {
                         const startDate =
                             filter.primaryValue != undefined && filter.primaryValue != null
                                 ? DateTime.getConvertedDate(filter.primaryValue, filter.isDateTimeOffset)
@@ -139,6 +140,7 @@ export class DataAdaptor extends ObApiClient {
                             filters.push(`${filterKey}=%26${endDate}`);
                         }
                         break;
+                    }
                 }
             });
         }
@@ -168,7 +170,7 @@ export class DataAdaptor extends ObApiClient {
         return sortQuery;
     }
 
-    private isNotEmpty(value): boolean {
+    private isNotEmpty(value: string): boolean {
         return value != null && value.trim() != "" && value != undefined;
     }
 }
