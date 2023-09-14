@@ -78,13 +78,13 @@ export class Filter {
     operator: StringOperators | NumberOperators | null = null;
 
     constructor(
-        type: FilterType, 
-        key: string, 
+        type: FilterType,
+        key: string,
         primaryValue: string | number | [] | Date | null = null,
         secondaryValue: string | number | [] | Date | null = null,
         isDateTimeOffset: boolean = false,
-        opearator: StringOperators | NumberOperators | null = null)
-    {
+        opearator: StringOperators | NumberOperators | null = null,
+    ) {
         this.type = type;
         this.key = key;
         this.primaryValue = primaryValue;
@@ -92,5 +92,4 @@ export class Filter {
         this.isDateTimeOffset = isDateTimeOffset;
         this.operator = opearator;
     }
-
 }

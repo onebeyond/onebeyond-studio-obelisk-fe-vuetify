@@ -26,7 +26,7 @@ export abstract class DateTime {
         return DateTime.parseDateAndTime(dateAsString);
     }
 
-    public static toZonedDate(date: Date, timeZoneId: string, timespan: string = ''): Date {
+    public static toZonedDate(date: Date, timeZoneId: string, timespan: string = ""): Date {
         const dateTime = DateTime.setTime(date, timespan);
         const dateTimeAsString = format(dateTime, "yyyy-MM-dd HH:mm");
         return toDate(dateTimeAsString, { timeZone: timeZoneId });
@@ -54,7 +54,7 @@ export abstract class DateTime {
 
     public static getConvertedDate(value: Date, isUTC: boolean): string {
         const dateTimeAsString = format(value, "yyyy-MM-dd HH:mm:ss.SSS");
-    
+
         if (!isUTC) {
             const dateTime = toDate(dateTimeAsString, { timeZone: "UTC" });
             return dateTime.toISOString();

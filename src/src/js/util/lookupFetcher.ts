@@ -9,8 +9,8 @@ import { plainToInstance, type ClassConstructor } from "class-transformer";
 export default class LookupFetcher<T extends ILookupItem<string> | ILookupItem<number>> extends OBApiClient {
     private apiEndpoint = "";
     private urlParams: object = {};
-    private failureCallback: ((error: unknown) => void) | null = null; 
-    private afterFetchCallback: ((data: T[]) => void) | null = null; 
+    private failureCallback: ((error: unknown) => void) | null = null;
+    private afterFetchCallback: ((data: T[]) => void) | null = null;
     private lookups: T[] = [];
     private responsePropName?: string = undefined;
     private entity: ClassConstructor<T> | null = null;
@@ -21,10 +21,7 @@ export default class LookupFetcher<T extends ILookupItem<string> | ILookupItem<n
         this.responsePropName = responsePropName;
     }
 
-    public setEndpoint(
-        apiEndpoint: string,
-        urlParams?: object
-    ): this {
+    public setEndpoint(apiEndpoint: string, urlParams?: object): this {
         if (!apiEndpoint.startsWith("/")) {
             apiEndpoint = `/${apiEndpoint}`;
         }
@@ -50,10 +47,7 @@ export default class LookupFetcher<T extends ILookupItem<string> | ILookupItem<n
 
     public async executeFetch(): Promise<this> {
         let query = Object.keys(this.urlParams)
-            .map(
-                (k) =>
-                    `${encodeURIComponent(k)}=${encodeURIComponent(this.urlParams[k])}`
-            )
+            .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(this.urlParams[k])}`)
             .join("&");
 
         if (query !== "") query = "?" + query;
@@ -79,7 +73,7 @@ export default class LookupFetcher<T extends ILookupItem<string> | ILookupItem<n
 
     private onReadFailure(error: unknown): void {
         if (this.failureCallback) {
-            this.failureCallback(error);    
+            this.failureCallback(error);
         }
     }
 
