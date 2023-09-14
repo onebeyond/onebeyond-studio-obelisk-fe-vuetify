@@ -62,12 +62,7 @@
     const updateKey = ref(0);
 
     function addComplexFilter() {
-        emit(
-            "addFilter",
-            column.value!.filterType,
-            column.value!.key,
-            modelValue.value
-        );
+        emit("addFilter", column.value!.filterType, column.value!.key, modelValue.value);
         updateKey.value++;
     }
 

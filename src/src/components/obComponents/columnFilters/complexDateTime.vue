@@ -7,11 +7,7 @@
         </template>
         <v-card>
             <div style="background-color: white; width: 280px">
-                <template
-                    v-if="
-                        column.filterType == filterType.ComplexDateTime
-                    "
-                >
+                <template v-if="column.filterType == filterType.ComplexDateTime">
                     <v-row no-gutters>
                         <v-col cols="6">
                             <v-btn text block @click="addComplexFilter()" color="success"> Filter </v-btn>
@@ -21,7 +17,12 @@
                         </v-col>
                     </v-row>
                     <div>
-                        <DateTimePicker :label="column.title" clearable="true" :name="column.title" v-model="modelValue" />
+                        <DateTimePicker
+                            :label="column.title"
+                            clearable="true"
+                            :name="column.title"
+                            v-model="modelValue"
+                        />
                     </div>
                 </template>
             </div>

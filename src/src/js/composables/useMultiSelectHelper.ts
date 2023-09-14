@@ -2,7 +2,7 @@ import { ref, type Ref } from "vue";
 
 export default function useMultiSelectHelper<TEntity, TLookup, TLookupId>(
     lookupTrackingPropName: string,
-    entityPropName: string
+    entityPropName: string,
 ) {
     const items: Ref<TLookup[]> = ref([]);
     const selectedItems: Ref<TLookup[]> = ref([]);
@@ -20,10 +20,8 @@ export default function useMultiSelectHelper<TEntity, TLookup, TLookupId>(
     }
 
     function onRemove(item: TLookup, entity: TEntity): void {
-        const index = (entity[entityPropName] as TLookupId[]).indexOf(
-            item[lookupTrackingPropName]
-        );
-        
+        const index = (entity[entityPropName] as TLookupId[]).indexOf(item[lookupTrackingPropName]);
+
         if (index !== -1) {
             (entity[entityPropName] as TLookupId[]).splice(index, 1);
         }
@@ -38,9 +36,7 @@ export default function useMultiSelectHelper<TEntity, TLookup, TLookupId>(
     }
 
     function selectItems(ids: TLookupId[]): void {
-        const toSelect = items.value.filter((item) =>
-            ids.includes(item[lookupTrackingPropName])
-        );
+        const toSelect = items.value.filter((item) => ids.includes(item[lookupTrackingPropName]));
 
         selectedItems.value.push(...toSelect);
     }

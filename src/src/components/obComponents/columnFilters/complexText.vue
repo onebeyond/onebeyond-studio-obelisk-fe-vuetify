@@ -41,7 +41,7 @@
 <script setup lang="ts">
     import { toRef, ref } from "vue";
     import { Column, FilterType, StringOperators } from "@js/grids/vuetify/types";
- 
+
     const props = defineProps({
         column: {
             type: Column,
