@@ -7,7 +7,7 @@
         </template>
         <v-card>
             <div style="background-color: white; width: 280px">
-                <template v-if="column.filterType == filterType.ComplexNumber">
+                <template v-if="column.filterType == FilterType.ComplexNumber">
                     <v-row no-gutters>
                         <v-col cols="6">
                             <v-btn text block @click="addComplexFilter()" color="success"> Filter </v-btn>
