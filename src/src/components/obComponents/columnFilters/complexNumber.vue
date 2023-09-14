@@ -22,7 +22,7 @@
                             :value="modelOperatorValue"
                             :items="numberOperators"
                             :autofocus="true"
-                            @update:model-value="(e) => updateOperator(column.key, e)"
+                            @update:model-value="(e) => updateOperator(e)"
                         />
                         <v-text-field
                             :key="column.key"
@@ -49,7 +49,6 @@
         },
     });
     const column = toRef(props, "column");
-    const filterType = FilterType;
     const numberOperators = Object.values(NumberOperators);
     const modelValue = ref(null);
     const modelOperatorValue = ref(NumberOperators.Equals);
@@ -74,7 +73,7 @@
         updateKey.value++;
     }
 
-    function updateOperator(key: string, value: string): void {
+    function updateOperator(value: NumberOperators): void {
         modelOperatorValue.value = value;
     }
 </script>

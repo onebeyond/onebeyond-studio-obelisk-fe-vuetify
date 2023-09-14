@@ -9,7 +9,7 @@
             <div style="background-color: white; width: 280px">
                 <template
                     v-if="
-                        column.filterType == filterType.ComplexDate || column.filterType == filterType.ComplexDateOnly
+                        column.filterType == FilterType.ComplexDate || column.filterType == FilterType.ComplexDateOnly
                     "
                 >
                     <v-row no-gutters>
@@ -40,7 +40,6 @@
         },
     });
     const column = toRef(props, "column");
-    const filterType = FilterType;
     const modelValue = ref(null);
     const emit = defineEmits(["addDateFilter", "clearComplexFilter"]);
     const updateKey = ref(0);

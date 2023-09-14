@@ -9,8 +9,8 @@
             <div style="background-color: white; width: 280px">
                 <template
                     v-if="
-                        column.filterType == filterType.ComplexBoolean ||
-                        column.filterType == filterType.ComplexDropdown
+                        column.filterType == FilterType.ComplexBoolean ||
+                        column.filterType == FilterType.ComplexDropdown
                     "
                 >
                     <v-row no-gutters>
@@ -26,7 +26,7 @@
                             :key="column.key"
                             v-model="modelValue"
                             :items="
-                                column.filterType == filterType.ComplexBoolean ? booleanArray : column.valueAccessor
+                                column.filterType == FilterType.ComplexBoolean ? booleanArray : column.valueAccessor
                             "
                             :label="column.title"
                             persistent-hint
@@ -52,7 +52,6 @@
         },
     });
     const column = toRef(props, "column");
-    const filterType = FilterType;
     const modelValue = ref(null);
     const booleanArray = [
         { id: 1, name: "Yes" },

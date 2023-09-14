@@ -7,7 +7,7 @@
         </template>
         <v-card>
             <div style="background-color: white; width: 280px">
-                <template v-if="column.filterType == filterType.ComplexDateTime">
+                <template v-if="column.filterType == FilterType.ComplexDateTime">
                     <v-row no-gutters>
                         <v-col cols="6">
                             <v-btn text block @click="addComplexFilter()" color="success"> Filter </v-btn>
@@ -41,7 +41,6 @@
         },
     });
     const column = toRef(props, "column");
-    const filterType = FilterType;
     const modelValue = ref(null);
     const emit = defineEmits(["addDateFilter", "clearComplexFilter"]);
     const updateKey = ref(0);

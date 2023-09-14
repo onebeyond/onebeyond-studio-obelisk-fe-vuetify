@@ -45,31 +45,31 @@
                 <template v-for="column in columns" :key="column.key">
                     <td>
                         <div v-if="column.allowFiltering">
-                            <template v-if="column.filterType == filterType.SimpleText">
+                            <template v-if="column.filterType == FilterType.SimpleText">
                                 <SimpleText :column="column" @addFilter="addFilter" />
                             </template>
-                            <template v-if="column.filterType == filterType.SimpleNumber">
+                            <template v-if="column.filterType == FilterType.SimpleNumber">
                                 <SimpleNumber :column="column" @addFilter="addFilter" />
                             </template>
                             <template
                                 v-if="
-                                    column.filterType == filterType.SimpleDate ||
-                                    column.filterType == filterType.SimpleDateOnly
+                                    column.filterType == FilterType.SimpleDate ||
+                                    column.filterType == FilterType.SimpleDateOnly
                                 "
                             >
                                 <SimpleDate :column="column" @addDateFilter="addDateFilter" />
                             </template>
-                            <template v-if="column.filterType == filterType.SimpleDateTime">
+                            <template v-if="column.filterType == FilterType.SimpleDateTime">
                                 <SimpleDateTime :column="column" @addDateFilter="addDateFilter" />
                             </template>
 
-                            <template v-if="column.filterType == filterType.SimpleDropdown">
+                            <template v-if="column.filterType == FilterType.SimpleDropdown">
                                 <SimpleDropDown :column="column" @addFilter="addFilter" />
                             </template>
                             <template
                                 v-if="
-                                    column.filterType == filterType.SimpleMultiSelectCheckbox ||
-                                    column.filterType == filterType.SimpleBoolean
+                                    column.filterType == FilterType.SimpleMultiSelectCheckbox ||
+                                    column.filterType == FilterType.SimpleBoolean
                                 "
                             >
                                 <SimpleMultiSelect :column="column" @addFilter="addFilter" />
@@ -86,14 +86,14 @@
                             <v-icon :icon="getSortIcon(column)"></v-icon>
                         </template>
 
-                        <template v-if="column.filterType == filterType.ComplexText">
+                        <template v-if="column.filterType == FilterType.ComplexText">
                             <ComplexText
                                 :column="column"
                                 @addComplexFilter="addComplexFilter"
                                 @clearComplexFilter="clearComplexFilter"
                             />
                         </template>
-                        <template v-if="column.filterType == filterType.ComplexNumber">
+                        <template v-if="column.filterType == FilterType.ComplexNumber">
                             <ComplexNumber
                                 :column="column"
                                 @addComplexFilter="addComplexFilter"
@@ -102,8 +102,8 @@
                         </template>
                         <template
                             v-if="
-                                column.filterType == filterType.ComplexDropdown ||
-                                column.filterType == filterType.ComplexBoolean
+                                column.filterType == FilterType.ComplexDropdown ||
+                                column.filterType == FilterType.ComplexBoolean
                             "
                         >
                             <complexDropDown
@@ -112,7 +112,7 @@
                                 @clearComplexFilter="clearComplexFilter"
                             />
                         </template>
-                        <template v-if="column.filterType == filterType.ComplexMultiSelectCheckbox">
+                        <template v-if="column.filterType == FilterType.ComplexMultiSelectCheckbox">
                             <complexMultiSelect
                                 :column="column"
                                 @addFilter="addFilter"
@@ -121,8 +121,8 @@
                         </template>
                         <template
                             v-if="
-                                column.filterType == filterType.ComplexDate ||
-                                column.filterType == filterType.ComplexDateOnly
+                                column.filterType == FilterType.ComplexDate ||
+                                column.filterType == FilterType.ComplexDateOnly
                             "
                         >
                             <complexDate
@@ -131,28 +131,28 @@
                                 @clearComplexFilter="clearComplexFilter"
                             />
                         </template>
-                        <template v-if="column.filterType == filterType.ComplexDateTime">
+                        <template v-if="column.filterType == FilterType.ComplexDateTime">
                             <complexDateTime
                                 :column="column"
                                 @addDateFilter="addDateFilter"
                                 @clearComplexFilter="clearComplexFilter"
                             />
                         </template>
-                        <template v-if="column.filterType == filterType.ComplexNumberRange">
+                        <template v-if="column.filterType == FilterType.ComplexNumberRange">
                             <complexNumberRange
                                 :column="column"
                                 @addRangeFilter="addRangeFilter"
                                 @clearComplexFilter="clearComplexFilter"
                             />
                         </template>
-                        <template v-if="column.filterType == filterType.ComplexDateRange">
+                        <template v-if="column.filterType == FilterType.ComplexDateRange">
                             <complexDateRange
                                 :column="column"
                                 @addDateRangeFilter="addDateRangeFilter"
                                 @clearComplexFilter="clearComplexFilter"
                             />
                         </template>
-                        <template v-if="column.filterType == filterType.ComplexDateTimeRange">
+                        <template v-if="column.filterType == FilterType.ComplexDateTimeRange">
                             <complexDateTimeRange
                                 :column="column"
                                 @addDateRangeFilter="addDateRangeFilter"
@@ -206,7 +206,6 @@
 
     const entityGridRef: Ref<VDataTableServer> = ref();
     defineExpose({ entityGridRef });
-    const filterType = FilterType;
     const searchText = ref("");
     const key = ref(0);
 
@@ -216,7 +215,7 @@
     const entityGrid = toRef(props, "entityGrid");
 
     onMounted(() => {
-        props.entityGrid.setRefreshMethod(refresh);
+        entityGrid.value.setRefreshMethod(refresh);
     });
 
     // Refreshes grid by updating key value to force update
@@ -229,12 +228,12 @@
     }
 
     async function addFilter(type: FilterType, key: string, value: string | number | null) {
-        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
+        entityGrid.value.extraFilters = entityGrid.value.extraFilters.filter((element) => element.key != key);
         if (value != null) {
-            var filter = new Filter(type, key, value);
-            props.entityGrid.extraFilters.push(filter);
+            const filter = new Filter(type, key, value);
+            entityGrid.value.extraFilters.push(filter);
         }
-        props.entityGrid.refresh();
+        entityGrid.value.refresh();
     }
 
     async function addDateFilter(
@@ -243,12 +242,12 @@
         value: Date | null,
         isDateTimeOffset: boolean = false,
     ): Promise<void> {
-        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
+        entityGrid.value.extraFilters = entityGrid.value.extraFilters.filter((element) => element.key != key);
         if (value != null) {
-            var filter = new Filter(type, key, value, null, isDateTimeOffset);
-            props.entityGrid.extraFilters.push(filter);
+            const filter = new Filter(type, key, value, null, isDateTimeOffset);
+            entityGrid.value.extraFilters.push(filter);
         }
-        props.entityGrid.refresh();
+        entityGrid.value.refresh();
     }
 
     async function addComplexFilter(
@@ -257,17 +256,17 @@
         value: string | number | [] | null,
         operator: StringOperators | NumberOperators | null,
     ): Promise<void> {
-        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
+        entityGrid.value.extraFilters = entityGrid.value.extraFilters.filter((element) => element.key != key);
         if (value != null) {
-            var filter = new Filter(type, key, value, null, false, operator);
-            props.entityGrid.extraFilters.push(filter);
+            const filter = new Filter(type, key, value, null, false, operator);
+            entityGrid.value.extraFilters.push(filter);
         }
-        props.entityGrid.refresh();
+        entityGrid.value.refresh();
     }
 
     async function clearComplexFilter(key: string) {
-        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-        props.entityGrid.refresh();
+        entityGrid.value.extraFilters = entityGrid.value.extraFilters.filter((element) => element.key != key);
+        entityGrid.value.refresh();
     }
 
     async function addRangeFilter(
@@ -276,10 +275,10 @@
         primaryValue: string | number | [] | null,
         secondaryValue: string | number | [] | null,
     ): Promise<void> {
-        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
-        var filter = new Filter(type, key, primaryValue, secondaryValue, false);
-        props.entityGrid.extraFilters.push(filter);
-        props.entityGrid.refresh();
+        entityGrid.value.extraFilters = entityGrid.value.extraFilters.filter((element) => element.key != key);
+        const filter = new Filter(type, key, primaryValue, secondaryValue, false);
+        entityGrid.value.extraFilters.push(filter);
+        entityGrid.value.refresh();
     }
 
     async function addDateRangeFilter(
@@ -289,11 +288,11 @@
         secondaryValue: Date | null,
         isDateTimeOffset: boolean = false,
     ): Promise<void> {
-        props.entityGrid.extraFilters = props.entityGrid.extraFilters.filter((element) => element.key != key);
+        entityGrid.value.extraFilters = entityGrid.value.extraFilters.filter((element) => element.key != key);
         if (primaryValue != null || secondaryValue != null) {
-            var filter = new Filter(type, key, primaryValue, secondaryValue, isDateTimeOffset);
-            props.entityGrid.extraFilters.push(filter);
+            const filter = new Filter(type, key, primaryValue, secondaryValue, isDateTimeOffset);
+            entityGrid.value.extraFilters.push(filter);
         }
-        props.entityGrid.refresh();
+        entityGrid.value.refresh();
     }
 </script>

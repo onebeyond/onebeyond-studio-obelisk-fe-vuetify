@@ -2,7 +2,7 @@
     <v-select
         :key="column.key"
         v-model="modelValue"
-        :items="column.filterType == filterType.SimpleBoolean ? booleanArray : column.valueAccessor"
+        :items="column.filterType == FilterType.SimpleBoolean ? booleanArray : column.valueAccessor"
         :label="column.title"
         multiple
         persistent-hint
@@ -15,18 +15,16 @@
             <v-list-item title="Select All" @click="toggleList()">
                 <template v-slot:prepend>
                     <v-checkbox-btn
-                        :color="checkSomeItems(column.key) ? 'indigo-darken-4' : undefined"
+                        :color="checkSomeItems() ? 'indigo-darken-4' : undefined"
                         :indeterminate="
-                            checkSomeItems(column.key) &&
+                            checkSomeItems() &&
                             !checkAllItems(
-                                column.key,
-                                column.filterType == filterType.SimpleBoolean ? booleanArray : column.valueAccessor,
+                                column.filterType == FilterType.SimpleBoolean ? booleanArray : column.valueAccessor,
                             )
                         "
                         :model-value="
                             checkAllItems(
-                                column.key,
-                                column.filterType == filterType.SimpleBoolean ? booleanArray : column.valueAccessor,
+                                column.filterType == FilterType.SimpleBoolean ? booleanArray : column.valueAccessor,
                             )
                         "
                     />
@@ -47,7 +45,6 @@
         },
     });
     const column = toRef(props, "column");
-    const filterType = FilterType;
     const modelValue = ref(null);
     const emit = defineEmits(["addFilter"]);
     const updateKey = ref(0);
@@ -61,7 +58,7 @@
     }
 
     function toggleList() {
-        const items = column.value.filterType == filterType.SimpleBoolean ? booleanArray : column.value.valueAccessor;
+        const items = column.value.filterType == FilterType.SimpleBoolean ? booleanArray : column.value.valueAccessor;
         if (modelValue.value != null && modelValue.value.length == items.length) {
             modelValue.value = null;
             updateKey.value++;
@@ -72,11 +69,11 @@
         emit("addFilter", column.value!.filterType, column.value!.key, modelValue.value);
     }
 
-    function checkSomeItems(key: string): boolean {
+    function checkSomeItems(): boolean {
         return modelValue.value == null ? false : modelValue.value.length > 0;
     }
 
-    function checkAllItems(key: string, items: any): boolean {
+    function checkAllItems(items: any): boolean {
         return modelValue.value == null ? false : modelValue.value.length == items.length;
     }
 </script>

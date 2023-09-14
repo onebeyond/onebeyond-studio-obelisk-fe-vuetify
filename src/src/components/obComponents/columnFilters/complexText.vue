@@ -7,7 +7,7 @@
         </template>
         <v-card>
             <div style="background-color: white; width: 280px">
-                <template v-if="column.filterType == filterType.ComplexText">
+                <template v-if="column.filterType == FilterType.ComplexText">
                     <v-row no-gutters>
                         <v-col cols="6">
                             <v-btn text block @click="addComplexFilter()" color="success"> Filter </v-btn>
@@ -22,7 +22,7 @@
                             :value="modelOperatorValue"
                             :items="stringOperators"
                             :autofocus="true"
-                            @update:model-value="(e) => updateOperator(column.key, e)"
+                            @update:model-value="(e) => updateOperator(e)"
                         />
                         <v-text-field
                             :key="column.key"
@@ -49,7 +49,6 @@
         },
     });
     const column = toRef(props, "column");
-    const filterType = FilterType;
     const stringOperators = Object.values(StringOperators);
     const modelValue = ref(null);
     const modelOperatorValue = ref(StringOperators.Contains);
@@ -74,7 +73,7 @@
         updateKey.value++;
     }
 
-    function updateOperator(key: string, value: string): void {
+    function updateOperator(value: StringOperators): void {
         modelOperatorValue.value = value;
     }
 </script>
