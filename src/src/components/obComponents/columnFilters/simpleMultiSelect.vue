@@ -74,7 +74,7 @@
         return modelValue.value == null ? false : modelValue.value.length > 0;
     }
 
-    function checkAllItems(items: Array<LookupItem<T>>): boolean {
+    function checkAllItems(items: []): boolean {
         return modelValue.value == null ? false : modelValue.value.length == items.length;
     }
 </script>
