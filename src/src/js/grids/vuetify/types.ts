@@ -1,3 +1,4 @@
+import LookupItem from "@js/dataModels/commons/lookupItem";
 export type CrudAction = (id: string) => void;
 
 export interface Command {
@@ -13,7 +14,7 @@ export class Column {
     align?: "start" | "end";
     allowFiltering?: boolean = false;
     filterType?: FilterType = FilterType.NoFilter;
-    valueAccessor?: any = [];
+    valueAccessor?: Array<LookupItem<T>> = [];
     isDateTimeOffset: boolean = false; //Need to specify for DateTimeOffset field so it will convert to current timezone to utc
 }
 
