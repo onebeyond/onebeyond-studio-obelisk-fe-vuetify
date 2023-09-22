@@ -32,6 +32,10 @@ export abstract class DateTime {
         return toDate(dateTimeAsString, { timeZone: timeZoneId });
     }
 
+    public static toZoneDate(date: Date, timeZoneId: string): Date {
+        return toDate(new Date(date), { timeZone: timeZoneId });
+    }
+
     public static getEndOfDay(date: Date): Date {
         return endOfDay(date);
     }
@@ -50,7 +54,8 @@ export abstract class DateTime {
 
     public static getConvertedDate(value: Date, isUTC: boolean): string {
         const dateTimeAsString = format(value, "yyyy-MM-dd HH:mm:ss.SSS");
-        if (isUTC) {
+
+        if (!isUTC) {
             const dateTime = toDate(dateTimeAsString, { timeZone: "UTC" });
             return dateTime.toISOString();
         }

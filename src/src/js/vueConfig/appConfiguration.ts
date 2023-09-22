@@ -5,6 +5,8 @@ import "@js/util/stringExtensions";
 //NOTE: Only add here if truly required globally, doing so inflates the bundle size
 import SessionTimeoutComponent from "@components/util/sessionTimeout.vue";
 import GlobalErrorHandler from "@components/util/globalErrorHandler.vue";
+import DatePicker from "@components/util/vuetify/datePicker.vue";
+import DateTimePicker from "@components/util/vuetify/dateTimePicker.vue";
 import ModalPopup from "@components/util/modalPopup.vue";
 
 //Language selector for VueI18n
@@ -147,6 +149,8 @@ export default class AppConfiguration {
         this.app.component("v-modalPopup", ModalPopup);
         this.app.component("language-selector", LanguageSelector);
         this.app.component("global-error-handler", GlobalErrorHandler);
+        this.app.component("DatePicker", DatePicker);
+        this.app.component("DateTimePicker", DateTimePicker);
     }
 
     private inspect(object: unknown): void {

@@ -1,6 +1,6 @@
 import { EntityGrid, EntityGridAction } from "../entityGrid";
 import { DataAdaptor } from "./dataAdaptor";
-import type { CrudAction, Command, Column, Query, VuetifyGrid } from "@js/grids/vuetify/types";
+import type { CrudAction, Command, Column, Query, VuetifyGrid, Filter } from "@js/grids/vuetify/types";
 
 //encapsulates all the logic related to the grid vue component we're currently using in the template
 export class VuetifyEntityGrid extends EntityGrid {
@@ -12,11 +12,14 @@ export class VuetifyEntityGrid extends EntityGrid {
     public currentOrderByDescending: boolean = false;
     public commands: Command[] = [];
     public hasGlobalSearchEnabled: boolean = false;
+    public hasColumnComplexFilter: boolean = false;
+    public hasColumnSimpleFilter: boolean = false;
     public query: Query = {
         limit: 10,
         page: 1,
         orderBy: [],
     };
+    public extraFilters: Filter[] = [];
 
     public search: string = "";
 
@@ -60,6 +63,18 @@ export class VuetifyEntityGrid extends EntityGrid {
         return this;
     }
 
+    public enableColumnComplexFilter(): VuetifyEntityGrid {
+        this.hasColumnComplexFilter = true;
+        this.hasColumnSimpleFilter = false;
+        return this;
+    }
+
+    public enableColumnSimpleFilter(): VuetifyEntityGrid {
+        this.hasColumnSimpleFilter = true;
+        this.hasColumnComplexFilter = false;
+        return this;
+    }
+
     public enableGlobalSearch(): VuetifyEntityGrid {
         this.hasGlobalSearchEnabled = true;
         return this;
@@ -94,7 +109,8 @@ export class VuetifyEntityGrid extends EntityGrid {
     public async refresh(): Promise<void> {
         try {
             this.isLoading = true;
-            const response = await this._dataAdaptor?.executeApi(this.query, this.search);
+            const response = await this._dataAdaptor?.executeApi(this.query, this.search, this.extraFilters);
+            this.data = response.data;
 
             if (response) {
                 this.data = response.data;
