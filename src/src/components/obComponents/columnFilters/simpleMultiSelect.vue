@@ -37,6 +37,7 @@
 <script setup lang="ts">
     import { toRef, ref } from "vue";
     import { Column, FilterType } from "@js/grids/vuetify/types";
+    import type LookupItem from "@js/dataModels/commons/lookupItem";
 
     const props = defineProps({
         column: {
@@ -73,7 +74,7 @@
         return modelValue.value == null ? false : modelValue.value.length > 0;
     }
 
-    function checkAllItems(items: any): boolean {
+    function checkAllItems(items: Array<LookupItem<T>>): boolean {
         return modelValue.value == null ? false : modelValue.value.length == items.length;
     }
 </script>
