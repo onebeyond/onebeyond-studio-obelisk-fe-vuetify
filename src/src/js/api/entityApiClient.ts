@@ -14,9 +14,9 @@ export default class EntityApiClient<TEntity extends Entity<T>, T> extends ObRes
     }
 
     // Please use with care, this will retrieve all entities without any paging!
-    public async getAll(): Promise<PagedList<T>> {
+    public async getAll(): Promise<PagedList<TEntity>> {
         const data = await this.get();
-        return (await data.json()) as PagedList<T>;
+        return (await data.json()) as PagedList<TEntity>;
     }
 
     public async getEntity(id: T): Promise<TEntity> {
