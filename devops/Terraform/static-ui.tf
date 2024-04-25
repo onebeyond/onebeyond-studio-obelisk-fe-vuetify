@@ -1,4 +1,4 @@
-resource "azurerm_static_site" "ui" {
+resource "azurerm_static_web_app" "ui" {
   name                = "${local.resource_prefix}-stapp"
   resource_group_name = azurerm_resource_group.stage.name
   location            = var.static_ui_location
@@ -21,9 +21,9 @@ resource "azurerm_static_site" "ui" {
 # 2. Via a bunch of providers capable to deal with DNS records:
 #    https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs
 #    https://registry.terraform.io/providers/n3integration/godaddy/latest/docs
-resource "azurerm_static_site_custom_domain" "ui" {
-  count           = var.static_ui_custom_domain == null ? 0 : 1
-  static_site_id  = azurerm_static_site.ui.id
-  domain_name     = var.static_ui_custom_domain
-  validation_type = "dns-txt-token"
+resource "azurerm_static_web_app_custom_domain" "ui" {
+  count             = var.static_ui_custom_domain == null ? 0 : 1
+  static_web_app_id = azurerm_static_site.ui.id
+  domain_name       = var.static_ui_custom_domain
+  validation_type   = "dns-txt-token"
 }
