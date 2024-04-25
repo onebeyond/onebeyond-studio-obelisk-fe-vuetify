@@ -23,7 +23,7 @@ resource "azurerm_static_web_app" "ui" {
 #    https://registry.terraform.io/providers/n3integration/godaddy/latest/docs
 resource "azurerm_static_web_app_custom_domain" "ui" {
   count             = var.static_ui_custom_domain == null ? 0 : 1
-  static_web_app_id = azurerm_static_site.ui.id
+  static_web_app_id = azurerm_static_web_app.ui.id
   domain_name       = var.static_ui_custom_domain
   validation_type   = "dns-txt-token"
 }
