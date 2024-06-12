@@ -102,8 +102,8 @@ export class VuetifyEntityGrid extends EntityGrid {
         }
     }
 
-    public initDataAdaptor(apiUrl: string, errorCallback: Function): void {
-        this._dataAdaptor = new DataAdaptor(apiUrl, errorCallback);
+    public initDataAdaptor(apiUrl: string, errorCallback: Function, parentId?: string): void {
+        this._dataAdaptor = new DataAdaptor(apiUrl, errorCallback, parentId);
     }
 
     public async refresh(): Promise<void> {

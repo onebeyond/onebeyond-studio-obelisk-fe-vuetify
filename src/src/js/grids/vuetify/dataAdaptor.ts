@@ -12,9 +12,11 @@ import { DateTime } from "@js/util/dateTime";
 
 export class DataAdaptor extends ObApiClient {
     private readonly errorCallback: Function;
+    private readonly _parentId?: string;
 
-    constructor(apiBaseUrl: string, errorCallback: Function) {
+    constructor(apiBaseUrl: string, errorCallback: Function, parentId?: string) {
         super(apiBaseUrl);
+        this._parentId = parentId;
         this.errorCallback = errorCallback;
     }
 
@@ -147,6 +149,10 @@ export class DataAdaptor extends ObApiClient {
         filters.push(`page=${query.page}`);
         filters.push(`limit=${query.limit}`);
         filters.push(this.constructSortQuery(query.orderBy));
+
+        if (this._parentId) {
+            filters.push(`parentId=${this._parentId}`);
+        }
 
         const finalQuery = `?${filters.join("&")}`;
 
