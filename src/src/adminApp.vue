@@ -91,11 +91,13 @@
         <!-- Global Toast component for notifications/alerts -->
         <Toast ref="globalToastRef" />
         <v-footer padless>
-            <v-card width="100%" class="text-center" flat tile>
-                <v-card-text class="pt-3">
-                    {{ t("application.applicationName") }} - {{ t("application.developedBy") }}
-                    <a href="https://www.one-beyond.com" target="_blank">One Beyond -</a>
-                    {{ t("application.build") }}: {{ $buildNumber }} ({{ $buildDate }})
+            <v-card flat tile>
+                <v-card-text>
+                    <p>
+                        {{ t("application.applicationName") }} - {{ t("application.developedBy") }}
+                        <a href="https://www.one-beyond.com" target="_blank">One Beyond -</a>
+                    </p>
+                    <p>{{ t("application.build") }}: {{ $buildNumber }} ({{ $buildDate }})</p>
                 </v-card-text>
             </v-card>
         </v-footer>

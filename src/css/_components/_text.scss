@@ -1,4 +1,5 @@
-@import "_variables.scss";
+@import "../_base/_variables.scss";
+@import "../_base/_mixins.scss";
 
 .title-bar {
     display: flex;
@@ -28,12 +29,11 @@
 
 p {
     font-size: $textNormal;
+    margin-bottom: 1rem;
 }
 
 a {
     text-decoration: none;
-    color: #000;
-
     &:hover {
         text-decoration: underline;
     }

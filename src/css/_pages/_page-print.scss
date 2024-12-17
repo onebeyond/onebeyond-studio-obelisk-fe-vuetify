@@ -1,5 +1,4 @@
-﻿@import "../_components/_variables.scss";
-@import "../_components/_mixins.scss";
+﻿@import "../_base/_variables.scss";
 
 @page {
     size: auto;
@@ -15,28 +14,12 @@
         padding: 0;
     }
 
-    #main-menu,
-    #sidebar-left,
-    #sidebar-mask,
-    .title-bar,
-    footer.footer {
+    header, footer {
         display: none !important;
     }
 
-    .card.content-panel {
-        border: none;
-        box-shadow: none;
-        margin-bottom: 2cm;
-
-        .card-title {
-            margin-bottom: 1cm;
-            font-weight: 400;
-            font-size: 2rem;
-            color: $pageTitleColor;
-        }
-
-        .card-body {
-            padding: 0;
-        }
+    .v-card {   
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
     }
 }
