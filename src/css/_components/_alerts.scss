@@ -1,4 +1,5 @@
-@import "_variables.scss";
+@import "../_base/_variables.scss";
+@import "../_base/_mixins.scss";
 
 .v-alert {
     font-size: $textNormal;

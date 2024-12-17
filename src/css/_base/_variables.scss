@@ -1,21 +1,22 @@
 // Basic variables
-$themeColour: #338855 !default;
 $body-bg: #fafafa !default;
 $font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
 
-// Colours
+// Primary Colours
+$primary: #338855 !default;
+
+// Greys
 $greyLight: #ddd;
 $greyMedium: #999;
 $greyDark: #333;
 
 // Titles
-$pageTitleColor: $themeColour !default;
-
-// Font Sizes
+$pageTitleColor: $primary !default;
 $titleLarge: 2rem;
 $titleNormal: 1.5rem;
 
+// Text
 $textLarge: 1.2rem;
 $textNormal: 1rem;
 $textSmall: 0.9rem;

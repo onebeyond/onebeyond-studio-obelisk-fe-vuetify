@@ -1,7 +1,27 @@
-@import "_variables.scss";
+@import "../_base/_variables.scss";
+@import "../_base/_mixins.scss";
 
-.v-card__subtitle,
-.v-card__text,
-.v-card__title {
-    padding: 25px;
+.v-card {
+    @include border-radius;
+    @include box-shadow;
+
+    .v-card-title {
+        padding: 2rem 2rem 0;
+        white-space: normal;
+    }
+    .v-card-text {
+        padding: 1rem 2rem 2rem;
+    }
+    .v-card-actions {
+        padding: 1rem 2rem 1rem;
+        border-top: 1px solid $greyLight;
+    }
+}
+
+.v-dialog {
+    > .v-overlay__content {
+        > .v-card {
+            @extend .v-card;
+        }
+    }
 }

@@ -1,6 +1,3 @@
-// Variables
-@import "_components/_variables.scss";
-
 // Fonts
 @import "./google-fonts/google-fonts.css";
 
@@ -15,3 +12,10 @@
 @import "_components/_alerts.scss";
 @import "_components/_dropdowns.scss";
 @import "_components/_cards.scss";
+@import "_components/_footer.scss";
+
+// Pages
+@import "_pages/_page-not-found.scss";
+@import "_pages/_page-print.scss";
+@import "_pages/page-authapp.scss";
+

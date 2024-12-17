@@ -1,0 +1,29 @@
+@import "../_base/_variables.scss";
+@import "../_base/_mixins.scss";
+
+footer.v-footer {
+    display: flex;
+    flex-grow: 0;
+    padding: 0;
+
+    .v-card {
+        width: 100%;
+        border-radius: 0;
+        .v-card-text {
+            padding-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            
+            p {
+                font-size: $textTiny;
+                margin: 0;
+                a ~ a {
+                    margin-left: 1rem;
+                }
+            }
+        }
+    }
+}
