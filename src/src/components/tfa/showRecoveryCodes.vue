@@ -2,47 +2,39 @@
     <div>
         <v-dialog v-model="showRecoveryCodes" persistent max-width="480px">
             <v-card>
-                <v-container>
-                    <v-row>
-                        <v-col text cols="12">
-                            <div class="text-center">
-                                <h1>{{ t("title") }}</h1>
-
-                                <v-alert dense outlined type="warning">
-                                    <p>
-                                        <strong>{{ t("codeInfo") }}</strong>
-                                    </p>
-                                    <p>
-                                        {{ t("loseCodeInfo") }}
-                                    </p>
-                                </v-alert>
-
-                                <v-container class="pb-10">
-                                    <v-row>
-                                        <v-col cols="12">
-                                            <v-row
-                                                justify="center"
-                                                v-for="i in Math.ceil(recoveryCodes.length / 2)"
-                                                :key="i"
-                                            >
-                                                <code
-                                                    class="text-center ma-1"
-                                                    v-for="item in recoveryCodes.slice((i - 1) * 2, i * 2)"
-                                                    :key="item"
-                                                    >{{ item }} <br
-                                                /></code>
-                                            </v-row>
-                                        </v-col>
+                <v-card-title>
+                    <h1>{{ t("title") }}</h1>
+                </v-card-title>
+                <v-card-text>
+                    <div class="text-center">
+                        <v-alert dense outlined type="warning">
+                            <p>
+                                <strong>{{ t("codeInfo") }}</strong>
+                            </p>
+                            <p>
+                                {{ t("loseCodeInfo") }}
+                            </p>
+                        </v-alert>
+                        <v-container class="pb-10">
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-row justify="center" v-for="i in Math.ceil(recoveryCodes.length / 2)" :key="i">
+                                        <code
+                                            class="text-center ma-1"
+                                            v-for="item in recoveryCodes.slice((i - 1) * 2, i * 2)"
+                                            :key="item"
+                                            >{{ item }} <br
+                                        /></code>
                                     </v-row>
-                                </v-container>
-                            </div>
-                            <div class="v-card-actions">
-                                <v-btn @click="showTwoFactorAuthentication"> {{ t("button.cancel") }}</v-btn>
-                                <v-btn color="primary" @click="returnToDashboard">{{ t("button.generate") }}</v-btn>
-                            </div>
-                        </v-col>
-                    </v-row>
-                </v-container>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </div>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="secondary" @click="showTwoFactorAuthentication"> {{ t("button.cancel") }}</v-btn>
+                    <v-btn color="primary" @click="returnToDashboard">{{ t("button.generate") }}</v-btn>
+                </v-card-actions>
             </v-card>
         </v-dialog>
     </div>

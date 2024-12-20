@@ -3,57 +3,48 @@
         <v-dialog v-model="showForm" persistent max-width="480px">
             <v-card>
                 <v-form ref="formRef">
-                    <v-container>
-                        <v-row>
-                            <v-col text cols="12">
-                                <h1>{{ t("title") }}?</h1>
+                    <v-card-title>
+                        <h1>{{ t("title") }}?</h1>
+                    </v-card-title>
+                    <v-card-text>
+                        <p>{{ t("instructions") }}.</p>
 
-                                <v-card-text>
-                                    <p>{{ t("instructions") }}.</p>
-
-                                    <v-text-field
-                                        v-model="emailInput"
-                                        type="text"
-                                        hide-details="auto"
-                                        dense
-                                        outlined
-                                        name="email"
-                                        :data-vv-as="t('password.email')"
-                                        :label="t('password.email')"
-                                        :rules="[rules.required, rules.email]"
-                                    >
-                                    </v-text-field>
-                                </v-card-text>
-                                <div class="v-card-actions">
-                                    <v-btn id="submit-btn" @click="cancel">{{ t("button.cancel") }}</v-btn>
-                                    <v-btn id="submit-btn" color="primary" @click="sendResetPassword">
-                                        {{ t("resetButton") }}
-                                    </v-btn>
-                                </div>
-                            </v-col>
-                        </v-row>
-                    </v-container>
+                        <v-text-field
+                            v-model="emailInput"
+                            type="text"
+                            hide-details="auto"
+                            dense
+                            outlined
+                            name="email"
+                            :data-vv-as="t('password.email')"
+                            :label="t('password.email')"
+                            :rules="[rules.required, rules.email]"
+                        >
+                        </v-text-field>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn id="submit-btn" color="secondary" @click="cancel">{{ t("button.cancel") }}</v-btn>
+                        <v-btn id="submit-btn" color="primary" @click="sendResetPassword">
+                            {{ t("resetButton") }}
+                        </v-btn>
+                    </v-card-actions>
                 </v-form>
             </v-card>
         </v-dialog>
         <v-dialog v-model="showPasswordConfirmation" persistent max-width="480px">
             <v-card>
                 <v-form>
-                    <v-container>
-                        <v-row>
-                            <v-col text cols="12">
-                                <h1>{{ t("confirmationMessage.title") }}</h1>
-
-                                <p>{{ t("confirmationMessage.instructions") }}.</p>
-
-                                <div class="v-card__actions">
-                                    <v-btn id="submit-btn" color="primary" @click="cancel">
-                                        {{ t("password.backToLogin") }}
-                                    </v-btn>
-                                </div>
-                            </v-col>
-                        </v-row>
-                    </v-container>
+                    <v-card-title>
+                        <h1>{{ t("confirmationMessage.title") }}</h1>
+                    </v-card-title>
+                    <v-card-text>
+                            <p>{{ t("confirmationMessage.instructions") }}.</p>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn id="submit-btn" color="primary" @click="cancel">
+                            {{ t("password.backToLogin") }}
+                        </v-btn>
+                    </v-card-actions>
                 </v-form>
             </v-card>
         </v-dialog>

@@ -2,58 +2,49 @@
     <v-dialog v-model="dialog" persistent max-width="360px">
         <v-card>
             <v-form @submit.prevent="signIn" ref="formRef">
-                <v-container>
-                    <v-row>
-                        <v-col cols="12">
-                            <img
-                                src="/assets/images/one-beyond-logo-black.svg"
-                                height="60"
-                                class="mx-auto d-block logo"
+                <v-card-title>
+                    <img src="/assets/images/one-beyond-logo-black.svg" height="60" class="mx-auto d-block logo" />
+                    <h3 class="text-center">{{ t("title") }}</h3>
+                </v-card-title>
+                <v-card-text>
+                    <p class="text-center mb-4">{{ t("field.twoFactorInfo") }}</p>
+
+                    <div>
+                        <label>{{ t("field.twoFactorCode") }}</label>
+                        <v-text-field
+                            type="text"
+                            dense
+                            outlined
+                            v-model="code"
+                            :rules="[rules.required, rules.numeric, rules.length(6)]"
+                        ></v-text-field>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="custom-control custom-checkbox">
+                            <input
+                                type="checkbox"
+                                class="custom-control-input"
+                                id="rememberMe"
+                                name="rememberMe"
+                                value="true"
+                                v-model="rememberThisMachine"
                             />
-                            <h3 class="text-center">{{ t("title") }}</h3>
-                            <hr />
-                            <p class="text-center mb-4">{{ t("field.twoFactorInfo") }}</p>
-
-                            <div>
-                                <label>{{ t("field.twoFactorCode") }}</label>
-                                <v-text-field
-                                    type="text"
-                                    dense
-                                    outlined
-                                    v-model="code"
-                                    :rules="[rules.required, rules.numeric, rules.length(6)]"
-                                ></v-text-field>
-                            </div>
-
-                            <div class="text-center">
-                                <div class="custom-control custom-checkbox">
-                                    <input
-                                        type="checkbox"
-                                        class="custom-control-input"
-                                        id="rememberMe"
-                                        name="rememberMe"
-                                        value="true"
-                                        v-model="rememberThisMachine"
-                                    />
-                                    <label class="custom-control-label" for="rememberMe">{{
-                                        t("field.rememberThisMachine")
-                                    }}</label>
-                                </div>
-                            </div>
-
-                            <div class="v-card-actions">
-                                <v-btn id="submit2-btn" color="primary" type="submit" :disabled="signingIn">{{
-                                    t("button.signIn")
-                                }}</v-btn>
-                            </div>
-
-                            <p class="text-center mb-4">
-                                {{ t("field.recoveryInfo") }}
-                                <router-link to="signInWithRecoveryCode">{{ t("field.recoveryCode") }}</router-link>
-                            </p>
-                        </v-col>
-                    </v-row>
-                </v-container>
+                            <label class="custom-control-label" for="rememberMe">{{
+                                t("field.rememberThisMachine")
+                            }}</label>
+                        </div>
+                    </div>
+                </v-card-text>
+                <v-card-actions class="border-0 flex-column">
+                    <v-btn id="submit2-btn" color="primary" type="submit" :disabled="signingIn">{{
+                        t("button.signIn")
+                    }}</v-btn>
+                    <p class="text-center mt-7">
+                        {{ t("field.recoveryInfo") }}
+                        <router-link to="signInWithRecoveryCode">{{ t("field.recoveryCode") }}</router-link>
+                    </p>
+                </v-card-actions>
             </v-form>
         </v-card>
     </v-dialog>

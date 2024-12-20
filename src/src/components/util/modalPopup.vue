@@ -1,7 +1,7 @@
 <template>
     <div v-if="visible">
         <v-dialog v-model="visible" persistent max-width="500px" :class="['modal-dialog', modalClass]">
-            <v-card class="py-5">
+            <v-card>
                 <slot name="header">
                     <h1>
                         {{ title }}
@@ -12,7 +12,7 @@
                 </slot>
                 <div class="v-card-actions">
                     <slot name="footer">
-                        <v-btn @click="onClose">{{ t("button.close") }}</v-btn>
+                        <v-btn color="secondary" @click="onClose">{{ t("button.close") }}</v-btn>
                     </slot>
                 </div>
             </v-card>
