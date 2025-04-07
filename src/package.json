@@ -71,7 +71,7 @@
         "html-webpack-plugin": "5.5.0",
         "jest": "27.5.1",
         "mini-css-extract-plugin": "1.6.2",
-        "postcss": "8.4.21",
+        "postcss": "8.5.3",
         "prettier": "2.8.7",
         "process": "0.11.10",
         "sass": "1.58.3",
