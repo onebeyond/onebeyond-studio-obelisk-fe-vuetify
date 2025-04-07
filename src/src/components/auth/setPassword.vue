@@ -3,72 +3,64 @@
         <v-dialog v-model="showForm" persistent max-width="480px">
             <v-card>
                 <v-form ref="formRef">
-                    <v-container>
-                        <v-row>
-                            <v-col text cols="12">
-                                <h1>{{ props.isFirstTimeSetup ? t("setTitle") : t("resetTitle") }}</h1>
+                    <v-card-title>
+                        <h1>{{ props.isFirstTimeSetup ? t("setTitle") : t("resetTitle") }}</h1>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-text-field
+                            class="pt-3"
+                            v-model="password"
+                            type="password"
+                            hide-details="auto"
+                            dense
+                            outlined
+                            name="password"
+                            :disabled="passwordChanged"
+                            :label="t('password')"
+                            :rules="passwordRules"
+                        >
+                        </v-text-field>
 
-                                <v-text-field
-                                    class="pt-3"
-                                    v-model="password"
-                                    type="password"
-                                    hide-details="auto"
-                                    dense
-                                    outlined
-                                    name="password"
-                                    :disabled="passwordChanged"
-                                    :label="t('password')"
-                                    :rules="passwordRules"
-                                >
-                                </v-text-field>
+                        <v-text-field
+                            class="pt-3"
+                            v-model="confirmPassword"
+                            type="password"
+                            hide-details="auto"
+                            dense
+                            outlined
+                            name="confirmPassword"
+                            :disabled="passwordChanged"
+                            :label="t('confirmPassword')"
+                            :rules="[rules.required, rules.passwordMatch]"
+                        >
+                        </v-text-field>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn id="submit-btn" color="secondary" @click="cancel">
+                            {{ t("password.backToLogin") }}
+                        </v-btn>
 
-                                <v-text-field
-                                    class="pt-3"
-                                    v-model="confirmPassword"
-                                    type="password"
-                                    hide-details="auto"
-                                    dense
-                                    outlined
-                                    name="confirmPassword"
-                                    :disabled="passwordChanged"
-                                    :label="t('confirmPassword')"
-                                    :rules="[rules.required, rules.passwordMatch]"
-                                >
-                                </v-text-field>
-
-                                <div class="v-card-actions">
-                                    <v-btn id="submit-btn" color="primary" @click="cancel">
-                                        {{ t("password.backToLogin") }}
-                                    </v-btn>
-
-                                    <v-btn id="submit-btn" :disabled="passwordChanged" color="primary" @click="change">
-                                        {{ t("setPasswordButton") }}
-                                    </v-btn>
-                                </div>
-                            </v-col>
-                        </v-row>
-                    </v-container>
+                        <v-btn id="submit-btn" :disabled="passwordChanged" color="primary" @click="change">
+                            {{ t("setPasswordButton") }}
+                        </v-btn>
+                    </v-card-actions>
                 </v-form>
             </v-card>
         </v-dialog>
         <v-dialog v-model="passwordChanged" persistent max-width="480px">
             <v-card>
                 <v-form>
-                    <v-container>
-                        <v-row>
-                            <v-col text cols="12">
-                                <h1>{{ t("confirmationMessage.title") }}</h1>
-
-                                <p>{{ t("confirmationMessage.instructions") }}.</p>
-
-                                <div class="v-card__actions">
-                                    <v-btn id="submit-btn" color="primary" @click="cancel">
-                                        {{ t("password.backToLogin") }}
-                                    </v-btn>
-                                </div>
-                            </v-col>
-                        </v-row>
-                    </v-container>
+                    <v-card-title>
+                        <h1>{{ t("confirmationMessage.title") }}</h1>
+                    </v-card-title>
+                    <v-card-text>
+                        <p>{{ t("confirmationMessage.instructions") }}.</p>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn id="submit-btn" color="primary" @click="cancel">
+                            {{ t("password.backToLogin") }}
+                        </v-btn>
+                    </v-card-actions>
                 </v-form>
             </v-card>
         </v-dialog>

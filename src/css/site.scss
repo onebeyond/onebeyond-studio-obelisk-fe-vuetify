@@ -1,6 +1,9 @@
 // Fonts
 @import "./google-fonts/google-fonts.css";
 
+// Base
+@import "_base/_utility.scss";
+
 // Components
 @import "_components/_general.scss";
 @import "_components/_header.scss";

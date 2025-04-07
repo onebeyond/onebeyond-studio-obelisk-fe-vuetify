@@ -21,7 +21,7 @@
             </template>
 
             <template #footer>
-                <v-btn type="button" class="btn btn-primary" @click="refreshPage">{{ $t("button.reload") }}</v-btn>
+                <v-btn color="primary" type="button" class="btn btn-primary" @click="refreshPage">{{ $t("button.reload") }}</v-btn>
             </template>
         </v-modalPopup>
     </div>

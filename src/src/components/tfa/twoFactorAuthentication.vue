@@ -2,8 +2,10 @@
     <div>
         <v-dialog v-model="showForm" persistent max-width="480px">
             <v-card>
-                <v-container>
+                <v-card-title>
                     <h1>{{ t("title") }}</h1>
+                </v-card-title>
+                <v-card-text>
                     <v-row v-if="tfaSettings.is2faEnabled">
                         <v-col text cols="12" class="text-center">
                             <h2 v-if="message != ''">{{ message }}</h2>
@@ -54,26 +56,26 @@
                             <p v-if="showEnableAuthenticator">
                                 To set up two-factor authentication first you must configure the app.
                             </p>
-                            <div class="v-card-actions">
-                                <v-btn @click="dashboard">{{ t("button.cancel") }}</v-btn>
-
-                                <div>
-                                    <div v-if="!tfaSettings.is2faEnabled">
-                                        <v-btn color="primary" @click="showEnableAuthenticatorCard">
-                                            {{ t("link.enableAuthenticator") }}
-                                        </v-btn>
-                                    </div>
-                                </div>
-
-                                <div v-if="tfaSettings.hasAuthenticator && tfaSettings.is2faEnabled">
-                                    <v-btn color="primary" @click="showResetAuthenticatorCard">
-                                        {{ t("link.resetAuthenticator") }}
-                                    </v-btn>
-                                </div>
-                            </div>
                         </v-col>
                     </v-row>
-                </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="secondary" @click="dashboard">{{ t("button.cancel") }}</v-btn>
+
+                    <div>
+                        <div v-if="!tfaSettings.is2faEnabled">
+                            <v-btn color="primary" @click="showEnableAuthenticatorCard">
+                                {{ t("link.enableAuthenticator") }}
+                            </v-btn>
+                        </div>
+                    </div>
+
+                    <div v-if="tfaSettings.hasAuthenticator && tfaSettings.is2faEnabled">
+                        <v-btn color="primary" @click="showResetAuthenticatorCard">
+                            {{ t("link.resetAuthenticator") }}
+                        </v-btn>
+                    </div>
+                </v-card-actions>
             </v-card>
         </v-dialog>
 

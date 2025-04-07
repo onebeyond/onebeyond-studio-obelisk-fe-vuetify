@@ -3,72 +3,68 @@
         <v-dialog v-model="dialog" persistent max-width="360px">
             <v-card>
                 <v-form ref="formRef">
-                    <v-container>
-                        <v-row>
-                            <v-col cols="12">
-                                <img
-                                    src="/assets/images/one-beyond-logo-black.svg"
-                                    height="60"
-                                    class="mx-auto d-block logo"
-                                    alt="company logo"
+                    <v-card-title>
+                        <img
+                            src="/assets/images/one-beyond-logo-black.svg"
+                            height="60"
+                            class="mx-auto d-block logo"
+                            alt="company logo"
+                        />
+                        <h1 class="text-center mt-2 mb-4">{{ t("title") }}</h1>
+                    </v-card-title>
+                    <v-card-text>
+                        <div>
+                            <label>{{ t("field.username") }}</label>
+                            <v-text-field
+                                density="compact"
+                                variant="outlined"
+                                v-model="username"
+                                :rules="[rules.required]"
+                                data-cy="inputUserName"
+                            ></v-text-field>
+                        </div>
+
+                        <div>
+                            <label for="password">{{ t("field.password") }}</label>
+                            <v-text-field
+                                density="compact"
+                                variant="outlined"
+                                type="password"
+                                v-model="password"
+                                :rules="[rules.required]"
+                                data-cy="inputPassword"
+                            ></v-text-field>
+                        </div>
+
+                        <div class="text-center">
+                            <div class="custom-control custom-checkbox">
+                                <input
+                                    type="checkbox"
+                                    class="custom-control-input"
+                                    id="rememberMe"
+                                    name="rememberMe"
+                                    value="true"
+                                    v-model="rememberMe"
                                 />
-                                <h1 class="text-center mt-2 mb-4">{{ t("title") }}</h1>
+                                <label class="custom-control-label" for="rememberMe">{{ t("field.rememberMe") }}</label>
+                            </div>
+                        </div>
+                    </v-card-text>
+                    <v-card-actions class="border-0 flex-column">
+                        <v-btn
+                            id="submit-btn"
+                            color="primary"
+                            type="button"
+                            :disabled="signingIn"
+                            @click="signIn"
+                            data-cy="submitBtn"
+                            >{{ t("button.signIn") }}</v-btn
+                        >
 
-                                <div>
-                                    <label>{{ t("field.username") }}</label>
-                                    <v-text-field
-                                        density="compact"
-                                        variant="outlined"
-                                        v-model="username"
-                                        :rules="[rules.required]"
-                                        data-cy="inputUserName"
-                                    ></v-text-field>
-                                </div>
-
-                                <div>
-                                    <label for="password">{{ t("field.password") }}</label>
-                                    <v-text-field
-                                        density="compact"
-                                        variant="outlined"
-                                        type="password"
-                                        v-model="password"
-                                        :rules="[rules.required]"
-                                        data-cy="inputPassword"
-                                    ></v-text-field>
-                                </div>
-
-                                <div class="text-center">
-                                    <div class="custom-control custom-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            class="custom-control-input"
-                                            id="rememberMe"
-                                            name="rememberMe"
-                                            value="true"
-                                            v-model="rememberMe"
-                                        />
-                                        <label class="custom-control-label" for="rememberMe">{{
-                                            t("field.rememberMe")
-                                        }}</label>
-                                    </div>
-                                </div>
-                                <div class="v-card-actions border-0">
-                                    <v-btn
-                                        id="submit-btn"
-                                        color="primary"
-                                        type="button"
-                                        :disabled="signingIn"
-                                        @click="signIn"
-                                        data-cy="submitBtn"
-                                        >{{ t("button.signIn") }}</v-btn
-                                    >
-                                </div>
-                                <p class="v-card-actions border-0">
-                                    <router-link to="forgotPassword">{{ t("button.forgottenPassword") }}</router-link>
-                                </p>
-                            </v-col>
-                        </v-row>
-                    </v-container>
+                        <p class="mt-8">
+                            <router-link to="forgotPassword">{{ t("button.forgottenPassword") }}</router-link>
+                        </p>
+                    </v-card-actions>
                 </v-form>
             </v-card>
         </v-dialog>

@@ -3,27 +3,23 @@
         <v-dialog v-model="showDisableTFA" persistent max-width="480px">
             <v-card>
                 <v-form>
-                    <v-container>
-                        <v-row>
-                            <v-col text cols="12">
-                                <h1>{{ t("title") }}</h1>
-
-                                <v-alert dense outlined type="warning">
-                                    <p>
-                                        {{ t("message") }}
-                                        <a @click="showEnableAuthenticatorCard">{{ t("messageLink") }}</a>
-                                    </p>
-                                </v-alert>
-
-                                <div class="v-card__actions">
-                                    <v-btn @click="showTwoFactorAuthentication"> {{ t("button.cancel") }}</v-btn>
-                                    <v-btn color="error" class="white--text" @click="disableTFA">
-                                        {{ t("button.disableTfa") }}
-                                    </v-btn>
-                                </div>
-                            </v-col>
-                        </v-row>
-                    </v-container>
+                    <v-card-title>
+                        <h1>{{ t("title") }}</h1>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-alert dense outlined type="warning">
+                            <p>
+                                {{ t("message") }}
+                                <a @click="showEnableAuthenticatorCard">{{ t("messageLink") }}</a>
+                            </p>
+                        </v-alert>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="secondary" @click="showTwoFactorAuthentication"> {{ t("button.cancel") }}</v-btn>
+                        <v-btn color="error" class="white--text" @click="disableTFA">
+                            {{ t("button.disableTfa") }}
+                        </v-btn>
+                    </v-card-actions>
                 </v-form>
             </v-card>
         </v-dialog>

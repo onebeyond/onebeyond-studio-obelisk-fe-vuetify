@@ -2,42 +2,28 @@
     <v-dialog v-model="dialog" persistent max-width="360px">
         <v-card>
             <v-form ref="formRef">
-                <v-container>
-                    <v-row>
-                        <v-col cols="12">
-                            <img
-                                src="/assets/images/one-beyond-logo-black.svg"
-                                height="60"
-                                class="mx-auto d-block logo"
-                            />
-                            <h3 class="text-center">{{ t("title") }}</h3>
-                            <hr />
-                            <p class="text-center mb-4">{{ t("message.recoveryInfo") }}</p>
-
-                            <div>
-                                <label>{{ t("field.recoveryCode") }}</label>
-                                <v-text-field
-                                    dense
-                                    outlined
-                                    v-model="code"
-                                    :rules="[rules.required, rules.length(11), rules.alphaDash]"
-                                >
-                                </v-text-field>
-                            </div>
-
-                            <div class="v-card-actions">
-                                <v-btn
-                                    id="submit-btn"
-                                    color="primary"
-                                    type="submit"
-                                    :disabled="signingIn"
-                                    @click="signIn"
-                                    >{{ t("button.signIn") }}</v-btn
-                                >
-                            </div>
-                        </v-col>
-                    </v-row>
-                </v-container>
+                <v-card-title>
+                    <img src="/assets/images/one-beyond-logo-black.svg" height="60" class="mx-auto d-block logo" />
+                    <h3 class="text-center">{{ t("title") }}</h3>
+                </v-card-title>
+                <v-card-text>
+                    <p class="text-center mb-4">{{ t("message.recoveryInfo") }}</p>
+                    <div>
+                        <label>{{ t("field.recoveryCode") }}</label>
+                        <v-text-field
+                            dense
+                            outlined
+                            v-model="code"
+                            :rules="[rules.required, rules.length(11), rules.alphaDash]"
+                        >
+                        </v-text-field>
+                    </div>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn id="submit-btn" color="primary" type="submit" :disabled="signingIn" @click="signIn">{{
+                        t("button.signIn")
+                    }}</v-btn>
+                </v-card-actions>
             </v-form>
         </v-card>
     </v-dialog>

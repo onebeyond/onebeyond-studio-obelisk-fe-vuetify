@@ -2,36 +2,25 @@
     <div>
         <v-dialog v-model="showResetAuthenticator" persistent max-width="480px">
             <v-card>
-                <v-container>
-                    <v-row>
-                        <v-col text cols="12">
-                            <div>
-                                <div class="text-center">
-                                    <h1>{{ t("title") }}</h1>
-
-                                    <v-alert dense outlined type="warning">
-                                        <strong>{{ t("resetKey") }}</strong>
-                                    </v-alert>
-                                    <p>
-                                        {{ t("disableTfaInfo") }}
-                                    </p>
-                                    <div>
-                                        <v-form method="post" class="form-group" @submit.prevent="resetTfa">
-                                            <div class="v-card-actions">
-                                                <v-btn @click="showTwoFactorAuthentication">
-                                                    {{ t("button.cancel") }}</v-btn
-                                                >
-                                                <v-btn color="error" class="white--text" type="submit">{{
-                                                    t("button.resetBtn")
-                                                }}</v-btn>
-                                            </div>
-                                        </v-form>
-                                    </div>
-                                </div>
-                            </div>
-                        </v-col>
-                    </v-row>
-                </v-container>
+                <v-card-title>
+                    <h1>{{ t("title") }}</h1>
+                </v-card-title>
+                <v-card-text>
+                    <div class="text-center">
+                        <v-alert dense outlined type="warning">
+                            <strong>{{ t("resetKey") }}</strong>
+                        </v-alert>
+                        <p>
+                            {{ t("disableTfaInfo") }}
+                        </p>
+                    </div>
+                </v-card-text>
+                <v-card-actions>
+                    <v-form method="post" @submit.prevent="resetTfa">
+                        <v-btn color="secondary" @click="showTwoFactorAuthentication"> {{ t("button.cancel") }}</v-btn>
+                        <v-btn color="error" class="white--text" type="submit">{{ t("button.resetBtn") }}</v-btn>
+                    </v-form>
+                </v-card-actions>
             </v-card>
         </v-dialog>
     </div>
