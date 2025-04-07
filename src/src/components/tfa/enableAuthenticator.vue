@@ -2,64 +2,62 @@
     <div>
         <v-dialog v-model="showEnableAuthenticator" persistent max-width="480px">
             <v-card>
-                <v-container>
-                    <v-row>
-                        <v-col text cols="12">
-                            <h1>{{ t("title") }}</h1>
-                            <v-form id="send-code" @submit.prevent="enableTfa">
-                                <ol class="list">
-                                    <li>
-                                        {{ t("downloadMessage") }}:
-                                        <a href="https://go.microsoft.com/fwlink?Linkid=825072">{{ t("android") }}</a>
-                                        {{ t("and") }}
-                                        <a href="https://go.microsoft.com/fwlink?Linkid=825073">{{ t("ios") }}</a>
-                                        {{ t("or") }}
-                                        {{ t("downloadLinkGoogleAuthenticator") }}
-                                        <a
-                                            href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en"
-                                            >{{ t("android") }}</a
-                                        >
-                                        {{ t("and") }}
-                                        <a
-                                            href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8"
-                                            >{{ t("ios") }}</a
-                                        >.
-                                    </li>
-                                    <li>
-                                        {{ t("scanQrCode") }}
-                                        <kbd>{{ tfaSettings?.sharedKey }}</kbd>
-                                        {{ t("scanQrCodeInfo") }}
-                                        <QRCode
-                                            :value="tfaSettings?.authenticationUri"
-                                            :size="200"
-                                            v-if="tfaSettings?.authenticationUri"
-                                        />
-                                    </li>
-                                    <li>
-                                        {{ t("scanQrCodeInfoTwo") }}
-                                        <div class="row">
-                                            <div class="col-12 mt-3">
-                                                <div class="form-group">
-                                                    <label class="control-label">{{ t("verificationCode") }}</label>
-                                                    <v-text-field
-                                                        dense
-                                                        outlined
-                                                        v-model="code"
-                                                        :rules="[rules.code]"
-                                                    ></v-text-field>
-                                                </div>
-                                            </div>
+                <v-card-title>
+                    <h1>{{ t("title") }}</h1>
+                </v-card-title>
+                <v-form id="send-code" @submit.prevent="enableTfa">
+                    <v-card-text>
+                        <ol class="list">
+                            <li>
+                                {{ t("downloadMessage") }}:
+                                <a href="https://go.microsoft.com/fwlink?Linkid=825072">{{ t("android") }}</a>
+                                {{ t("and") }}
+                                <a href="https://go.microsoft.com/fwlink?Linkid=825073">{{ t("ios") }}</a>
+                                {{ t("or") }}
+                                {{ t("downloadLinkGoogleAuthenticator") }}
+                                <a
+                                    href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en"
+                                    >{{ t("android") }}</a
+                                >
+                                {{ t("and") }}
+                                <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">{{
+                                    t("ios")
+                                }}</a
+                                >.
+                            </li>
+                            <li>
+                                {{ t("scanQrCode") }}
+                                <kbd>{{ tfaSettings?.sharedKey }}</kbd>
+                                {{ t("scanQrCodeInfo") }}
+                                <QRCode
+                                    :value="tfaSettings?.authenticationUri"
+                                    :size="200"
+                                    v-if="tfaSettings?.authenticationUri"
+                                />
+                            </li>
+                            <li>
+                                {{ t("scanQrCodeInfoTwo") }}
+                                <div class="row">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ t("verificationCode") }}</label>
+                                            <v-text-field
+                                                dense
+                                                outlined
+                                                v-model="code"
+                                                :rules="[rules.code]"
+                                            ></v-text-field>
                                         </div>
-                                    </li>
-                                </ol>
-                                <div class="v-card-actions">
-                                    <v-btn @click="showTwoFactorAuthentication"> {{ t("button.cancel") }}</v-btn>
-                                    <v-btn color="primary" type="submit">{{ t("verify") }}</v-btn>
+                                    </div>
                                 </div>
-                            </v-form>
-                        </v-col>
-                    </v-row>
-                </v-container>
+                            </li>
+                        </ol>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="secondary" @click="showTwoFactorAuthentication"> {{ t("button.cancel") }}</v-btn>
+                        <v-btn color="primary" type="submit">{{ t("verify") }}</v-btn>
+                    </v-card-actions>
+                </v-form>
             </v-card>
         </v-dialog>
     </div>

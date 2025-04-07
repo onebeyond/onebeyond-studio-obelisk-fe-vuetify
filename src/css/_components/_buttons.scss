@@ -1,7 +1,38 @@
 @import "../_base/_variables.scss";
 @import "../_base/_mixins.scss";
 
-.v-btn {
+.btn-primary {
+    color: #fff !important;
+    border: 1px solid $primary;
+    background-color: $primary !important;
+    &:hover {
+        border-color: $greyDark !important;
+        background-color: $greyDark !important;
+    }
+}
+.btn-secondary {
+    background-color: transparent !important;
+    color: $greyDark !important;
+    border: 1px solid $greyMedium;
+    &:hover {
+        background-color: $greyLight !important;
+    }
+}
+
+button.v-btn, a.btn {
+    &.v-btn--size-default {
+        font-size: $textSmall;
+    }
+
+    &.bg-primary,
+    &.text-primary {
+        @extend .btn-primary;
+    }
+    &.bg-secondary,
+    &.text-secondary {
+        @extend .btn-secondary;
+    }
+
     &:not(.v-btn--round).v-size--small {
         height: 28px;
         padding: 0 12px;

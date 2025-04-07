@@ -75,7 +75,7 @@
                 </v-card-text>
             </template>
             <template #footer>
-                <v-btn id="closePopupBtn" @click="closeEntityModal">{{ t("button.close") }}</v-btn>
+                <v-btn id="closePopupBtn" color="secondary" @click="closeEntityModal">{{ t("button.close") }}</v-btn>
                 <v-btn id="unlockBtn" color="success" v-if="!entity.isNew && entity.isLockedOut" @click="unlock">{{
                     t("button.unlock")
                 }}</v-btn>

@@ -9,7 +9,7 @@
             </v-card>
             <v-card-actions class="text-right">
                 <v-spacer></v-spacer>
-                <v-btn type="button" id="cancelLogoutBtn" @click="cancelLogout">
+                <v-btn type="button" id="cancelLogoutBtn" color="primary" @click="cancelLogout">
                     {{ t("button.keepWorking") }}
                 </v-btn>
                 <v-btn id="logoutBtn" color="error" @click="doLogout">

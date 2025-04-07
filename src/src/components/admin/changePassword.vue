@@ -55,10 +55,10 @@
                                     </v-text-field>
                                 </v-card-text>
                                 <div class="v-card-actions">
-                                    <v-btn v-if="passwordChanged" color="primary" @click="cancel">
+                                    <v-btn v-if="passwordChanged" color="secondary" @click="cancel">
                                         {{ t("button.close") }}
                                     </v-btn>
-                                    <v-btn v-if="!passwordChanged" @click="cancel">
+                                    <v-btn v-if="!passwordChanged" color="secondary" @click="cancel">
                                         {{ t("button.cancel") }}
                                     </v-btn>
                                     <v-btn v-if="!passwordChanged" color="primary" @click="change">
