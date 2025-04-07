@@ -9,6 +9,8 @@ import type { SignInWithRecoveryCode } from "@js/dataModels/auth/signInWithRecov
 import type { ChangePasswordRequest } from "@js/dataModels/auth/changePasswordRequest";
 import type { PasswordRequirements } from "@js/dataModels/auth/passwordRequirements";
 import type { ResetPasswordStatus } from "@js/dataModels/auth/resetPasswordStatus";
+import { JwtResult } from "@js/dataModels/auth/jwtResult";
+import { SignInStatus } from "@js/dataModels/auth/signInStatus";
 
 //We derive from WebApiClient, not from ObApiClient, because the Account controller does not have api folder
 export default class AuthApiClient extends ObResourceApiClient {
@@ -18,11 +20,29 @@ export default class AuthApiClient extends ObResourceApiClient {
 
     public async ping(): Promise<void> {
         await this.get("ping");
-    }
+    }    
 
-    public async basicSignIn(userCredentials: SignInRequest): Promise<SignInResult> {
-        const response = await this.post("basic/signin", userCredentials);
-        return (await response.json()) as SignInResult;
+    public async jwtSignIn(userCredentials: SignInRequest): Promise<SignInResult> {
+        try {
+            const response = await this.post("api/account/jwt/signIn/v1/", userCredentials);
+
+            const jwtResponse = (await response.json()) as JwtResult;
+
+            this.setJwtCookie(jwtResponse);
+
+            return {
+                status: SignInStatus.Success,
+                statusMessage: "Logged in."
+            };
+        }
+        catch (error: any)
+        {
+            console.error(error);
+            return {
+                status: SignInStatus.Failure,
+                statusMessage: error.body.message
+            };
+        }
     }
 
     public async basicSignInTfa(userCredentials: SignInTfa): Promise<SignInResult> {
@@ -60,7 +80,14 @@ export default class AuthApiClient extends ObResourceApiClient {
     }
 
     public async signOut(): Promise<void> {
-        await this.post("signout");
+        try {
+            await this.post("signout");
+        }
+        catch (error){
+            console.error(error);
+        }
+        
+        this.clearJwtCookies();
     }
 
     public async getPasswordRequirements(): Promise<PasswordRequirements> {

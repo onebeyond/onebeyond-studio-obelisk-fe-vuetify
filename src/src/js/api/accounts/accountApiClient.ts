@@ -13,7 +13,13 @@ export default class AccountApiClient extends ObResourceApiClient {
     }
 
     public async signOut(): Promise<void> {
-        await this.post("signout");
+        try {
+            await this.post("signout");
+        }
+        catch (error){
+            console.error(error);
+        }
+        this.clearJwtCookies();
     }
 
     public async whoAmI(): Promise<UserContext> {
