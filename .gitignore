@@ -373,3 +373,5 @@ src/ca.crt
 src/ca.key
 src/cert.crt
 src/cert.key
+
+.vscode

@@ -56,7 +56,7 @@
                                     <v-btn
                                         id="submit-btn"
                                         color="primary"
-                                        type="submit"
+                                        type="button"
                                         :disabled="signingIn"
                                         @click="signIn"
                                         data-cy="submitBtn"
@@ -114,7 +114,7 @@
             const userCredentials = new SignInRequest(username.value, password.value, rememberMe);
 
             try {
-                const data: SignInResult = await authApiClient.basicSignIn(userCredentials);
+                const data: SignInResult = await authApiClient.jwtSignIn(userCredentials);
 
                 if (data.status === SignInStatus.Success) {
                     LocalSessionStorage.setUserAuthenticated(true);

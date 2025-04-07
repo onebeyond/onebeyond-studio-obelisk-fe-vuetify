@@ -26,5 +26,6 @@ export default abstract class ObApiClient extends WebApiClient {
         this.requestInterceptors.splice(0, this.requestInterceptors.length);
         this.responseInterceptors.splice(0, this.responseInterceptors.length);
         await this.fetch("signout", WebApiClient.buildRequest("POST"), `${ObApiClient.WebApiRoot}api/auth/v1/`);
+        this.clearJwtCookies();
     }
 }
