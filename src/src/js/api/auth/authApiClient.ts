@@ -80,7 +80,13 @@ export default class AuthApiClient extends ObResourceApiClient {
     }
 
     public async signOut(): Promise<void> {
-        await this.post("signout");
+        try {
+            await this.post("signout");
+        }
+        catch (error){
+            console.error(error);
+        }
+        
         this.clearJwtCookies();
     }
 

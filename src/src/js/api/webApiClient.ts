@@ -38,9 +38,25 @@ export default abstract class WebApiClient {
         return this.fetch(endpoint, WebApiClient.buildRequest("DELETE", body ? JSON.stringify(body) : null, authHeaders?.bearerToken));
     }
 
-    protected async refresh(refreshToken: string): Promise<Response> {
-        return this.fetch("refresh", WebApiClient.buildRequest("PUT", JSON.stringify(refreshToken)), `${WebApiClient.WebApiRoot}api/account/jwt/refreshToken/v1/`, false);
+    protected async refresh(refreshToken: string): Promise<boolean> {
+        try {
+            const jwtResponse = await this.fetch("refresh", WebApiClient.buildRequest("PUT", JSON.stringify(refreshToken)), `${WebApiClient.WebApiRoot}api/account/jwt/refreshToken/v1/`, false);
+
+            if (!jwtResponse.ok){
+                return false;
+            }
+    
+            const jwtResult = await jwtResponse.json() as JwtResult;        
+            this.setJwtCookie(jwtResult);
+            return true;
+        }
+        catch (error) {
+            console.error(error);
+            return false;
+        }        
     }
+
+    private static refreshPromise: Promise<boolean> | null = null;
 
     protected async fetch(endpoint?: string, request?: RequestInit, overriddenBaseUrl?: string, canBeAuthenticated: boolean = true): Promise<Response> {
         const fullUrl = `${overriddenBaseUrl || this.apiBaseUrl}${endpoint ?? ""}`;
@@ -61,11 +77,19 @@ export default abstract class WebApiClient {
             if (canBeAuthenticated && response.status === 401) {
                 const jwtCookies = this.getJwtCookie();
                 if (jwtCookies !== null) {
-                    const jwtResponse = await this.refresh(jwtCookies.refreshToken!);
-                    if (!jwtResponse.ok){
-                        this.clearJwtCookies();
-                        const errorMessage = await response.text();
-                        return Promise.reject(new WebApiError(errorMessage, response.status, request));
+                    if (!WebApiClient.refreshPromise) {
+                        WebApiClient.refreshPromise = this.refresh(jwtCookies.refreshToken!);
+                    }
+                    
+                    const success = await WebApiClient.refreshPromise;
+
+                    if (!success) {
+                        this.clearJwtCookies();                        
+                    }
+                    else {
+                        request!.headers!["Authorization"] = `Bearer ${this.getCookie(this.BEARER_COOKIE)}`;
+                        fetchFunction = () => fetch(new Request(fullUrl, request));
+                        response = await fetchFunction();
                     }
                 }
             }
@@ -75,13 +99,16 @@ export default abstract class WebApiClient {
             );
         }
 
-        // Call response interceptors, if any
-        const suppressResponseErrorFromResponse = await this.callResponseInterceptors(response, fetchFunction);
+        if (canBeAuthenticated || response.status !== 401) {            
+            // Call response interceptors, if any
+            const suppressResponseErrorFromResponse = await this.callResponseInterceptors(response, fetchFunction);
 
-        if (!response.ok && !suppressResponseErrorFromRequest && !suppressResponseErrorFromResponse) {
-            const errorMessage = await response.text();
-            return Promise.reject(new WebApiError(errorMessage, response.status, request));
+            if (!response.ok && !suppressResponseErrorFromRequest && !suppressResponseErrorFromResponse) {
+                const errorMessage = await response.text();
+                return Promise.reject(new WebApiError(errorMessage, response.status, request));
+            }
         }
+        
         return response;
     }
 
