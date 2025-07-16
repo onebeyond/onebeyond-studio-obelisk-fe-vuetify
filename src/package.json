@@ -37,7 +37,7 @@
         "vue": "3.2.47",
         "vue-class-component": "8.0.0-rc.1",
         "vue-context": "6.0.0",
-        "vue-i18n": "9.2.2",
+        "vue-i18n": "9.14.5",
         "vue-multiselect": "3.0.0-beta.1",
         "vue-nav-tabs": "0.5.7",
         "vue-router": "4.1.6",
